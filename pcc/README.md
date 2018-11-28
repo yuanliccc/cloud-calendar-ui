@@ -1,6 +1,6 @@
 # pcc
 
-> pcc ui project
+> A Vue.js project
 
 ## Build Setup
 
