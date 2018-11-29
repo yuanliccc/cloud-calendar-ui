@@ -12,7 +12,7 @@
             </div>
             <div class="line-tip">
               无账号，请
-              <router-link to="/pcc/signup">注册</router-link>
+              <router-link to="/signup">注册</router-link>
             </div>
             <div class="flex-column flex-grow">
               <div class="normal-line"></div>

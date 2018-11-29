@@ -4,7 +4,7 @@
       <div class="jumbotron huge-screen">
         <div class="huge-screen-container">
 
-          <div class="index-header-block flex-row">
+          <!--<div class="index-header-block flex-row">
             <div class="header-content-block flex-row">
               <div class="header-content-left flex-row">
                 <div class="header-item-start t-center flex-column">
@@ -22,11 +22,11 @@
                   <router-link class="header-item-a" to="/pcc/login">登录</router-link>
                 </div>
                 <div class="header-item header-item-end t-center flex-column">
-                  <a class="header-item-a" href="views/signup/signup.html">注册</a>
+                  <router-link class="header-item-a" to="/pcc/signup">注册</router-link>
                 </div>
               </div>
             </div>
-          </div>
+          </div>-->
 
           <div class="huge-screen-title-block">
             <div class="huge-screen-title">Cloud-calendar</div>
@@ -43,7 +43,7 @@
           </div>
 
           <div class="huge-screen-login-button-block">
-            <button class="huge-screen-login-button">加入云日历</button>
+            <button class="huge-screen-login-button" @click="toSignUp">加入云日历</button>
           </div>
         </div>
       </div>
@@ -112,7 +112,12 @@
 
 <script>
     export default {
-        name: "index"
+        name: "index",
+        methods: {
+          toSignUp:function () {
+            this.$router.push({path:'/pcc/signup'});
+          }
+        }
     }
 </script>
 
@@ -131,7 +136,7 @@
   .huge-screen {
     padding-top: 0;
     padding-bottom: 100px;
-    background: linear-gradient(45deg,#1e88e5,#1e88e5 100%);
+    background: linear-gradient(45deg,rgb(33, 150, 243),rgb(33, 150, 243) 100%);
   }
 
   .huge-screen:after {
@@ -283,6 +288,7 @@
     cursor: pointer;
     margin-left: 0px;
     font-size: 20px;
+    margin-right: 10px;
   }
 
 
