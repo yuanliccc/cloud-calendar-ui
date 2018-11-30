@@ -115,7 +115,7 @@
         name: "index",
         methods: {
           toSignUp:function () {
-            this.$router.push({path:'/pcc/signup'});
+            this.$router.push({path:'/signup'});
           }
         }
     }
