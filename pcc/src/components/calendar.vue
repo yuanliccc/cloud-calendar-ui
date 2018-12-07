@@ -1,6 +1,30 @@
 <template>
-    <div class="flex-row flex-wrap">
-      <div style="width: 14%; height: 30px; margin: 1px; background: #1e88e5;" v-for="item in list" :key="item">{{item.content}}</div>
+    <div class="full">
+      <div class="calendar-title flex-row">
+        <div class="flex-grow">
+          <button>今天</button>
+        </div>
+
+        <div class="flex-row">
+          <div>
+            <span class="glyphicon glyphicon-chevron-left"></span>
+          </div>
+          <div>
+            2018 年 12 月
+          </div>
+          <div>
+            <span class="glyphicon glyphicon-chevron-right"></span>
+          </div>
+        </div>
+
+        <div class="flex-grow">
+
+        </div>
+      </div>
+      <div class="flex-row flex-wrap" style="height: 500px">
+        <div class="calendar-item-common calendar-item-title" v-for="item in weekInfo" :key="item">{{item}}</div>
+        <div class="calendar-item-common calendar-item" v-for="(item, index) in list" :key="index">{{item.content}}</div>
+      </div>
     </div>
 </template>
 
@@ -9,7 +33,8 @@ export default {
   name: 'calendar',
   data: function () {
     return {
-      list: []
+      list: [],
+      weekInfo: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天']
     }
   },
   mounted: function () {
@@ -70,4 +95,22 @@ export default {
 
 <style scoped>
 
+  .calendar-title {
+    margin-top: 20px;
+  }
+
+  .calendar-item-common {
+    width: 14%;
+  }
+
+  .calendar-item-title {
+    margin-top: 20px;
+  }
+
+  .calendar-item {
+    border: 1px solid red;
+    height: 14%;
+    border-bottom: none;
+    border-right: none;
+  }
 </style>
