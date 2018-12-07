@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <div class="header-block flex-column">
     <div class="index-header-block flex-row">
@@ -7,7 +8,7 @@
             <router-link class="header-item-a" to="/">个人云日历</router-link>
           </div>
           <div class="header-item t-center flex-column">
-            <a class="header-item-a">日历</a>
+            <router-link class="header-item-a" to="/calendar">日历</router-link>
           </div>
           <div class="header-item t-center flex-column">
             <a class="header-item-a">服务</a>
@@ -27,9 +28,9 @@
 </template>
 
 <script>
-  export default {
-    name: "header"
-  }
+export default {
+  name: 'header'
+}
 </script>
 
 <style scoped>
@@ -89,7 +90,6 @@
     font-size: 20px;
     margin-right: 10px;
   }
-
 
   .header-item-end {
     margin-right: 0px;

@@ -111,14 +111,14 @@
 </template>
 
 <script>
-    export default {
-        name: "index",
-        methods: {
-          toSignUp:function () {
-            this.$router.push({path:'/signup'});
-          }
-        }
+export default {
+  name: 'index',
+  methods: {
+    toSignUp: function () {
+      this.$router.push({path: '/signup'})
     }
+  }
+}
 </script>
 
 <style scoped>
@@ -290,7 +290,6 @@
     font-size: 20px;
     margin-right: 10px;
   }
-
 
   .header-item-end {
     margin-right: 0px;

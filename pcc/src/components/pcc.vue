@@ -8,15 +8,13 @@
 </template>
 
 <script>
-  import hh from './header'
-
-  export default {
-      name: "pcc",
-      components: {
-        hh
-      },
-
+import hh from './header'
+export default {
+  name: 'pcc',
+  components: {
+    hh
   }
+}
 </script>
 
 <style scoped>
