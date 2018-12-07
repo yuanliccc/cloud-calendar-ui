@@ -4,7 +4,7 @@ import index from '../components/index.vue'
 import pcc from '../components/pcc.vue'
 import login from '../components/login.vue'
 import signup from '../components/signup.vue'
-import calendar from  '../components/calendar.vue'
+import calendar from '../components/calendar.vue'
 
 Vue.use(Router)
 

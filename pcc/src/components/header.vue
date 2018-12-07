@@ -7,19 +7,19 @@
           <div class="header-item-start t-center flex-column">
             <router-link class="header-item-a" to="/">个人云日历</router-link>
           </div>
-          <div class="header-item t-center flex-column">
-            <router-link class="header-item-a" to="/calendar">日历</router-link>
+          <div v-bind:class="[ titles[0].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column' ]">
+            <a class="header-item-a" v-on:click="jump(0)">{{titles[0].title}}</a>
           </div>
-          <div class="header-item t-center flex-column">
-            <a class="header-item-a">服务</a>
-          </div>
+          <!--<div v-bind:class="[ titles[1].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column' ]">
+            <a class="header-item-a" v-on:click="jump(1)">{{titles[1].title}}</a>
+          </div>-->
         </div>
         <div class="header-content-right flex-row">
-          <div class="header-item t-center flex-column">
-            <router-link class="header-item-a" to="/login">登录</router-link>
+          <div v-bind:class="[ titles[2].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column' ]">
+            <a class="header-item-a" v-on:click="jump(2)">{{titles[2].title}}</a>
           </div>
-          <div class="header-item header-item-end t-center flex-column">
-            <router-link class="header-item-a" to="/signup">注册</router-link>
+          <div v-bind:class="[ titles[3].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column', 'header-item-end' ]">
+            <a class="header-item-a" v-on:click="jump(3)">{{titles[3].title}}</a>
           </div>
         </div>
       </div>
@@ -29,7 +29,55 @@
 
 <script>
 export default {
-  name: 'header'
+  name: 'hheader',
+  data: function () {
+    return {
+      titles: [
+        {
+          title: '日历',
+          route: '/calendar',
+          isActive: false
+        },
+        {
+          title: '服务',
+          route: '/services',
+          isActive: false
+        },
+        {
+          title: '登录',
+          route: '/login',
+          isActive: false
+        },
+        {
+          title: '注册',
+          route: '/signup',
+          isActive: false
+        }
+      ]
+    }
+  },
+  watch: {
+    '$route': 'changeActive'
+  },
+  mounted: function () {
+
+  },
+  methods: {
+    jump: function (index) {
+      this.$router.push({path: this.titles[index].route})
+    },
+    changeActive: function () {
+      let currentPath = this.$route.path
+
+      for (let i = 0; i < this.titles.length; i++) {
+        if (currentPath.endsWith(this.titles[i].route)) {
+          this.titles[i].isActive = true
+        } else {
+          this.titles[i].isActive = false
+        }
+      }
+    }
+  }
 }
 </script>
 
@@ -99,7 +147,14 @@ export default {
     height: 100%;
     min-width: 90px;
     cursor: pointer;
+  }
 
+  .header-item-active {
+    height: 100%;
+    min-width: 90px;
+    cursor: pointer;
+    background: #1e88e5;
+    border-radius: 2px;
   }
 
   .header-item:hover {
