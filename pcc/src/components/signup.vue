@@ -1,7 +1,7 @@
 <template>
     <div>
-      <div class="content flex-column">
-        <div class="content-container flex-row">
+      <div class="content flex-column flex-center">
+        <div class="content-container flex-row flex-center">
           <div class="content-left">
             <div id="carousel-example-generic" class="carousel slide full" data-ride="carousel">
               <!-- Indicators -->
@@ -99,17 +99,17 @@
                       </div>
                     </div>
 
-                    <div class="flex-row login-line-block">
-                      <div class="flex-column flex-grow">
+                    <div class="flex-row flex-center login-line-block">
+                      <div class="flex-column flex-center flex-grow">
                         <div class="normal-line"></div>
                       </div>
                       <div class="line-tip">已经有账号，请 <router-link to="/login">登录</router-link></div>
-                      <div class="flex-column flex-grow">
+                      <div class="flex-column flex-center flex-grow">
                         <div class="normal-line"></div>
                       </div>
                     </div>
 
-                    <div class="submit-block flex-row">
+                    <div class="submit-block flex-row flex-center">
                       <button class="submit-btn">submit</button>
                     </div>
                   </div>

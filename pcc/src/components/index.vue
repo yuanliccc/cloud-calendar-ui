@@ -59,7 +59,7 @@
         </div>
 
         <div class="flex-row">
-          <div class="service-img-block flex-column">
+          <div class="service-img-block flex-column flex-center">
             <div class="service-img-container">
               <img src="../assets/images/index/soundready.png">
             </div>
@@ -67,7 +67,7 @@
               <p class="service-img-desc no-margin">接口测试</p>
             </div>
           </div>
-          <div class="service-img-block flex-column">
+          <div class="service-img-block flex-column flex-center">
             <div class="service-img-container">
               <img src="../assets/images/index/jshint.png">
             </div>
@@ -75,7 +75,7 @@
               <p class="service-img-desc no-margin">文档服务</p>
             </div>
           </div>
-          <div class="service-img-block flex-column">
+          <div class="service-img-block flex-column flex-center">
             <div class="service-img-container">
               <img src="../assets/images/index/kippt.png">
             </div>
@@ -89,9 +89,9 @@
 
     </div>
 
-    <div class="foot-block flex-row">
+    <div class="foot-block flex-row flex-center">
       <div class="foot-container">
-        <div class="flex-row">
+        <div class="flex-row flex-center">
           <div class="foot-link-block">
             <a class="foot-link">京ICP证100780号</a>
           </div>

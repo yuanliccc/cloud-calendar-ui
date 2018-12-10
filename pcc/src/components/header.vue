@@ -1,13 +1,13 @@
 /* eslint-disable */
 <template>
-  <div class="header-block flex-column">
-    <div class="index-header-block flex-row">
-      <div class="header-content-block flex-row">
-        <div class="header-content-left flex-row">
-          <div class="header-item-start t-center flex-column">
+  <div class="header-block flex-column flex-center">
+    <div class="index-header-block flex-row flex-center">
+      <div class="header-content-block flex-row flex-center">
+        <div class="header-content-left flex-row flex-center">
+          <div class="header-item-start t-center flex-column flex-center">
             <router-link class="header-item-a" to="/">个人云日历</router-link>
           </div>
-          <div v-bind:class="[ titles[0].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column' ]">
+          <div v-bind:class="[ titles[0].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column', 'flex-center' ]">
             <a class="header-item-a" v-on:click="jump(0)">{{titles[0].title}}</a>
           </div>
           <!--<div v-bind:class="[ titles[1].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column' ]">
@@ -15,10 +15,10 @@
           </div>-->
         </div>
         <div class="header-content-right flex-row">
-          <div v-bind:class="[ titles[2].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column' ]">
+          <div v-bind:class="[ titles[2].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column', 'flex-center' ]">
             <a class="header-item-a" v-on:click="jump(2)">{{titles[2].title}}</a>
           </div>
-          <div v-bind:class="[ titles[3].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column', 'header-item-end' ]">
+          <div v-bind:class="[ titles[3].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column', 'header-item-end', 'flex-center' ]">
             <a class="header-item-a" v-on:click="jump(3)">{{titles[3].title}}</a>
           </div>
         </div>

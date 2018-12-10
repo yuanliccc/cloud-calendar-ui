@@ -1,25 +1,25 @@
 <template>
   <div>
-    <div class="login-block flex-row">
+    <div class="login-block flex-row flex-center">
       <div class="login-container-bg">
         <div class="login-container">
           <div class="login-container-header">
             Login in
           </div>
           <div class="flex-row login-line-block">
-            <div class="flex-column flex-grow">
+            <div class="flex-column flex-grow flex-center">
               <div class="normal-line"></div>
             </div>
             <div class="line-tip">
               无账号，请
               <router-link to="/signup">注册</router-link>
             </div>
-            <div class="flex-column flex-grow">
+            <div class="flex-column flex-grow flex-center">
               <div class="normal-line"></div>
             </div>
           </div>
 
-          <div class="login-container-content flex-row">
+          <div class="login-container-content flex-row flex-center">
             <div class="login-container-content-block">
               <div class="login-input-item">
                 <div class="login-input-item-title">username</div>
