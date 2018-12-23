@@ -1,8 +1,13 @@
 <template>
   <div class="calendar">
     <div class="calendar-title flex-row flex-center">
-      <div class="flex-grow flex-column flex-center">
-        <button class="calendar-common-btn" @click="toToday">今天</button>
+      <div class="flex-grow flex-row flex-start">
+        <div class="flex-column flex-center">
+          <button class="calendar-common-btn" @click="toToday">今天</button>
+        </div>
+        <div class="flex-column flex-center normal-margin-left">
+          <div>{{today.year}} - {{today.month}} - {{today.day}}</div>
+        </div>
       </div>
 
       <div class="flex-row">

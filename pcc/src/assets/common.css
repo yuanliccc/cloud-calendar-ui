@@ -47,6 +47,10 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.18);
 }
 
+.normal-margin-left {
+  margin-left: 5px;
+}
+
 .flex-grow {
   flex-grow: 1;
 }
