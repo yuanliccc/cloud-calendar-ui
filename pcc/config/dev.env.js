@@ -4,5 +4,5 @@ const prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  pcc_server: 'localhost:8080'
+  pcc_server_host: 'localhost:8090'
 })

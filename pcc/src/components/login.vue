@@ -22,7 +22,7 @@
           <div class="login-container-content flex-row flex-center">
             <div class="login-container-content-block">
               <div class="login-input-item">
-                <div class="login-input-item-title">username</div>
+                <div class="login-input-item-title">phone</div>
                 <div class="login-input-block">
                   <input class="login-input">
                 </div>
@@ -84,7 +84,18 @@
 
 <script>
 export default {
-  name: 'login'
+  name: 'login',
+  data: function () {
+    return {
+
+    }
+  },
+  mounted: function () {
+
+  },
+  methods: {
+
+  }
 }
 </script>
 
