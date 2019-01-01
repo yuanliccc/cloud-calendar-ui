@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import store from './store'
 import router from './router'
+import axios from './axios'
 import './assets/lib/bootstrap/css/bootstrap.min.css'
 import './assets/common.css'
 
@@ -14,6 +15,7 @@ new Vue({
   el: '#app',
   router,
   store,
+  axios,
   components: { App },
   template: '<App/>'
 })

@@ -24,20 +24,20 @@
               <div class="login-input-item">
                 <div class="login-input-item-title">phone</div>
                 <div class="login-input-block">
-                  <input class="login-input">
+                  <input v-model="pccUser.phone" class="login-input">
                 </div>
               </div>
               <div class="login-input-item">
                 <div class="login-input-item-title">password</div>
                 <div class="login-input-block">
-                  <input class="login-input">
+                  <input v-model="pccUser.password" class="login-input">
                 </div>
               </div>
               <div class="login-radio">
                 <input type="radio"> keep login in
               </div>
               <div class="submit-block flex-row">
-                <button class="submit-btn">Login in</button>
+                <button class="submit-btn" @click="login">Login in</button>
               </div>
             </div>
           </div>
@@ -85,16 +85,30 @@
 <script>
 export default {
   name: 'login',
+  components: {
+  },
   data: function () {
     return {
-
+      pccUser: {
+        phone: '',
+        password: ''
+      }
     }
   },
   mounted: function () {
 
   },
   methods: {
-
+    login: function () {
+        this.$axios.post('/pcc/user/detail',this.pccUser,
+        function (response) {
+          console.log(response.data)
+        },
+        function (error) {
+          console.log(error)
+        }
+      )
+    }
   }
 }
 </script>
