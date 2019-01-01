@@ -58,7 +58,7 @@
           <p class="service-desc">云日历为您提供实用的自动服务</p>
         </div>
 
-        <div class="flex-row">
+        <div class="flex-row flex-center">
           <div class="service-img-block flex-column flex-center">
             <div class="service-img-container">
               <img src="../assets/images/index/soundready.png">
