@@ -1,3 +1,15 @@
+:root{
+  --commonBg: #333333;
+  --commonBgHeaderHover: #acacac;
+  --commonBgHeaderColor: #a7a7a7;
+  --commonBgHeaderActive: #d6d6d6;
+  /*
+  --commonBg: rgb(33, 150, 243);
+  --commonBgHeaderHover: #1e88e5;
+  --commonBgHeaderColor: white;
+  */
+}
+
 body {
   background: #f2f2f2;
 }
@@ -68,4 +80,15 @@ body {
 
 .submit-btn:hover {
   background: #2196f3;
+}
+
+.submit-btn-unactive {
+  background: rgba(33, 150, 243, 0.46);
+  width: 80%;
+  height: 40px;
+  border-radius: 20px;
+  color: white;
+  font-size: 16px;
+  border: 0;
+  outline: none;
 }

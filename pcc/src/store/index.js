@@ -4,7 +4,8 @@ Vue.use(Vuex)
 
 const state = {
   showLoading: false,
-  showTip: false
+  showTip: false,
+  userInfo: undefined
 }
 
 const getters = {
@@ -13,6 +14,14 @@ const getters = {
   },
   showTip(showTip) {
     return state.showTip
+  },
+  userInfo(userInfo) {
+
+    if(!state.userInfo) {
+      state.userInfo = window.localStorage.getItem("userInfo")
+    }
+
+    return state.userInfo
   }
 }
 
@@ -28,6 +37,12 @@ const mutations = {
   },
   hideTip: function () {
     state.showTip = false
+  },
+  setUserInfo: function (newUserInfo) {
+    state.userInfo = newUserInfo
+
+    window.localStorage.setItem("userInfo", state.userInfo)
+
   }
 }
 

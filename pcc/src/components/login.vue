@@ -30,14 +30,19 @@
               <div class="login-input-item">
                 <div class="login-input-item-title">password</div>
                 <div class="login-input-block">
-                  <input v-model="pccUser.password" class="login-input">
+                  <input v-model="pccUser.password" type="password" class="login-input">
                 </div>
               </div>
-              <div class="login-radio">
+              <!--<div class="login-radio">
                 <input type="radio"> keep login in
-              </div>
-              <div class="submit-block flex-row">
-                <button class="submit-btn" @click="login">Login in</button>
+              </div>-->
+              <div class="submit-block flex-row flex-center">
+                <button
+                        v-bind:disabled="pccUser.phone === '' || pccUser.password === ''"
+                        v-bind:class="[pccUser.phone === '' || pccUser.password === '' ? 'submit-btn-unactive' : 'submit-btn']"
+                        @click="login">
+                  Login in
+                </button>
               </div>
             </div>
           </div>
@@ -100,14 +105,27 @@ export default {
   },
   methods: {
     login: function () {
-        this.$axios.post('/pcc/user/detail',this.pccUser,
-        function (response) {
-          console.log(response.data)
-        },
-        function (error) {
-          console.log(error)
-        }
-      )
+      // 显示加载动画
+      this.$store.commit("showLoading")
+      // 请求
+      this.$axios.post('/pcc/user/detail',this.pccUser)
+        .then(res => {
+          const data = res.data
+
+          if(data.data == null) {
+            // 弹框
+          }
+          else {
+            this.$store.commit("setUserInfo", data.data)
+            this.$router.push({path: 'calendar'})
+          }
+
+          console.log(res.data)
+          this.$store.commit("hideLoading")
+        })
+        .catch(err => {
+          this.$store.commit("hideLoading")
+        })
     }
   }
 }
@@ -241,6 +259,10 @@ export default {
     color: #aaa;
   }
 
+  .submit-block {
+    margin-top: 20px;
+  }
+
   .login-input {
     height: 46px;
     width: 100%;
@@ -250,11 +272,6 @@ export default {
     background: rgba(33, 150, 243, 0.08);
     display: inline-block;
     outline: none;
-  }
-
-  .login-submit-block {
-    width: 100%;
-    margin-top: 12px;
   }
 
   .login-radio {

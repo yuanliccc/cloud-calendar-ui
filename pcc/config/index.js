@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/pcc': {
-        target: '127.0.0.1:8090/pcc',
+        target: 'http://127.0.0.1:8090/pcc/',
         changeOrigin:true,
         pathRewrite: {
           '^/pcc': '/'
