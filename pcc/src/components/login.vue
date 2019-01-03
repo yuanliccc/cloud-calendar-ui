@@ -117,7 +117,7 @@ export default {
           }
           else {
             this.$store.commit("setUserInfo", data.data)
-            this.$router.push({path: 'calendar'})
+            this.$router.push({path: '/mine'})
           }
 
           console.log(res.data)
@@ -132,6 +132,10 @@ export default {
 </script>
 
 <style scoped>
+
+  .login-input-block {
+    margin-top: 5px;
+  }
 
   .line-tip {
     margin-left: 10px;
@@ -208,7 +212,7 @@ export default {
     text-align: center;
     margin: 0 auto;
     text-align: center;
-    color: #2196f3;
+    color: var(--commonColor);
   }
 
   .line {
@@ -232,8 +236,8 @@ export default {
     flex-direction: column;
     font-size: 20px;
     border-bottom: 1px solid #999;
-    background: #2196f3;
-    color: white;
+    background: white;
+    color: var(--commonBg);
     box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 5px 0px,
     rgba(0, 0, 0, 0.14) 0px 2px 2px 0px,
     rgba(0, 0, 0, 0.12) 0px 3px 1px -2px;
@@ -242,7 +246,9 @@ export default {
   .login-container-content {
     margin-top: 20px;
     background: white;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 5px 0px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 3px 1px -2px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 5px 0px,
+    rgba(0, 0, 0, 0.14) 0px 2px 2px 0px,
+    rgba(0, 0, 0, 0.12) 0px 3px 1px -2px;
   }
 
   .login-container-content-block {
@@ -267,9 +273,9 @@ export default {
     height: 46px;
     width: 100%;
     border-radius: 23px;
-    border: 1px solid rgba(119, 119, 119, 0.1);
+    border: 1px solid rgba(158, 158, 158, 0.29);
     padding: 15px 20px;
-    background: rgba(33, 150, 243, 0.08);
+    background: rgba(158, 158, 158, 0.15);
     display: inline-block;
     outline: none;
   }

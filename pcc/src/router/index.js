@@ -5,6 +5,7 @@ import pcc from '../components/pcc.vue'
 import login from '../components/login.vue'
 import signup from '../components/signup.vue'
 import calendar from '../components/calendar.vue'
+import mine from '../components/mine'
 
 Vue.use(Router)
 
@@ -32,6 +33,10 @@ export default new Router({
         {
           path: 'calendar',
           component: calendar
+        },
+        {
+          path: 'mine',
+          component: mine
         }
       ]
     }

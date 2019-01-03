@@ -6,7 +6,7 @@
           <button class="calendar-common-btn" @click="toToday">今天</button>
         </div>
         <div class="flex-column flex-center normal-margin-left">
-          <div>{{today.year}} - {{today.month}} - {{today.day}}</div>
+          <div>{{today.year}} - {{today.month + 1}} - {{today.day}}</div>
         </div>
       </div>
 
@@ -46,14 +46,19 @@
            item.day === selectDay.day && item.type === 'normal' ? 'calendar-item-selected' : '' ]"
            v-for="(item, index) in list"
            @click="clickDay(item)"
+           @mouseover="showNewAdd(index)"
+           @mouseout="showNewAdd(index)"
            :key="index">
         <div class="calendar-item-internal">
-          <div class="flex-row flex-center">
-            <div class="flex-column flex-grow flex-start">
-              <div>{{item.day}}</div>
+          <div class="flex-row flex-between">
+            <div class="flex-column flex-start calendar-item-internal-item">
+              <div class="full">{{item.day}}</div>
             </div>
-            <div class="flex-column flex-end">
-              <div>{{item.lunarStr.day}}</div>
+            <div class="flex-column flex-center calendar-item-internal-item" v-show="item.isShowNewAdd">
+              <div class="full text-center">新增</div>
+            </div>
+            <div class="flex-column flex-end calendar-item-internal-item">
+              <div class="full text-right">{{item.lunarStr.day}}</div>
             </div>
           </div>
         </div>
@@ -108,6 +113,9 @@ export default {
     this.showToday()
   },
   methods: {
+    showNewAdd: function(index) {
+      this.list[index].isShowNewAdd = !this.list[index].isShowNewAdd;
+    },
     clickDay: function (item) {
       if (item.type === 'pre') {
         this.preMonth(item.day)
@@ -194,7 +202,8 @@ export default {
         for (let i = 1; i < preNum; i++) {
           let obj = {
             type: 'pre',
-            day: (preMonthDays--)
+            day: (preMonthDays--),
+            isShowNewAdd: false
           }
           obj.lunar = this.getLunar(preYear, preMonth, preMonthDays + 1)
           obj.lunarStr = this.lunarDateToStr(obj.lunar)
@@ -205,7 +214,8 @@ export default {
       for (let i = 0; i < days; i++) {
         let obj = {
           type: 'normal',
-          day: i + 1
+          day: i + 1,
+          isShowNewAdd: false
         }
         obj.lunar = this.getLunar(year, month, i + 1)
         obj.lunarStr = this.lunarDateToStr(obj.lunar)
@@ -220,7 +230,8 @@ export default {
 
         let obj = {
           type: 'next',
-          day: (i + 1)
+          day: (i + 1),
+          isShowNewAdd: false
         }
         obj.lunar = this.getLunar(nextYear, nextMonth, i + 1)
         obj.lunarStr = this.lunarDateToStr(obj.lunar)
@@ -310,6 +321,10 @@ export default {
 </script>
 
 <style scoped>
+
+  .calendar-item-internal-item {
+    width: 33%;
+  }
 
   .calendar-item-internal {
     margin: 5px;

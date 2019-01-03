@@ -41,37 +41,38 @@
     font-weight: 600;
     text-align: center;
     background: #3ac;
+    color: white;
     border-radius: 100%;
     display: inline-block;
     animation: slide 1s infinite;
   }
   .dot:nth-child(1) {
     animation-delay: 0.1s;
-    background: #32aacc;
+    background: var(--commonBg);
   }
   .dot:nth-child(2) {
     animation-delay: 0.2s;
-    background: #64aacc;
+    background: var(--commonBg);
   }
   .dot:nth-child(3) {
     animation-delay: 0.3s;
-    background: #96aacc;
+    background: var(--commonBg);
   }
   .dot:nth-child(4) {
     animation-delay: 0.4s;
-    background: #c8aacc;
+    background: var(--commonBg);
   }
   .dot:nth-child(5) {
     animation-delay: 0.5s;
-    background: #faaacc;
+    background: var(--commonBg);
   }
   .dot:nth-child(6) {
     animation-delay: 0.6s;
-    background: #faaacc;
+    background: var(--commonBg);
   }
   .dot:nth-child(7) {
     animation-delay: 0.7s;
-    background: #faaacc;
+    background: var(--commonBg);
   }
   @-moz-keyframes slide {
     0% {
