@@ -136,7 +136,7 @@ export default {
   .huge-screen {
     padding-top: 0;
     padding-bottom: 100px;
-    background: linear-gradient(45deg,rgb(33, 150, 243),rgb(33, 150, 243) 100%);
+    background: linear-gradient(var(--commonBg),var(--commonBg) 100%);
   }
 
   .huge-screen:after {

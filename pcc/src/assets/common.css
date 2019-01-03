@@ -3,10 +3,12 @@
   --commonBgHeaderHover: #acacac;
   --commonBgHeaderColor: #a7a7a7;
   --commonBgHeaderActive: #d6d6d6;
+  --commonOtherBg:rgba(51, 51, 51, 0.55);
   /*
   --commonBg: rgb(33, 150, 243);
   --commonBgHeaderHover: #1e88e5;
   --commonBgHeaderColor: white;
+  --commonOtherBg:#2196f3;
   */
 }
 

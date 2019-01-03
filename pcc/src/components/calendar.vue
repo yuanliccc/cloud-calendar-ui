@@ -316,7 +316,7 @@ export default {
   }
 
   .lunar-tag {
-    background: #2196f3;
+    background: var(--commonOtherBg);
     padding: 1px 6px 1px 6px;
     color: white;
     margin: 5px;
@@ -332,7 +332,9 @@ export default {
     background: white;
     margin: 10px;
     position: relative;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px -1px,
+    rgba(0, 0, 0, 0.14) 0px 4px 5px 0px,
+    rgba(0, 0, 0, 0.12) 0px 1px 10px 0px;
   }
 
   .calendar-common-btn {
@@ -363,7 +365,7 @@ export default {
   }
 
   .calendar-control-button:hover {
-    color: rgb(33, 150, 243);
+    color: var(--commonBg);
   }
 
   .calendar-control-view-block {
@@ -392,12 +394,12 @@ export default {
     cursor: pointer;
   }
 
-  .calendar-item:hover {
+  /*.calendar-item:hover {
     background: #e1e5eb;
-  }
+  }*/
 
   .calendar-item-selected {
-    background: #2196f3;
+    background: var(--commonOtherBg);
     color: white;
   }
 </style>

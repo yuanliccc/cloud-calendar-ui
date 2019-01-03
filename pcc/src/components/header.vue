@@ -116,9 +116,9 @@ export default {
   }
 
   .mock-user-logo {
-    border: 1px solid #009688;
+    border: 1px solid rgba(255, 255, 255, 0.23);
     border-radius: 25px;
-    background: #009688;
+    background: rgba(0, 150, 136, 0.34);
     cursor: pointer;
   }
 
@@ -128,6 +128,7 @@ export default {
   }
 
   .header-block {
+    position: relative;
     background: var(--commonBg);
     height: 50px;
     width: 100%;
@@ -137,14 +138,28 @@ export default {
     rgba(0, 0, 0, 0.12) 0px 1px 10px 0px;
   }
 
+  .index-header-block:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: url(../assets/images/index-huge-screen-back.png) repeat center center;
+    opacity: .4;
+  }
+
   .index-header-block {
     height: 40px;
     width: 100%;
+    z-index: 1;
   }
 
   .header-content-block {
     width: 98%;
     height: 100%;
+    z-index: 1;
   }
 
   .header-content-left {

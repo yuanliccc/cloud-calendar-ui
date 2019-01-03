@@ -18,7 +18,13 @@ const getters = {
   userInfo(userInfo) {
 
     if(!state.userInfo) {
-      state.userInfo = window.localStorage.getItem("userInfo")
+      const localUserInfo = window.localStorage.getItem("userInfo")
+      if(localUserInfo === null) {
+        state.userInfo = undefined
+      }
+      else {
+        state.userInfo = localUserInfo
+      }
     }
 
     return state.userInfo
