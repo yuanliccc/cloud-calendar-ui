@@ -1,0 +1,125 @@
+$primary-color: #409EFF;
+$primary-background-color: #ecf5ff;
+
+.components-list {
+  padding: 8px 0;  /* 设置上下内边距为8px,左右内边距为0px */
+  width: 100%;
+
+  .widget-cate {
+    padding: 8px 12px;  /* 设置上下内边距为8px,左右内边距为12px */
+    font-size: 13px;  /* 设置字体大小13px */
+  }
+
+  ul{
+    position: relative;
+    overflow: hidden;
+    padding: 0 10px 10px; /* 设置上内边距为0,左右内边距为10px,下内边距为10px */
+    margin: 0;  /* 设置外边距为0 */
+  }
+
+  .form-edit-widget-label {
+    font-size: 12px;
+    display: block; /* 将元素显示为块级元素,此元素前后会有换行符 */
+    width: 48%; /* 设置宽度为父容器宽度的48% */
+    /**
+    一行文本的行高为：上间距 + 文本的高度+下间距，并且上间距是等于下间距的。
+    我们还可以基本上这样认为：行高是两行文字基线之间的距离，也是两行文字顶线之间的距离，两行文字中线之间的距离
+     */
+    line-height: 26px; /* 设置行高为26px */
+    overflow: hidden;
+    /**
+    text-overflow属性规定当文本溢出包含元素时发生的事情
+      |-- ellipsis: 显示省略号来表示被修剪的内容
+      |-- clip: 修剪文本
+      |-- string: 用给定的字符串来代表被修剪的文本
+     */
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap; /* 规定段落中的文本不进行换行 */
+    margin: 1%; /* 设置上下左右外边距为1% */
+    color: #333;
+    border: 1px solid #F4F6FC; /* 设置边框粗细,样式,颜色 */
+    text-align: center;
+
+    /* &在sass中表示父选择器的标识符 */
+    &:hover {
+      color: $primary-color;
+      border: 1px dashed $primary-color;
+    }
+
+    /**
+    '&>a'表示父选择器下的所有a标签
+     */
+    &>a {
+      display: block;
+      cursor: move;  /* 设置光标的样式为可移动图标 */
+      background: #F4F6FC;
+      border: 1px solid #F4F6FC;
+
+      span {
+        display: inline-block;  /* 设置展示效果为不独占一行(行内元素)的块级元素(有长宽高) */
+        vertical-align: middle;  /* 设置垂直对齐方式 */
+      }
+    }
+  }
+}
+
+.center-container {
+  border-left: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+
+  .el-main {
+    padding: 0;
+  }
+}
+
+.widget-form-container {
+  .widget-form-list {
+    padding: 5px 10px 18px;  /* 设置上内边距为5px,左右内边距10px,下内边距18px */
+    margin: 0;  /* 设置外边距为0 */
+    min-height: 150px;  /* 设置最小高度为150px,是因为如果该元素没有初始高度,vuedraggable将无法拖拽到此区域 */
+    border-left: 5px solid transparent; /* 设置边框粗细为5px,实线,透明 */
+
+    .widget-view {
+      padding: 5px 10px 18px;
+      margin: 0;
+      position: relative;
+      border-left: 5px solid transparent;
+      &.active{
+        border-left: 5px solid $primary-color;
+        background: #b3d8ff;
+      }
+    }
+
+    .widget-form-list-grid {
+      padding: 5px 10px 18px;  /* 设置上内边距为5px,左右内边距10px,下内边距18px */
+      margin: 0;  /* 设置外边距为0 */
+      border-left: 5px solid transparent; /* 设置边框粗细为5px,实线,透明 */
+      min-height: 32px;
+    }
+  }
+
+  .widget-grid {
+    &.active {
+      border-left: 5px solid $primary-color;
+      background: #b3d8ff;
+    }
+  }
+}
+
+.widget-config-container {
+  .config-tab {
+    height: 45px;
+    line-height: 45px;
+    display: inline-block;
+    width: 125px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+
+    &.active {
+      border-bottom: solid 2px $primary-color;
+    }
+  }
+}
