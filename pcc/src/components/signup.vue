@@ -144,18 +144,18 @@ export default {
   }
 
   .content-container {
-    width: 80%;
+    width: 70%;
     height: 400px;
     margin: 0 auto;
   }
 
   .content-left {
-    width: 700px;
+    width: 65%;
   }
 
   .content-right {
-    width: 350px;
-    margin-left: 30px;
+    width: 35%;
+    padding-left: 30px;
   }
 
   .img-size {
@@ -169,7 +169,7 @@ export default {
   }
 
   .content-right-container {
-    width: 300px;
+    width: 100%;
   }
 
   .register-title {
@@ -182,8 +182,8 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    background: #2196f3;
-    color: white;
+    background: white;
+    color: var(--commonBg);
     font-size: 20px;
   }
 
@@ -195,7 +195,7 @@ export default {
     justify-content: center;
     flex-direction: column;
     font-size: 20px;
-    color: #2196f3;
+    color: var(--commonColor)
   }
 
   .input-container {
@@ -209,7 +209,7 @@ export default {
     position: relative;
     box-sizing: border-box;
     color: inherit;
-    height: 40px;
+    height: 45px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
     box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 0px 0px,
     rgba(0, 0, 0, 0.14) 0px 0px 0px 0px,
@@ -235,6 +235,10 @@ export default {
     height: 100%;
   }
 
+  input::-webkit-input-placeholder{
+    color: #c3c3c3;
+  }
+
   .input-title {
     font-size: 16px;
     color: #777;
@@ -251,7 +255,7 @@ export default {
   .input-block-underline {
     border: none;
     box-sizing: border-box;
-    background-color: rgb(33, 150, 243);
+    background-color: var(--commonColor);
     top: -1px;
     left: 45%;
     width: 10px;

@@ -48,7 +48,10 @@ const mutations = {
     state.userInfo = newUserInfo
 
     window.localStorage.setItem("userInfo", state.userInfo)
-
+  },
+  loginOut: function () {
+    state.userInfo = undefined
+    window.localStorage.removeItem("userInfo")
   }
 }
 

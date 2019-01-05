@@ -115,7 +115,14 @@ export default {
   name: 'index',
   methods: {
     toSignUp: function () {
-      this.$router.push({path: '/signup'})
+      const userInfo = this.$store.getters.userInfo;
+
+      if(userInfo !== undefined) {
+        this.$router.push({path: '/calendar'})
+      }
+      else {
+        this.$router.push({path: '/signup'})
+      }
     }
   }
 }
@@ -139,7 +146,7 @@ export default {
     background: linear-gradient(var(--commonBg),var(--commonBg) 100%);
   }
 
-  .huge-screen:after {
+  /*.huge-screen:after {
     content: '';
     display: block;
     position: absolute;
@@ -149,7 +156,7 @@ export default {
     left: 0;
     background: url(../assets/images/index-huge-screen-back.png) repeat center center;
     opacity: .4;
-  }
+  }*/
 
   .huge-screen-title-block {
     width: 100%;
@@ -160,7 +167,7 @@ export default {
 
   .huge-screen-title {
     font-size: 70px;
-    color: white;
+    color: var(--commonBgHeaderColor);
     font-weight: 600;
     margin-bottom: 30px;
     margin-top: 70px;
@@ -174,12 +181,12 @@ export default {
 
   .huge-screen-content {
     font-size: 30px;
-    color: white;
+    color: var(--commonBgHeaderColor);
   }
 
   .huge-screen-container {
     position: relative;
-    z-index: 2;
+    /*z-index: 2;*/
   }
 
   .huge-screen-link-block {
@@ -191,14 +198,14 @@ export default {
   }
 
   .huge-screen-link {
-    font-size: 23px;
-    color: #ffffffb3;
+    font-size: 20px;
+    color: var(--commonBgHeaderColor);
     text-decoration: underline;
     cursor: pointer;
   }
 
   .huge-screen-link:hover {
-    color: white;
+    color: var(--commonBodyBg);
   }
 
   .huge-screen-login-button-block {
@@ -211,16 +218,16 @@ export default {
     width: 280px;
     height: 50px;
     font-size: 24px;
-    background: linear-gradient(45deg,#1e88e5,#2177c3 100%);
-    color: #ccc;
+    background: var(--commonBg);
+    color: var(--commonBgHeaderColor);
     font-weight: 500;
-    border: 1px solid #2388e1;
+    border: 1px solid var(--commonBodyBg);
     border-radius: 2px;
   }
 
   .huge-screen-login-button:hover {
-    color: white;
-    background: linear-gradient(45deg,#2177c3,#1e88e5 100%);
+    color: var(--commonBg);
+    background: var(--commonBodyBg);
   }
 
   .service-block {
