@@ -84,7 +84,7 @@ export default {
         },
         {
           title: '我的',
-          route: '/mine',
+          route: '/mine/chart',
           isActive: false
         }
       ],

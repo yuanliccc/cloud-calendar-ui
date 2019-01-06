@@ -16,9 +16,7 @@
       </div>
     </div>
     <div class="flex-grow flex-column content">
-      <div>
-        <h1>Hello !</h1>
-      </div>
+        <router-view></router-view>
     </div>
   </div>
 </template>
@@ -99,6 +97,7 @@
   }
 
   .content {
+    overflow-y: scroll;
   }
 
   .show-menu {

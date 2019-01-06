@@ -117,7 +117,7 @@ export default {
           }
           else {
             this.$store.commit("setUserInfo", data.data)
-            this.$router.push({path: '/mine'})
+            this.$router.push({path: '/mine/chart'})
           }
 
           console.log(res.data)
