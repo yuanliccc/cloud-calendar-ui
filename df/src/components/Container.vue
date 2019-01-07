@@ -44,6 +44,7 @@
       <!-- el-header:顶栏容器 -->
       <el-header>
         <div style="text-align:center">这里后期会有几个按钮:预览,保存</div>
+        <el-button type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">生成JSON</el-button>
       </el-header>
       <!-- el-main:主要区域容器 -->
       <el-main>
@@ -61,7 +62,7 @@
         <div class="config-tab" :class="{active: configTab == 'form'}" @click="handleConfigSelect('form')">表单属性</div>
       </el-header>
       <el-main>
-        <form-config v-show="configTab == 'form'"></form-config>
+        <form-config v-show="configTab == 'form'" :data.sync="widgetForm"></form-config>
         <widget-config v-show="configTab == 'widget'" :data="widgetFormSelect"></widget-config>
       </el-main>
       <el-main>
@@ -97,7 +98,9 @@ export default {
         list: [],
         config: {
           labelWidth: 100,
-          labelPosition: 'left'
+          labelPosition: 'left',
+          name: '',
+          method: ''
         }
       },
       widgetFormSelect: null,
@@ -116,6 +119,16 @@ export default {
     },
     handleConfigSelect (value) {
       this.configTab = value
+    },
+    handleGenerateJson () {
+      this.jsonTemplate = this.widgetForm
+      this.$axios.post('/df/dynamic/form/test', this.jsonTemplate)
+        .then(res => {
+          console.log('sucess')
+        })
+        .catch(err => {
+          console.log('error' + err)
+        })
     }
   },
   watch: {
