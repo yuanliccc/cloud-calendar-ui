@@ -98,6 +98,7 @@
 
   .content {
     overflow-y: scroll;
+    background: #fafafc;
   }
 
   .show-menu {
@@ -142,6 +143,7 @@
   }
 
   .control-menu-block {
+    background: #fafafc;
   }
 
   body {

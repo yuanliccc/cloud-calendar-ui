@@ -4,32 +4,49 @@ const echartsContainer = {
   weekEchart: function (data, echartObj, id) {
     echartObj = echarts.init(document.getElementById(id))
     echartObj.setOption({
+      title: {
+        text:data.title,
+        x:'center',
+        y:'top',
+        textAlign:'left',
+        textStyle: {
+          color: 'black',
+          fontWeight: '500',
+          align: 'center',
+          fontSize: 16
+        }
+      },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
-          type: 'cross',
+          type: 'shadow',
           crossStyle: {
             color: '#2f4554'
           }
         }
       },
+      grid: {
+        x:30,
+        y:50,
+        x2:20,
+        y2:20,
+        borderWidth:1
+      },
       toolbox: {
         feature: {
-          dataView: {show: true, readOnly: false},
-          magicType: {show: true, type: ['line', 'bar']},
-          restore: {show: true},
-          saveAsImage: {show: true}
+          saveAsImage: {show: true,title:'下载'}
         }
       },
       legend: {
-        data:['发布任务']
+        show: false
       },
       xAxis: [
         {
           type: 'category',
-          data: ['星期一','星期二','星期三','星期四','星期五','星期六','星期天'],
+          data: ['周一','周二','周三','周四','周五','周六','周天'],
           axisPointer: {
-            type: 'shadow'
+            type: 'shadow',
+            snap: false
           }
         }
       ],
@@ -39,7 +56,6 @@ const echartsContainer = {
           name: '任务数量',
           min: 0,
           max: data.maxCount,
-          interval: 50,
           axisLabel: {
             formatter: '{value}'
           }
@@ -52,7 +68,15 @@ const echartsContainer = {
           data:data.counts,
           itemStyle: {
             normal: {
-              color: '#2f4554'
+              color: function(params) {
+                // build a color map as your need.
+                var colorList = [
+                  '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
+                  '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
+                  '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+                ];
+                return colorList[params.dataIndex]
+              }
             }
           }
         }

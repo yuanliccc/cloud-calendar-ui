@@ -14,9 +14,25 @@ const dateUtil = {
    * @returns {{startDate: *|Date, endDate: *|Date}}
    */
   currentWeek: function (date) {
+    return dateUtil.week(date, 0)
+  },
+  week: function(date, num) {
     const theDay = dateUtil.theDayOfWeek(date)
-    const startDate = dateUtil.beforeDate(date, theDay - 1)
-    const endDate = dateUtil.nextDate(date, 7 - theDay)
+
+    let startDate = {}
+    let endDate = {}
+    if(num === 0) {
+      startDate = dateUtil.beforeDate(date, theDay - 1)
+      endDate = dateUtil.nextDate(date, 7 - theDay)
+    }
+    else if(num < 0) {
+      startDate = dateUtil.beforeDate(date, theDay - 1 - 7 * num)
+      endDate = dateUtil.beforeDate(date, -(7 - theDay) - 7 * num)
+    }
+    else {
+      startDate = dateUtil.nextDate(date, (7 - theDay + 1) + 7 * (num - 1))
+      endDate = dateUtil.nextDate(date, 7 - theDay + 7 * num)
+    }
 
     return {
       'startDate': startDate,
