@@ -22,6 +22,7 @@ import 'vue-awesome/icons/toggle-off'
 import 'vue-awesome/icons/sliders-h'
 import 'vue-awesome/icons/regular/image'
 import 'vue-awesome/icons/chalkboard'
+import axios from './axios'
 
 Vue.component('icon', Icon)
 
@@ -35,5 +36,6 @@ Vue.use(ElementUI, { size: 'small' })
 new Vue({
   el: '#app',
   router,
+  axios,
   render: h => h(App)
 }).$mount('#app')
