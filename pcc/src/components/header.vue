@@ -28,11 +28,11 @@
             <a class="header-item-a" v-on:click="jump(4)">{{titles[4].title}}</a>
           </div>
           <div class="right-item-common cell flex-column flex-center text-center">
-            <div class="glyphicon glyphicon-bell"></div>
+            <div class="el-icon-bell"></div>
           </div>
           <div>
             <div class="mock-user-logo right-item-common flex-column flex-center text-center" @click="showUserMenu">
-              <div class="glyphicon glyphicon-user"></div>
+              <div class="el-icon-picture-outline"></div>
             </div>
             <div class="user-menu" v-if="isShowUserMenu"
                  v-bind:class="[isShowUserMenu ? 'menuDisplay' : 'menuDisappear']">

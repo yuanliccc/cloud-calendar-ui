@@ -1,22 +1,39 @@
 <template>
   <div class="flex-row flex-center text-center minePage" ref="minePage">
-    <div class="menu flex-row flex-center" v-bind:class="[isShowMenu ? 'show-menu' : 'hide-menu']">
+    <div class="menu flex-row flex-center">
       <div class="menu-container">
-        <div class="menu-item flex-row flex-center" v-for="(item, index) in menuItems">
+        <!--<div class="menu-item flex-row flex-center" v-for="(item, index) in menuItems" @click="clickMenu(item.route)">
           <div class="flex-column flex-center menu-item-icon">
             <div class="menu-item-icon-container" v-bind:class="item.icon"></div>
           </div>
           <div class="flex-column flex-center text-center flex-grow menu-item-title">{{item.title}}</div>
           <div class="menu-item-icon"></div>
-        </div>
+        </div>-->
+        <el-menu default-active="图表统计"
+                 class="el-menu-vertical-demo"
+                 @open="controlMenuDisplay"
+                 @close="controlMenuDisplay" :collapse="isShowMenu">
+          <div class="hide-show-btn flex-column flex-center text-center" @click="controlMenuDisplay">
+            <div class="flex-row flex-center">
+              <div class="fa fa-angle-double-left flex-column flex-center" v-if="!isShowMenu"></div>
+              <div class="fa fa-angle-double-right" v-else></div>
+            </div>
+          </div>
+          <el-menu-item v-for="(item, index) in menuItems" :index=item.title :key="index" @click="clickMenu(item.route)">
+            <i v-bind:class="item.icon"></i>
+            <span slot="title">{{item.title}}</span>
+          </el-menu-item>
+        </el-menu>
       </div>
-      <div class="flex-row flex-center control-menu-block">
-        <div class="control-menu-item" v-if="isShowMenu" @click="controlMenuDisplay">隐藏</div>
-        <div class="control-menu-item" v-else @click="controlMenuDisplay">显示</div>
-      </div>
+      <!--<div class="flex-column flex-center control-menu-block">
+        <div class="control-menu-item fa fa-angle-double-left" v-if="isShowMenu" @click="controlMenuDisplay"></div>
+        <div class="control-menu-item fa fa-angle-double-right" v-else @click="controlMenuDisplay"></div>
+      </div>-->
     </div>
     <div class="flex-grow flex-column content">
+      <transition name="slide-fade">
         <router-view></router-view>
+      </transition>
     </div>
   </div>
 </template>
@@ -26,22 +43,24 @@
     name: "mine",
     data: function () {
       return {
-        isShowMenu: false,
+        isShowMenu: true,
         menuItems: [
           {
-            icon: 'glyphicon glyphicon-stats',
-            title: '图表统计'
+            icon: 'fa fa-bar-chart-o',
+            title: '图表统计',
+            route: '/mine/chart'
           },
           {
-            icon: 'glyphicon glyphicon-tasks',
-            title: '任务管理'
+            icon: 'fa fa-tasks',
+            title: '任务管理',
+            route: '/mine/schedule'
           },
           {
-            icon: 'glyphicon glyphicon-list',
+            icon: 'fa fa-list',
             title: '好友列表'
           },
           {
-            icon: 'glyphicon glyphicon-calendar',
+            icon: 'fa fa-calendar-check-o',
             title: '日程管理'
           }
         ]
@@ -59,12 +78,30 @@
     methods: {
       controlMenuDisplay: function () {
         this.isShowMenu = !this.isShowMenu
+      },
+      clickMenu: function (route) {
+        this.$router.push({path:route})
       }
     }
   }
 </script>
 
 <style scoped>
+
+  .el-menu-vertical-demo {
+    height: 100%;
+  }
+
+  .hide-show-btn {
+    height: 56px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .hide-show-btn:hover {
+    outline: 0;
+    background-color: #ecf5ff;
+  }
 
   .menu-item-title {
     text-overflow:ellipsis;
@@ -98,7 +135,7 @@
 
   .content {
     overflow-y: scroll;
-    background: #fafafc;
+    background: white;
   }
 
   .show-menu {
@@ -132,10 +169,8 @@
   .control-menu-item {
     color: var(--commonColorHover);
     cursor: pointer;
+    font-size: 20px;
     width: 20px;
-    height: 45px;
-    background: rgba(51, 51, 51, 0.55);
-    border-radius: 0 0 10px 0;
   }
 
   .control-menu-item:hover {
@@ -160,12 +195,28 @@
     box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px -1px,
     rgba(0, 0, 0, 0.14) 0px 4px 5px 0px,
     rgba(0, 0, 0, 0.12) 0px 1px 10px 0px;
-    width: 200px;
     overflow: hidden;
   }
 
   .menu {
     height: 100%;
+  }
+
+  .slide-fade{
+    position: absolute;left:0;right: 0;
+  }
+  .slide-fade-enter-active {
+    transition: all 1.2s ease;
+  }
+  .slide-fade-leave-active {
+
+    transition: all .1s cubic-bezier(2.0, 0.5, 0.8, 1.0);
+  }
+  .slide-fade-enter, .slide-fade-leave-to
+  {
+    left:0;right: 0;
+    transform: translateX(50px);
+    opacity: 0;
   }
 
 </style>

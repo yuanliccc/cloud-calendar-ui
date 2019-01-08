@@ -63,22 +63,22 @@
 
         <div class="icon-block">
           <div class="icon-container">
-            <div class="icon-div"><span class="glyphicon glyphicon-edit"></span></div>
+            <div class="icon-div"><span class="fa fa-edit"></span></div>
             <div class="icon-desc">便利的编辑</div>
           </div>
 
           <div class="icon-container">
-            <div class="icon-div"><span class="glyphicon glyphicon-equalizer"></span></div>
+            <div class="icon-div"><span class="fa fa-bar-chart"></span></div>
             <div class="icon-desc">丰富的统计</div>
           </div>
 
           <div class="icon-container">
-            <div class="icon-div"><span class="glyphicon glyphicon-cog"></span></div>
+            <div class="icon-div"><span class="fa fa-gear"></span></div>
             <div class="icon-desc">个性化配置</div>
           </div>
 
           <div class="icon-container">
-            <div class="icon-div"><span class="glyphicon glyphicon-tasks"></span></div>
+            <div class="icon-div"><span class="fa fa-server"></span></div>
             <div class="icon-desc">多样的服务</div>
           </div>
         </div>

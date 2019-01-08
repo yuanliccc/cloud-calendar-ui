@@ -44,8 +44,8 @@ const mutations = {
   hideTip: function () {
     state.showTip = false
   },
-  setUserInfo: function (newUserInfo) {
-    state.userInfo = newUserInfo
+  setUserInfo: function (state, newUseInfo) {
+    state.userInfo = newUseInfo
 
     window.localStorage.setItem("userInfo", state.userInfo)
   },

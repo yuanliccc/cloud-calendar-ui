@@ -38,7 +38,7 @@
         const data = {
           startDate: date.startDate,
           endDate: date.endDate,
-          pccUserId: 1
+          pccUserId: this.$store.getters.userInfo.id
         }
         // 请求
         this.$axios.get('/pcc/schedule/day/count', {
@@ -72,7 +72,7 @@
         const data = {
           startDate: date.startDate,
           endDate: date.endDate,
-          pccUserId: 1
+          pccUserId: this.$store.getters.userInfo.id
         }
         // 请求
         this.$axios.get('/pcc/schedule/day/count', {

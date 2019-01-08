@@ -7,6 +7,7 @@ import signup from '../components/signup.vue'
 import calendar from '../components/calendar.vue'
 import mine from '../components/mine'
 import chart from '../components/mineChart'
+import schedule from '../components/schedule'
 
 Vue.use(Router)
 
@@ -42,6 +43,10 @@ export default new Router({
             {
               path: 'chart',
               component: chart
+            },
+            {
+              path: 'schedule',
+              component: schedule
             }
           ]
         }
