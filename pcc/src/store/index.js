@@ -23,7 +23,7 @@ const getters = {
         state.userInfo = undefined
       }
       else {
-        state.userInfo = localUserInfo
+        state.userInfo = JSON.parse(localUserInfo)
       }
     }
 
@@ -47,7 +47,7 @@ const mutations = {
   setUserInfo: function (state, newUseInfo) {
     state.userInfo = newUseInfo
 
-    window.localStorage.setItem("userInfo", state.userInfo)
+    window.localStorage.setItem("userInfo", JSON.stringify(state.userInfo))
   },
   loginOut: function () {
     state.userInfo = undefined
