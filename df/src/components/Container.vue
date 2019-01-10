@@ -44,7 +44,7 @@
       <!-- el-header:顶栏容器 -->
       <el-header>
         <div style="text-align:center">这里后期会有几个按钮:预览,保存</div>
-        <el-button type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">生成JSON</el-button>
+        <el-button type="text" size="medium" icon="el-icon-tickets" @click="saveDynamicForm">保存</el-button>
       </el-header>
       <!-- el-main:主要区域容器 -->
       <el-main>
@@ -120,15 +120,22 @@ export default {
     handleConfigSelect (value) {
       this.configTab = value
     },
-    handleGenerateJson () {
+    saveDynamicForm () {
       this.jsonTemplate = this.widgetForm
-      this.$axios.post('/df/dynamic/form/test', this.jsonTemplate)
-        .then(res => {
-          console.log('sucess')
-        })
-        .catch(err => {
-          console.log('error' + err)
-        })
+
+      // 判断组件列表是否为空
+      if (this.jsonTemplate.list.length === 0) {
+
+      } else {
+        this.$axios.post('/df/dynamic/form/addDynamicForm', this.jsonTemplate)
+          .then(res => {
+            console.log('sucess')
+            // 跳转路由
+          })
+          .catch(err => {
+            console.log('error' + err)
+          })
+      }
     }
   },
   watch: {
