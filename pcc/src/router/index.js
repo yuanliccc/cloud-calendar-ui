@@ -8,6 +8,7 @@ import calendar from '../components/calendar.vue'
 import mine from '../components/mine'
 import chart from '../components/mineChart'
 import schedule from '../components/schedule'
+import friends from '../components/friends'
 
 Vue.use(Router)
 
@@ -47,6 +48,10 @@ export default new Router({
             {
               path: 'schedule',
               component: schedule
+            },
+            {
+              path: 'friends',
+              component: friends
             }
           ]
         }

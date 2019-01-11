@@ -57,7 +57,8 @@
           },
           {
             icon: 'fa fa-list',
-            title: '好友列表'
+            title: '好友列表',
+            route: '/mine/friends'
           },
           {
             icon: 'fa fa-calendar-check-o',

@@ -11,10 +11,12 @@
         <el-table
           :data="scheduleList"
           style="width: 100%">
+          <el-table-column type="selection">
+
+          </el-table-column>
           <el-table-column
-            type="selection"
             prop="content"
-            label="任务内容" class="text-center">
+            label="任务内容" width="200">
           </el-table-column>
           <el-table-column
             prop="createUserName"
