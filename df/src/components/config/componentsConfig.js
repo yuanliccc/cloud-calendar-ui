@@ -17,7 +17,7 @@ export const basicComponents = [
     type: 'checkbox',
     name: '多选框',
     options: {
-      defaultValue: [],
+      defaultValue: '',
       options: [
         {
           value: '选项1'
