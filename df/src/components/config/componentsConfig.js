@@ -17,7 +17,7 @@ export const basicComponents = [
     type: 'checkbox',
     name: '多选框',
     options: {
-      defaultValue: '',
+      defaultValue: [],
       options: [
         {
           value: '选项1'
@@ -74,7 +74,8 @@ export const basicComponents = [
     type: 'date',
     name: '日期选择器',
     options: {
-      defaultValue: ''
+      defaultValue: '',
+      format: 'yyyy-MM-dd HH:mm:ss'
     }
   }
 ]
