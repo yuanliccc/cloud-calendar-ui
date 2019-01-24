@@ -74,7 +74,8 @@ export const basicComponents = [
     type: 'date',
     name: '日期选择器',
     options: {
-      defaultValue: ''
+      defaultValue: '',
+      format: 'yyyy-MM-dd HH:mm:ss'
     }
   }
 ]
