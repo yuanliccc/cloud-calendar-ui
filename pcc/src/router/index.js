@@ -9,6 +9,7 @@ import mine from '../components/mine'
 import chart from '../components/mineChart'
 import schedule from '../components/schedule'
 import friends from '../components/friends'
+import personal from '../components/personal'
 
 Vue.use(Router)
 
@@ -54,6 +55,10 @@ export default new Router({
               component: friends
             }
           ]
+        },
+        {
+          path: 'personal',
+          component: personal
         }
       ]
     }

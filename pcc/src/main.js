@@ -7,7 +7,6 @@ import router from './router'
 import axios from './axios'
 import elementUI from './element'
 import 'font-awesome/css/font-awesome.min.css'
-import './assets/lib/bootstrap/css/bootstrap.min.css'
 import './assets/common.css'
 
 Vue.config.productionTip = false

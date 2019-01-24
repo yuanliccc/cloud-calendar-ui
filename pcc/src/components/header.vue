@@ -28,7 +28,9 @@
             <a class="header-item-a" v-on:click="jump(4)">{{titles[4].title}}</a>
           </div>
           <div class="right-item-common cell flex-column flex-center text-center">
+            <el-badge :value="12" class="item">
             <div class="el-icon-bell"></div>
+            </el-badge>
           </div>
           <div>
             <div class="mock-user-logo right-item-common flex-column flex-center text-center" @click="showUserMenu">
@@ -38,7 +40,7 @@
                  v-bind:class="[isShowUserMenu ? 'menuDisplay' : 'menuDisappear']">
               <div>
                 <div class="user-menu-item flex-column flex-center">
-                  <div class="user-menu-item-container">账号设置</div>
+                  <div class="user-menu-item-container" @click="toPersonal">账号设置</div>
                 </div>
                 <div class="user-menu-item flex-column flex-center">
                   <div class="user-menu-item-container">好友列表</div>
@@ -124,6 +126,10 @@ export default {
       this.showUserMenu()
       this.$store.commit("loginOut")
       this.$router.push({path: "/login"})
+    },
+    toPersonal: function () {
+      this.showUserMenu()
+      this.$router.push({path: "/personal"})
     }
   }
 }

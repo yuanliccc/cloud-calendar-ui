@@ -1,56 +1,78 @@
 <template>
-    <div>
-      <div>
-        <el-input
-          placeholder="请输入内容"
-          prefix-icon="el-icon-search"
-          v-model="filter">
-        </el-input>
+  <div>
+    <div class="flex-row flex-start title-block">
+      <div class="search-form flex-row flex-start">
+        <div class="title-select-block">
+          <el-select v-model="filters[0].key" placeholder="请选择">
+            <el-option
+              v-for="item in filterOpinions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+        <div>
+          <el-input
+            placeholder="请输入内容"
+            prefix-icon="el-icon-search"
+            v-model="filters[0].value">
+          </el-input>
+        </div>
+        <div>
+          <el-button type="primary" icon="el-icon-search"></el-button>
+        </div>
       </div>
-      <el-table
-        :data="friends"
-        style="width: 100%">
-        <el-table-column type="selection">
-
-        </el-table-column>
-        <el-table-column
-          prop="friendName"
-          label="任务内容">
-        </el-table-column>
-        <el-table-column
-          prop="friendRemark"
-          label="备注"
-          sortable>
-        </el-table-column>
-        <el-table-column
-          prop="friendSex"
-          label="性别"
-          sortable>
-        </el-table-column>
-        <el-table-column
-          prop="friendEmail"
-          label="邮箱地址"
-          sortable>
-        </el-table-column>
-        <el-table-column
-          label="联系电话"
-          sortable>
-          <template slot-scope="scope">
-            <i class="el-icon-phone"></i>
-            <span style="margin-left: 10px">{{ scope.row.friendPhone }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="操作"
-          width="200">
-          <template slot-scope="scope">
-            <el-button type="success" icon="el-icon-view" circle></el-button>
-            <el-button type="primary" icon="el-icon-edit" circle></el-button>
-            <el-button type="danger" icon="el-icon-delete" circle></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <div class="flex-grow flex-row flex-end title-control-block">
+        <el-button-group>
+          <el-button type="primary" icon="el-icon-plus" @click="openAddFriends">新增</el-button>
+        </el-button-group>
+      </div>
     </div>
+    <el-table
+      :data="friends"
+      style="width: 100%">
+      <el-table-column type="selection">
+
+      </el-table-column>
+      <el-table-column
+        prop="friendName"
+        label="名字">
+      </el-table-column>
+      <el-table-column
+        prop="friendRemark"
+        label="备注"
+        sortable>
+      </el-table-column>
+      <el-table-column
+        prop="friendSex"
+        label="性别"
+        sortable>
+      </el-table-column>
+      <el-table-column
+        prop="friendEmail"
+        label="邮箱地址"
+        sortable>
+      </el-table-column>
+      <el-table-column
+        label="联系电话"
+        sortable>
+        <template slot-scope="scope">
+          <i class="el-icon-phone"></i>
+          <span style="margin-left: 10px">{{ scope.row.friendPhone }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="操作"
+        width="200">
+        <template slot-scope="scope">
+          <el-button type="success" icon="el-icon-view" circle></el-button>
+          <el-button type="primary" icon="el-icon-edit" circle></el-button>
+          <el-button type="danger" icon="el-icon-delete" circle></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script>
@@ -58,8 +80,31 @@
     name: "friends",
     data: function () {
       return {
-        friends:[],
-        filter
+        friends: [],
+        filterOpinions: [
+          {
+            value: 'name',
+            label: '名字'
+          }, {
+            value: 'remark',
+            label: '备注'
+          }, {
+            value: 'phone',
+            label: '电话'
+          }, {
+            value: 'email',
+            label: '邮箱'
+          }, {
+            value: 'sex',
+            label: '性别'
+          }
+        ],
+        filters: [
+          {
+            key: '',
+            value: ''
+          }
+        ]
       }
     },
     methods: {
@@ -68,7 +113,7 @@
         // 请求
         this.$axios.get('/pcc/user/friendsDetail', {
           params: {
-            page:1,
+            page: 1,
             size: 20,
             pccUserId: this.$store.getters.userInfo.id
           }
@@ -76,7 +121,7 @@
           .then(res => {
             const data = res.data
 
-            if(data.data == null) {
+            if (data.data == null) {
               // 弹框
             }
             else {
@@ -89,6 +134,24 @@
           .catch(err => {
             this.$store.commit('hideLoading')
           })
+      },
+      openAddFriends: function () {
+        this.$prompt('请输入对方电话号码', '添加好友', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+          inputErrorMessage: '邮箱格式不正确'
+        }).then(({ value }) => {
+          this.$message({
+            type: 'success',
+            message: '你的邮箱是: ' + value
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          });
+        });
       }
     },
     mounted: function () {
@@ -99,4 +162,21 @@
 
 <style scoped>
 
+  .title-control-block {
+    margin-right: 10px;
+  }
+
+  .title-select-block {
+    width: 100px;
+  }
+
+  .search-form {
+    width: 50%;
+  }
+
+  .title-block {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 10px;
+  }
 </style>

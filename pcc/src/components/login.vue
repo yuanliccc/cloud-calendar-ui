@@ -135,6 +135,7 @@ export default {
 
   .login-input-block {
     margin-top: 5px;
+    position: relative;
   }
 
   .line-tip {
@@ -270,8 +271,7 @@ export default {
   }
 
   .login-input {
-    height: 46px;
-    width: 100%;
+    width: 90%;
     border-radius: 23px;
     border: 1px solid rgba(158, 158, 158, 0.29);
     padding: 15px 20px;

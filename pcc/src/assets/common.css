@@ -16,9 +16,22 @@
   */
 }
 
+.pointer {
+  cursor: pointer;
+}
+
+.color-red {
+  color: red;
+}
+
+.color-green {
+  color: green;
+}
+
 body {
-  background: white;
+  background: #ededed;
   -webkit-user-select: none;
+  font-size: 14px;
 }
 
 .text-right {
@@ -54,6 +67,13 @@ body {
   width: 100%;
 }
 
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
 .t-center {
   text-align: center;
 }
