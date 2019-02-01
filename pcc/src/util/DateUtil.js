@@ -84,6 +84,25 @@ const dateUtil = {
   },
   padLeftZero (str) {
     return ('00' + str).substr(str.length)
+  },
+  howMuchDays: function (year, month) {
+    let daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
+      daysInMonth[1] = 29
+    }
+    return daysInMonth[month]
+  },
+  currentMonth: function () {
+    let date = new Date()
+    let days = this.howMuchDays(date.getFullYear(), date.getMonth())
+    let day = date.getDate()
+    let startDate = this.beforeDate(date, day - 1)
+    let endDate = this.nextDate(date, days - day)
+
+    return {
+      'startDate': startDate,
+      'endDate' : endDate
+    }
   }
 }
 

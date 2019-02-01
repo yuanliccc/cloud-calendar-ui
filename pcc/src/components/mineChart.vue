@@ -1,17 +1,113 @@
 <template>
-  <div class="full flex-row flex-center flex-wrap" v-bind:onresize="resizeCharts">
-    <div class="week-chart-block">
-      <div class="week-chart-title text-left">
-        周表
-      </div>
-      <div class="flex-row flex-around">
-        <div class="week-chart">
-          <div id="week" style="width:400px;height: 400px;"></div>
+  <div class="container-block flex-row flex-center" v-bind:onresize="resizeCharts">
+    <div class="content-container">
+      <div class="history-count-block">
+        <div class="chart-title">总量统计</div>
+        <div class="chart-content">
+          <div class="flex-row flex-start">
+            <div style="width: 900px" class="flex-row flex-wrap">
+              <div class="progress-item">
+                <div  class="progress-title">相关总数</div>
+                <div>
+                  <el-progress :stroke-width="4" :width="90" type="circle" :percentage="100" status="text">
+                    {{historyCounts.relationCount}}
+                  </el-progress>
+                </div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-title">创建总数</div>
+                <div>
+                  <el-progress :stroke-width="4" :width="90" type="circle"
+                               :percentage="100" status="text" color="rgba(87, 233, 196, 0.74)">
+                    {{historyCounts.createCount}}
+                  </el-progress>
+                </div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-title">参与总数</div>
+                <div>
+                  <el-progress :stroke-width="4" :width="90"
+                               type="circle" :percentage="100" status="text" color="#a1a4d9">
+                    {{historyCounts.treatedCount + historyCounts.unTreatedCount}}
+                  </el-progress>
+                </div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-title">完成总数</div>
+                <div>
+                  <el-progress :stroke-width="4" :width="90"
+                               type="circle" :percentage="100" status="text" color="#13ce66">
+                    {{historyCounts.treatedCount}}
+                  </el-progress>
+                </div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-title">未完成总数</div>
+                <div>
+                  <el-progress :stroke-width="4" :width="90"
+                               type="circle" :percentage="100" status="text" color="rgba(232, 124, 37, 0.75)">
+                    {{historyCounts.unTreatedCount}}
+                  </el-progress>
+                </div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-title">超时完成总数</div>
+                <div>
+                  <el-progress :stroke-width="4" :width="90"
+                               type="circle" :percentage="100" status="text" color="rgba(251, 149, 140, 0.61)">
+                    {{historyCounts.treatedOutTimeCount}}
+                  </el-progress>
+                </div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-title">未完成已超时</div>
+                <div>
+                  <el-progress :stroke-width="4" :width="90"
+                               type="circle" :percentage="100" status="text" color="#ff8478">
+                    {{historyCounts.unTreatedOutTimeCount}}
+                  </el-progress>
+                </div>
+              </div>
+            </div>
+            <div style="height: 330px" class="flex-column flex-center">
+              <div id="historyRate" style="width:300px;height: 300px;margin-top: 20px;"></div>
+            </div>
+          </div>
         </div>
-        <div class="week-chart">
-          <div id="lastWeek" style="width:400px;height: 400px;"></div>
+      </div>
+      <div class="history-count-block">
+        <div class="chart-title flex-row flex-center">
+          <div>指派统计</div>
+          <div class="flex-grow flex-row flex-end">
+            <!--<el-button size="mini" plain>所有</el-button>
+            <el-button size="mini" plain>本周</el-button>
+            <el-button size="mini" plain>本月</el-button>-->
+          </div>
+        </div>
+        <div class="chart-content ">
+          <div class="flex-row flex-around text-center">
+            <div id="historyAssign" style="width:400px;height:400px; margin-top: 20px"></div>
+            <div id="historyAssigned" style="width:400px;height:400px; margin-top: 20px"></div>
+          </div>
         </div>
       </div>
+      <div class="history-count-block">
+        <div class="chart-title text-left">本周任务统计</div>
+        <div class="chart-content flex-row flex-around">
+          <div class="week-chart">
+            <div id="weekCounts" style="width:800px;height: 500px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="history-count-block">
+        <div class="chart-title text-left">本月任务统计</div>
+        <div class="chart-content flex-row flex-around">
+          <div class="week-chart">
+            <div id="monthCounts" style="width:1200px;height: 700px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-block"></div>
     </div>
   </div>
 </template>
@@ -19,122 +115,174 @@
 <script>
   import dateUtil from '../util/DateUtil'
   import echartsContainer from '../echart/AllEcharts'
-
   export default {
     name: "mineChart",
     data: function () {
       return {
         weekChart: {},
-        lastWeekChart: {}
+        lastWeekChart: {},
+        historyCounts: {},
+        historyChart: {},
+        historyAssignCounts:[],
+        historyAssignChart: {},
+        historyAssignedCounts: [],
+        historyAssignedChart: {},
+        weekCountsEchart: {},
+        monthCountsEchart: {}
       }
     },
     mounted: function () {
-      this.weekCount()
-      this.lastWeekCount()
+      this.getHistoryCount()
+      this.getHistoryAssignCount()
+      this.getHistoryAssignedCount()
+      this.getWeekCounts()
+      this.getMonthCounts()
     },
     methods: {
-      lastWeekCount: function () {
-        const date = dateUtil.week(new Date(), -1)
-        const data = {
-          startDate: date.startDate,
-          endDate: date.endDate,
-          pccUserId: this.$store.getters.userInfo.id
-        }
-        // 请求
-        this.$axios.get('/pcc/schedule/day/count', {
-          params: {
-            startDate: new Date(data.startDate).toDateString(),
-            endDate: new Date(data.endDate).toDateString(),
-            pccUserId: data.pccUserId
-          }
-        })
-          .then(res => {
-            const data = res.data
-
-            if (data.data == null) {
-              // 弹框
-            }
-            else {
-              echartsContainer.weekEchart(this.parseWeekData(data.data, date, '上周任务数量统计表'), this.lastWeekChart, 'lastWeek')
-            }
-
-            console.log(res.data)
-            this.$store.commit("hideLoading")
-          })
-          .catch(err => {
-            this.$store.commit("hideLoading")
-          })
-      },
-      weekCount: function () {
-        // 显示加载动画
-        this.$store.commit("showLoading")
-        const date = dateUtil.currentWeek(new Date())
-        const data = {
-          startDate: date.startDate,
-          endDate: date.endDate,
-          pccUserId: this.$store.getters.userInfo.id
-        }
-        // 请求
-        this.$axios.get('/pcc/schedule/day/count', {
-          params: {
-            startDate: new Date(data.startDate).toDateString(),
-            endDate: new Date(data.endDate).toDateString(),
-            pccUserId: data.pccUserId
-          }
-        })
-          .then(res => {
-            const data = res.data
-
-            if (data.data == null) {
-              // 弹框
-            }
-            else {
-              echartsContainer.weekEchart(this.parseWeekData(data.data, date, '本周任务数量统计表'), this.weekChart, 'week')
-            }
-
-            console.log(res.data)
-            this.$store.commit("hideLoading")
-          })
-          .catch(err => {
-            this.$store.commit("hideLoading")
-          })
-      },
-      parseWeekData: function (data, date, title) {
-        let result = {
-          data: [],
-          maxCount: 0,
-          counts: [],
-        };
-        let index = new Date(date.startDate)
-        while (index <= date.endDate) {
-          result.data.push({time: index.format('YYYY-MM-dd'), count: 0})
-          index = dateUtil.nextDate(index, 1)
-        }
-        var maxCount = 0;
-        for (var i = 0; i < result.data.length; i++) {
-          for (var j = 0; j < data.length; j++) {
-            if (result.data[i].time === data[j].create_time) {
-              result.data[i].count = data[j].count
-              break
-            }
-          }
-          result.counts[i] = result.data[i].count
-          if (maxCount < result.data[i].count) {
-            maxCount = result.data[i].count
-          }
-        }
-
-        result.maxCount = maxCount
-
-        result.title = title
-        return result;
-      },
       resizeCharts: function () {
         this.charts.resize()
+      },
+      getHistoryCount: function () {
+        this.$store.commit('showLoading')
+        this.$axios.get('/pcc/schedule/history/count',{params: {pccUserId: this.$store.getters.userInfo.id}})
+          .then(res => {
+            this.historyCounts = res.data.data
+            this.showHistoryChart(res.data.data)
+          })
+          .catch(err => {
+            this.$message.error('获取总量统计失败，' + this.$store.getters.errMessage)
+          })
+        this.$store.commit('hideLoading')
+      },
+      showHistoryChart: function (historyCounts) {
+        let data = [
+          {value:historyCounts.treatedCount - historyCounts.treatedOutTimeCount, name:'按时完成'},
+          {value:historyCounts.treatedOutTimeCount, name: '超时完成'},
+          {value: historyCounts.unTreatedOutTimeCount, name:'已超时未完成'},
+          {value: historyCounts.unTreatedCount - historyCounts.unTreatedOutTimeCount, name:'未超时未完成'}
+        ]
+        echartsContainer.historyRateEchart(data, this.historyChart, 'historyRate')
+      },
+      getHistoryAssignCount: function () {
+        this.$store.commit('showLoading')
+        this.$axios.get('/pcc/schedule/history/assign/count',{params: {pccUserId: this.$store.getters.userInfo.id}})
+          .then(res => {
+            this.historyAssignCounts = res.data.data
+            this.showHistoryAssignChart(res.data.data)
+            console.log(res.data.data)
+          })
+          .catch(err => {
+            this.$message.error('获取指派统计数据失败，' + this.$store.getters.errMessage)
+          })
+        this.$store.commit('hideLoading')
+      },
+      showHistoryAssignChart: function (historyAssignCount) {
+        let data = {}
+        data.seriesTitle = '指派给他人的任务数（占比）'
+        data.x = []
+        data.series = []
+        for(var i = 0; i < historyAssignCount.length; i++) {
+          data.x.push(historyAssignCount[i].name)
+          let item = {}
+          item.value = historyAssignCount[i].count
+          item.name = historyAssignCount[i].name
+          data.series.push(item)
+        }
+        echartsContainer.historyAssignEchart(data, this.historyAssignChart, 'historyAssign')
+      },
+      getHistoryAssignedCount: function () {
+        this.$store.commit('showLoading')
+        this.$axios.get('/pcc/schedule/history/assigned/count',{params: {pccUserId: this.$store.getters.userInfo.id}})
+          .then(res => {
+            this.historyAssignedCounts = res.data.data
+            this.showHistoryAssignedChart(res.data.data)
+            console.log(res.data.data)
+          })
+          .catch(err => {
+            this.$message.error('获取被指派统计数据失败，' + this.$store.getters.errMessage)
+          })
+        this.$store.commit('hideLoading')
+      },
+      showHistoryAssignedChart: function (historyAssignedCount) {
+        let data = {}
+        data.seriesTitle = '被指派的任务数（占比）'
+        data.x = []
+        data.series = []
+        for(var i = 0; i < historyAssignedCount.length; i++) {
+          data.x.push(historyAssignedCount[i].name)
+          let item = {}
+          item.value = historyAssignedCount[i].count
+          item.name = historyAssignedCount[i].name
+          data.series.push(item)
+        }
+        echartsContainer.historyAssignEchart(data, this.historyAssignedChart, 'historyAssigned')
+      },
+      getWeekCounts: function () {
+        this.$store.commit("showLoading")
+        const date = dateUtil.currentWeek(new Date())
+        const params = {
+          pccUserId: this.$store.getters.userInfo.id,
+          startDate: new Date(date.startDate).toDateString(),
+          endDate: new Date(date.endDate).toDateString()
+        }
+        this.$axios.get('/pcc/schedule/day/counts', {params: params})
+          .then(res => {
+            console.log(res.data.data)
+            this.showWeekCountsChart(res.data.data)
+          })
+          .catch(err => {
+            this.$message.error('获取周统计数据失败，' + this.$store.getters.errMessage)
+          })
+        this.$store.commit("hideLoading")
+      },
+      showWeekCountsChart: function (data) {
+        let re = {}
+        re.publish = []
+        re.accept = []
+        re.complete = []
+
+        for(var i = 0; i < data.length; i++) {
+          re.publish.push(data[i].publish)
+          re.accept.push(data[i].accept)
+          re.complete.push(data[i].complete)
+        }
+        echartsContainer.weekCountsEchart(re, this.weekCountsEchart, 'weekCounts')
+      },
+      getMonthCounts: function () {
+        this.$store.commit("showLoading")
+        const date = dateUtil.currentMonth()
+        const params = {
+          pccUserId: this.$store.getters.userInfo.id,
+          startDate: new Date(date.startDate).toDateString(),
+          endDate: new Date(date.endDate).toDateString()
+        }
+        this.$axios.get('/pcc/schedule/day/counts', {params: params})
+          .then(res => {
+            console.log(res.data.data)
+            this.showMonthCountsChart(res.data.data)
+          })
+          .catch(err => {
+            this.$message.error('获取周统计数据失败，' + this.$store.getters.errMessage)
+          })
+        this.$store.commit("hideLoading")
+      },
+      showMonthCountsChart: function (data) {
+        let re = {}
+        re.publish = []
+        re.accept = []
+        re.complete = []
+        re.time = []
+
+        for(var i = 0; i < data.length; i++) {
+          re.publish.push(data[i].publish)
+          re.accept.push(data[i].accept)
+          re.complete.push(data[i].complete)
+          re.time.push(data[i].time.substring(8) + ' 日')
+        }
+        echartsContainer.monthCountsEchart(re, this.monthCountsEchart, 'monthCounts')
       }
     }
   }
-
   Date.prototype.format = function (formatStr) {
     var str = formatStr;
     var Week = ['日', '一', '二', '三', '四', '五', '六'];
@@ -162,6 +310,47 @@
 </script>
 
 <style scoped>
+
+  .bottom-block {
+    height: 30px;
+  }
+
+  .chart-content {
+    border: 1px solid #e5e5e5;
+    background: white;
+  }
+
+  .container-block {
+    background: whitesmoke;
+  }
+
+  .history-count-block {
+    margin-top: 20px;
+  }
+
+  .progress-item {
+    width: 220px;
+    height: 150px;
+  }
+
+  .progress-title {
+    padding-top: 20px;
+    padding-bottom: 10px;
+    color: gray;
+  }
+
+  .has-filter-chart-title {
+    margin-bottom: 5px;
+  }
+
+  .chart-title {
+    margin-bottom: 12px;
+    text-align: left;
+  }
+
+  .content-container {
+    width: 1200px;
+  }
 
   .week-chart-item-title {
     margin-bottom: 8px;

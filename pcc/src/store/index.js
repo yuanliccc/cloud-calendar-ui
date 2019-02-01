@@ -5,7 +5,8 @@ Vue.use(Vuex)
 const state = {
   showLoading: false,
   showTip: false,
-  userInfo: undefined
+  userInfo: undefined,
+  errMessage: '程序员小袁正在处理，请稍后重试'
 }
 
 const getters = {
@@ -16,7 +17,6 @@ const getters = {
     return state.showTip
   },
   userInfo(userInfo) {
-
     if(!state.userInfo) {
       const localUserInfo = window.localStorage.getItem("userInfo")
       if(localUserInfo === null) {
@@ -26,8 +26,10 @@ const getters = {
         state.userInfo = JSON.parse(localUserInfo)
       }
     }
-
     return state.userInfo
+  },
+  errMessage: function (errMessage) {
+    return state.errMessage
   }
 }
 

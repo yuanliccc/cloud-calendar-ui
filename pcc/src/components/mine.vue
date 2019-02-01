@@ -136,7 +136,7 @@
 
   .content {
     overflow-y: scroll;
-    background: white;
+    background: whitesmoke;
   }
 
   .show-menu {

@@ -34,7 +34,8 @@
           </div>
           <div>
             <div class="mock-user-logo right-item-common flex-column flex-center text-center" @click="showUserMenu">
-              <div class="el-icon-picture-outline"></div>
+              <div v-if="!userInfo.url" class="el-icon-picture-outline"></div>
+              <img v-else class="full half-radius" :src="'/pcc/file/imgId?pccFileId=' + userInfo.pcc_file_id"/>
             </div>
             <div class="user-menu" v-if="isShowUserMenu"
                  v-bind:class="[isShowUserMenu ? 'menuDisplay' : 'menuDisappear']">
@@ -237,7 +238,7 @@ export default {
   }
 
   .mock-user-logo {
-    border: 1px solid rgba(255, 255, 255, 0.23);
+    border: 1px solid rgba(14, 14, 14, 0.23);
     border-radius: 25px;
     background: rgba(0, 150, 136, 0.34);
     cursor: pointer;
