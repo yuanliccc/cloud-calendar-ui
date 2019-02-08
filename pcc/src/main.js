@@ -5,7 +5,7 @@ import App from './App'
 import store from './store'
 import router from './router'
 import axios from './axios'
-import './assets/lib/bootstrap/css/bootstrap.min.css'
+import bootstrap from './assets/lib/bootstrap/css/bootstrap.min.css'
 import './assets/common.css'
 
 Vue.config.productionTip = false
@@ -16,6 +16,7 @@ new Vue({
   router,
   store,
   axios,
+  bootstrap,
   components: { App },
   template: '<App/>'
 })

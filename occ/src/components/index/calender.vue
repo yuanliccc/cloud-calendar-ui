@@ -1,48 +1,39 @@
 <template>
-  <div>
-    <div >
-      <div class="head">
-        <div></div>
-
+  <div class="calender col-lg-12">
+    <div class="guide">
+      <div class="today">
+        <button @click="toDay" class="nextBt">
+          今天
+        </button>
       </div>
-      <div class="calender col-lg-12">
-        <div class="guide">
-          <div class="today">
-            <button @click="toDay" class="nextBt">
-              今天
-            </button>
-          </div>
-          <div class="toCenter">
-            <button @click="preMonth" class="nextBt"><</button>
-            <select  v-model="selectDay.year" @change="initDay" class="sel">
-              <option v-for="item in selYear">{{item}}</option>
-            </select>
-            <select  v-model="selectDay.month" @change="initDay" class="sel">
-              <option v-for="item in selMonth">{{item}}</option>
-            </select>
-            <button @click="nextMonth" class="nextBt">></button>
-          </div>
-        </div>
+      <div class="toCenter">
+        <button @click="preMonth" class="nextBt"><</button>
+        <select  v-model="selectDay.year" @change="initDay" class="sel">
+          <option v-for="item in selYear">{{item}}</option>
+        </select>
+        <select  v-model="selectDay.month" @change="initDay" class="sel">
+          <option v-for="item in selMonth">{{item}}</option>
+        </select>
+        <button @click="nextMonth" class="nextBt">></button>
+      </div>
+    </div>
 
-        <div v-for="(item, index) in days" class="calender_day" >
-          {{item}}
-        </div>
-        <div v-for="(item, index) in list" class="calender_day" @click="changeDay(item)">
-          <span v-if="item == today.day" class="red">{{item}}</span>
-          <span v-else>{{item}}</span>
-          <div class="calender_detail">
+    <div v-for="(item, index) in days" class="calender_day" >
+      {{item}}
+    </div>
+    <div v-for="(item, index) in list" class="calender_day" @click="changeDay(item)">
+      <span v-if="item == today.day" class="red">{{item}}</span>
+      <span v-else>{{item}}</span>
+      <div class="calender_detail">
 
-          </div>
-        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
-  export default {
-    name: 'index',
+  export default{
+    name: 'calender',
     data: function () {
       return {
         today: {
@@ -62,12 +53,12 @@
         list: [1,2,3,4,5,6,7,8,9,10],
         days:["日","一","二","三","四","五","六"],
         selYear:[],
-        selMonth:[1,2,3,4,5,6,7,8,9,10,11,12]
+        selMonth:[1,2,3,4,5,6,7,8,9,10,11,12],
       }
     },
     mounted: function () {
       for(let i = 1980; i < 2100;i++)
-          this.selYear.push(i);
+        this.selYear.push(i);
       this.getToday();
       this.initDay();
 
@@ -94,7 +85,6 @@
         this.selectDay.year = date.getFullYear();
       },
       initDay: function() {
-
         let startDay = new Date(this.selectDay.year + "-" + this.selectDay.month + "-01");
         this.list = [];
         for (let i = 0; i < startDay.getDay(); i++) {
@@ -102,24 +92,23 @@
         }
         let isRunNian = ((this.selectDay.year % 4 == 0) && (this.selectDay.year % 100 != 0)) || (this.selectDay.year % 400 == 0);
         if(this.selectDay.month == 2 && isRunNian)
-            this.months[1] = 29;
+          this.months[1] = 29;
         else
-            this.months[1] = 28;
+          this.months[1] = 28;
 
         for(let i = 1; i <= this.months[this.selectDay.month - 1]; i++)
           this.list.push(i);
-
-        console.log(startDay);
+        console.log(this.list);
       },
       nextMonth: function(){
-          if(this.selectDay.month == 12){
-              this.selectDay.month = 1;
-              this.selectDay.year += 1;
-              this.selectDay.day = 1;
-          }else
-              this.selectDay.month += 1;
+        if(this.selectDay.month == 12){
+          this.selectDay.month = 1;
+          this.selectDay.year += 1;
+          this.selectDay.day = 1;
+        }else
+          this.selectDay.month += 1;
 
-          this.initDay();
+        this.initDay();
       },
       preMonth: function(){
         if(this.selectDay.month == 1){
@@ -132,23 +121,20 @@
         this.initDay();
       },
       changeDay: function(item){
-          if(item != '')
-            this.today.day = item;
+        if(item != '')
+          this.today.day = item;
       },
     }
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  @import "../assets/lib/bootstrap/css/bootstrap.css";
+  @import url('../../assets/lib/bootstrap/css/bootstrap.css');
   body{
     border: none;
     margin: 0px;
   }
-  .head{
-    height: 100px;
-  }
+
   .today{
     float: left;
   }
