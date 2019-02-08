@@ -5,6 +5,11 @@ import pcc from '../components/pcc.vue'
 import login from '../components/login.vue'
 import signup from '../components/signup.vue'
 import calendar from '../components/calendar.vue'
+import mine from '../components/mine'
+import chart from '../components/mineChart'
+import schedule from '../components/schedule'
+import friends from '../components/friends'
+import personal from '../components/personal'
 
 Vue.use(Router)
 
@@ -32,6 +37,28 @@ export default new Router({
         {
           path: 'calendar',
           component: calendar
+        },
+        {
+          path: 'mine',
+          component: mine,
+          children: [
+            {
+              path: 'chart',
+              component: chart
+            },
+            {
+              path: 'schedule',
+              component: schedule
+            },
+            {
+              path: 'friends',
+              component: friends
+            }
+          ]
+        },
+        {
+          path: 'personal',
+          component: personal
         }
       ]
     }

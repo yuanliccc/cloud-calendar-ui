@@ -5,7 +5,8 @@ Vue.use(Vuex)
 const state = {
   showLoading: false,
   showTip: false,
-  userInfo: undefined
+  userInfo: undefined,
+  errMessage: '程序员小袁正在处理，请稍后重试'
 }
 
 const getters = {
@@ -16,18 +17,19 @@ const getters = {
     return state.showTip
   },
   userInfo(userInfo) {
-
     if(!state.userInfo) {
       const localUserInfo = window.localStorage.getItem("userInfo")
       if(localUserInfo === null) {
         state.userInfo = undefined
       }
       else {
-        state.userInfo = localUserInfo
+        state.userInfo = JSON.parse(localUserInfo)
       }
     }
-
     return state.userInfo
+  },
+  errMessage: function (errMessage) {
+    return state.errMessage
   }
 }
 
@@ -44,11 +46,14 @@ const mutations = {
   hideTip: function () {
     state.showTip = false
   },
-  setUserInfo: function (newUserInfo) {
-    state.userInfo = newUserInfo
+  setUserInfo: function (state, newUseInfo) {
+    state.userInfo = newUseInfo
 
-    window.localStorage.setItem("userInfo", state.userInfo)
-
+    window.localStorage.setItem("userInfo", JSON.stringify(state.userInfo))
+  },
+  loginOut: function () {
+    state.userInfo = undefined
+    window.localStorage.removeItem("userInfo")
   }
 }
 

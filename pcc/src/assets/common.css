@@ -3,7 +3,11 @@
   --commonBgHeaderHover: #acacac;
   --commonBgHeaderColor: #a7a7a7;
   --commonBgHeaderActive: #d6d6d6;
+  --commonBodyBg:#f2f2f2;
   --commonOtherBg:rgba(51, 51, 51, 0.55);
+  --commonColor: #6d6d6d;
+  --commonColorHover: #555555;
+  --commonColorUnActive: #bfbfbf;
   /*
   --commonBg: rgb(33, 150, 243);
   --commonBgHeaderHover: #1e88e5;
@@ -12,12 +16,38 @@
   */
 }
 
+.pointer {
+  cursor: pointer;
+}
+
+.half-radius {
+  border-radius: 50%;
+}
+
+.color-red {
+  color: red;
+}
+
+.color-green {
+  color: green;
+}
+
 body {
-  background: #f2f2f2;
+  background: #ededed;
+  -webkit-user-select: none;
+  font-size: 14px;
+}
+
+.text-right {
+  text-align: right;
 }
 
 .flex-start {
   justify-content: flex-start;
+}
+
+.flex-between {
+  justify-content: space-between;
 }
 
 .flex-end {
@@ -37,12 +67,27 @@ body {
   height: 100%;
 }
 
+.full-width {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
 .t-center {
   text-align: center;
 }
 
 .flex-center {
   justify-content: center;
+}
+
+.flex-around {
+  justify-content: space-around;
 }
 
 .flex-row {
@@ -58,7 +103,7 @@ body {
 .normal-line {
   width: 100%;
   height: 1px;
-  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
 }
 
 .normal-margin-left {
@@ -73,7 +118,7 @@ body {
   width: 80%;
   height: 40px;
   border-radius: 20px;
-  background: rgba(33, 150, 243, 0.85);
+  background: var(--commonColor);
   color: white;
   font-size: 16px;
   border: 0;
@@ -81,11 +126,11 @@ body {
 }
 
 .submit-btn:hover {
-  background: #2196f3;
+  background: var(--commonColorHover);
 }
 
 .submit-btn-unactive {
-  background: rgba(33, 150, 243, 0.46);
+  background: var(--commonColorUnActive);
   width: 80%;
   height: 40px;
   border-radius: 20px;

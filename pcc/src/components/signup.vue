@@ -3,15 +3,15 @@
       <div class="content flex-column flex-center">
         <div class="content-container flex-row flex-center">
           <div class="content-left">
-            <div id="carousel-example-generic" class="carousel slide full" data-ride="carousel">
-              <!-- Indicators -->
-              <!--<ol class="carousel-indicators">
+            <!--<div id="carousel-example-generic" class="carousel slide full" data-ride="carousel">
+              &lt;!&ndash; Indicators &ndash;&gt;
+              &lt;!&ndash;<ol class="carousel-indicators">
                   <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
                   <li data-target="#carousel-example-generic" data-slide-to="1"></li>
                   <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-              </ol>-->
+              </ol>&ndash;&gt;
 
-              <!-- Wrapper for slides -->
+              &lt;!&ndash; Wrapper for slides &ndash;&gt;
               <div class="carousel-inner" role="listbox">
                 <div class="item active img-item">
                   <img class="img-size" src="../assets/images/signup/one.jpg" alt="...">
@@ -21,7 +21,7 @@
                 </div>
               </div>
 
-              <!-- Controls -->
+              &lt;!&ndash; Controls &ndash;&gt;
               <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
                 <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
@@ -30,7 +30,13 @@
                 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
               </a>
-            </div>
+            </div>-->
+
+            <el-carousel class="full" indicator-position="outside">
+              <el-carousel-item class="img-block" v-for="(item, index) in images" :key="index">
+                <img class="full" v-bind:src="item.src">
+              </el-carousel-item>
+            </el-carousel>
           </div>
           <div class="content-right flex-row">
             <div class="content-right-container">
@@ -47,9 +53,9 @@
                       </div>-->
                       <div class="input-block flex-row">
                         <div class="input-icon-block">
-                          <span class="glyphicon glyphicon-user"></span>
+                          <span class="fa fa-user"></span>
                         </div>
-                        <input type="text" value="" class="input-style" placeholder="username">
+                        <input type="text" value="" class="input-style" v-model="user.name" placeholder="username">
                       </div>
                     </div>
 
@@ -59,9 +65,9 @@
                       </div>-->
                       <div class="input-block flex-row">
                         <div class="input-icon-block">
-                          <span class="glyphicon glyphicon-envelope"></span>
+                          <span class="fa fa-envelope"></span>
                         </div>
-                        <input type="text" value="" class="input-style" placeholder="email">
+                        <input type="text" value="" class="input-style" v-model="user.email" placeholder="email">
                       </div>
                     </div>
 
@@ -71,9 +77,9 @@
                       </div>-->
                       <div class="input-block flex-row">
                         <div class="input-icon-block">
-                          <span class="glyphicon glyphicon-earphone"></span>
+                          <span class="fa fa-phone"></span>
                         </div>
-                        <input type="text" value="" class="input-style" placeholder="phone">
+                        <input type="text" value="" class="input-style" v-model="user.phone" placeholder="phone">
                       </div>
                     </div>
                     <div class="input-item">
@@ -82,9 +88,9 @@
                       </div>-->
                       <div class="input-block flex-row">
                         <div class="input-icon-block">
-                          <span class="glyphicon glyphicon-lock"></span>
+                          <span class="fa fa-lock"></span>
                         </div>
-                        <input type="password" value="" class="input-style" placeholder="password">
+                        <input type="password" value="" class="input-style" v-model="user.password" placeholder="password">
                       </div>
                     </div>
                     <div class="input-item">
@@ -93,9 +99,9 @@
                       </div>-->
                       <div class="input-block flex-row">
                         <div class="input-icon-block">
-                          <span class="glyphicon glyphicon-lock"></span>
+                          <span class="fa fa-lock"></span>
                         </div>
-                        <input type="password" value="" class="input-style" placeholder="verify password">
+                        <input type="password" value="" class="input-style" v-model="verifyPassword" placeholder="verify password">
                       </div>
                     </div>
 
@@ -110,7 +116,7 @@
                     </div>
 
                     <div class="submit-block flex-row flex-center">
-                      <button class="submit-btn">submit</button>
+                      <button class="submit-btn" @click="signUp">submit</button>
                     </div>
                   </div>
                 </div>
@@ -124,11 +130,57 @@
 
 <script>
 export default {
-  name: 'signUp'
+  name: 'signUp',
+  data: function() {
+    return {
+      images: [
+        {
+          src:require('../assets/images/signup/one.jpg')
+        },
+        {
+          src:require('../assets/images/signup/two.jpg')
+        }
+      ],
+      user: {
+        name: null,
+        email: null,
+        phone: null,
+        password: null
+      },
+      verifyPassword: null
+    }
+  },
+  methods: {
+    signUp: function () {
+      if(this.verifyPassword === this.user.password) {
+        this.addUser()
+      }
+      else {
+        // 弹框
+      }
+    },
+    addUser: function () {
+      // 显示加载动画
+      this.$store.commit("showLoading")
+      // 请求
+      this.$axios.post('/pcc/user',this.user)
+        .then(res => {
+          this.$router.push({path: '/login'})
+          this.$store.commit("hideLoading")
+        })
+        .catch(err => {
+          this.$store.commit("hideLoading")
+        })
+    }
+  }
 }
 </script>
 
 <style scoped>
+
+  .img-block {
+    height: 350px;
+  }
 
   .line-tip {
     margin-left: 10px;
@@ -144,18 +196,18 @@ export default {
   }
 
   .content-container {
-    width: 80%;
+    width: 70%;
     height: 400px;
     margin: 0 auto;
   }
 
   .content-left {
-    width: 700px;
+    width: 65%;
   }
 
   .content-right {
-    width: 350px;
-    margin-left: 30px;
+    width: 35%;
+    padding-left: 30px;
   }
 
   .img-size {
@@ -169,7 +221,7 @@ export default {
   }
 
   .content-right-container {
-    width: 300px;
+    width: 100%;
   }
 
   .register-title {
@@ -182,8 +234,8 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    background: #2196f3;
-    color: white;
+    background: white;
+    color: var(--commonBg);
     font-size: 20px;
   }
 
@@ -195,7 +247,7 @@ export default {
     justify-content: center;
     flex-direction: column;
     font-size: 20px;
-    color: #2196f3;
+    color: var(--commonColor)
   }
 
   .input-container {
@@ -209,7 +261,7 @@ export default {
     position: relative;
     box-sizing: border-box;
     color: inherit;
-    height: 40px;
+    height: 45px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
     box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 0px 0px,
     rgba(0, 0, 0, 0.14) 0px 0px 0px 0px,
@@ -235,6 +287,10 @@ export default {
     height: 100%;
   }
 
+  input::-webkit-input-placeholder{
+    color: #c3c3c3;
+  }
+
   .input-title {
     font-size: 16px;
     color: #777;
@@ -251,7 +307,7 @@ export default {
   .input-block-underline {
     border: none;
     box-sizing: border-box;
-    background-color: rgb(33, 150, 243);
+    background-color: var(--commonColor);
     top: -1px;
     left: 45%;
     width: 10px;
