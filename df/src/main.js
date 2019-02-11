@@ -23,6 +23,7 @@ import 'vue-awesome/icons/sliders-h'
 import 'vue-awesome/icons/regular/image'
 import 'vue-awesome/icons/chalkboard'
 import axios from './axios'
+import './assets/common.css'
 
 Vue.component('icon', Icon)
 

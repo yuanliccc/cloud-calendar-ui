@@ -76,7 +76,7 @@ import Draggable from 'vuedraggable'
 import WidgetForm from './WidgetForm'
 import FormConfig from './FormConfig'
 import WidgetConfig from './WidgetConfig'
-import {basicComponents, layoutComponents} from './config/componentsConfig.js'
+import {basicComponents, layoutComponents} from '../config/componentsConfig.js'
 export default {
   name: 'df-container',
   components: {
@@ -150,5 +150,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../styles/index.scss';
+@import '../../styles/form-editor/index.scss';
 </style>
