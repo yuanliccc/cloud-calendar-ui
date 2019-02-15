@@ -2,6 +2,10 @@ body {
   margin: 0px;
 }
 
+body::-webkit-scrollbar {
+  display: none;
+}
+
 .color-red {
   color: red;
 }
