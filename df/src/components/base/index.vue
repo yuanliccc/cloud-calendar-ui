@@ -176,15 +176,15 @@ export default {
   }
 
   .card-title-1 {
-    background-image: url(../assets/images/card-mi.jpg);
+    background-image: url(../../assets/images/card-mi.jpg);
   }
 
   .card-title-2 {
-    background-image: url(../assets/images/card-kai.jpg);
+    background-image: url(../../assets/images/card-kai.jpg);
   }
 
   .card-title-3 {
-    background-image: url(../assets/images/card-book.jpg);
+    background-image: url(../../assets/images/card-book.jpg);
   }
 
   .info-card-container {

@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import DfHeader from './DfHeader.vue'
+import DfHeader from './base/DfHeader.vue'
 export default {
   name: 'df',
   components: {
