@@ -4,7 +4,10 @@ import index from '../components/base/index.vue'
 import df from '../components/df.vue'
 import signup from '../components/base/Signup.vue'
 import login from '../components/base/Login.vue'
-// import Home from '../components/form-editor/Home.vue'
+import main from '../components/bms/Main.vue'
+import personal from '../components/bms/Personal.vue'
+import dfList from '../components/bms/DynamicFormList.vue'
+import test from '../components/form-editor/Container.vue'
 
 Vue.use(Router)
 
@@ -31,6 +34,31 @@ export default new Router({
           name: 'signup',
           meta: {index: 2},
           component: signup
+        },
+        {
+          path: 'main',
+          component: main,
+          meta: {index: 3},
+          children: [
+            {
+              path: 'personal',
+              name: 'personal',
+              meta: {index: 4},
+              component: personal
+            },
+            {
+              path: 'dfList',
+              name: 'dfList',
+              meta: {index: 5},
+              component: dfList
+            }
+          ]
+        },
+        {
+          path: 'test',
+          name: 'test',
+          meta: {index: 6},
+          component: test
         }
       ]
     }

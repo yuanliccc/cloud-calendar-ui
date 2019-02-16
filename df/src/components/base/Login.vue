@@ -9,7 +9,9 @@
       <div class="login-container-block">
         <div class="login-container flex-row flex-center">
           <div class="login-container-left">
-            1
+            <div class="login-img-item">
+              <img class="img-size" src="../../assets/images/login-right-bg.jpg"/>
+            </div>
           </div>
           <div class="login-container-line">
           </div>
@@ -17,10 +19,10 @@
             <div class="login-container-right-context flex-column">
               <el-form>
                 <div class="input-item-block">
-                  <el-input class="input-style" placeholder="用户名"></el-input>
+                  <el-input class="input-style" placeholder="邮箱或手机号" v-model="loginUserInfo.identityCode"></el-input>
                 </div>
                 <div class="input-item-block">
-                  <el-input class="input-style" placeholder="密码"></el-input>
+                  <el-input class="input-style" type="password" placeholder="密码" v-model="loginUserInfo.verifyPassword"></el-input>
                 </div>
                 <div class="prompt-block flex-row flex-space-between">
                   <div class="prompt-left flex-row">
@@ -31,15 +33,15 @@
                     <div class="remark-info">不是自己的电脑上不要勾选此项</div>
                   </div>
                   <div class="prompt-right">
-                    <router-link to="/">忘记密码</router-link>
+                    <router-link to="/">忘记密码？</router-link>
                   </div>
                 </div>
                 <div class="button-block flex-row flex-space-between">
                   <div class="left-button-block">
-                    <button class="login-page-button blue-button left-button">登录</button>
+                    <button class="login-page-button blue-button left-button" @click="login()">登录</button>
                   </div>
                   <div class="right-button-block">
-                    <button class="login-page-button white-button right-button">注册</button>
+                    <button class="login-page-button white-button right-button" @click="jump('signup')">注册</button>
                   </div>
                 </div>
               </el-form>
@@ -55,7 +57,30 @@ export default {
   name: 'login',
   data () {
     return {
-      test: null
+      test: null,
+      loginUserInfo: {
+        identityCode: null,
+        verifyPassword: null
+      }
+    }
+  },
+  methods: {
+    jump: function (path) {
+      this.$router.push({path: path})
+    },
+    login: function () {
+      this.$axios.post('/df/user/login', this.loginUserInfo)
+        .then(res => {
+          const data = res.data
+          if (data.data == null) {
+            alert('账号或密码错误')
+          } else {
+            alert('跳转路由')
+          }
+        })
+        .catch(err => {
+          console.log('err: ' + err)
+        })
     }
   }
 }
@@ -99,6 +124,16 @@ export default {
   .login-container-right {
     width: 480px;
     padding-top: 45px;
+  }
+
+  .login-img-item {
+    padding-top: 60px;
+  }
+
+  .img-size {
+    width: 380px;
+    display: flex;
+    margin:0 auto;
   }
 
   .input-item-block {

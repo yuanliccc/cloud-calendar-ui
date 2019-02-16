@@ -10,22 +10,22 @@
         <div class="signup-container flex-column">
           <el-form>
             <div class="input-item-block">
-              <el-input class="input-style" placeholder="用户名"></el-input>
+              <el-input class="input-style" placeholder="昵称" v-model="user.name"></el-input>
             </div>
             <div class="input-item-block">
-              <el-input class="input-style" placeholder="密码"></el-input>
+              <el-input class="input-style" type="password" placeholder="密码" v-model="user.password"></el-input>
             </div>
             <div class="input-item-block">
-              <el-input class="input-style" placeholder="重复密码"></el-input>
+              <el-input class="input-style" type="password" placeholder="重复密码" v-model="verifyPassword"></el-input>
             </div>
             <div class="input-item-block">
-              <el-input class="input-style" placeholder="手机"></el-input>
+              <el-input class="input-style" placeholder="手机" v-model="user.phone"></el-input>
             </div>
             <div class="input-item-block">
-              <el-input class="input-style" placeholder="邮箱"></el-input>
+              <el-input class="input-style" type="email" placeholder="邮箱" v-model="user.email"></el-input>
             </div>
             <div class="input-item-block">
-              <button class="signup-button">立即创建</button>
+              <button class="signup-button" @click="submit()">立即创建</button>
             </div>
             <div class="to-login-block">
               <router-link to="/login">已有账号,直接登录></router-link>
@@ -47,7 +47,26 @@ export default {
         email: null,
         phone: null,
         password: null
+      },
+      verifyPassword: null
+    }
+  },
+  methods: {
+    submit: function () {
+      if (this.user.password === this.verifyPassword) {
+        this.addUser()
+      } else {
+        alert('两次输入的密码不一致')
       }
+    },
+    addUser: function () {
+      this.$axios.post('/df/user', this.user)
+        .then(res => {
+          this.$router.push({path: 'login'})
+        })
+        .catch(err => {
+          console.log('error' + err)
+        })
     }
   }
 }
