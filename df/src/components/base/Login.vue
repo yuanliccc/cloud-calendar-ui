@@ -90,6 +90,7 @@ export default {
     padding-top: 50px;
     padding-bottom: 100px;
     background: #ffeeee40;
+    min-height: 425px;
   }
 
   .login-title-line {

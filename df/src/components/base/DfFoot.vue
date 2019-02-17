@@ -25,11 +25,17 @@ export default {
 </script>
 <style>
   .foot-block {
-    margin-top: 30px;
-    padding-bottom: 15px;
     border-top:1px solid #3333;
-    padding-top: 15px;
     bottom: 0px;
+    min-height: 50px;
+    height: 50px;
+    width: 100%;
+  }
+
+  .foot-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .foot-link-block {
