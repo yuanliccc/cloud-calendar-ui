@@ -29,10 +29,11 @@
 </template>
 <script>
 export default {
-  name: 'main',
+  name: 'mainContainer',
   data () {
     return {
       isShowMenu: true,
+      transitionName: '',
       meunItems: [
         {
           title: '动态表单管理',

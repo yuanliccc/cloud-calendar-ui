@@ -21,6 +21,7 @@ body::-webkit-scrollbar {
 }
 
 .flex-center {
+  display: flex;
   justify-content: center;
 }
 

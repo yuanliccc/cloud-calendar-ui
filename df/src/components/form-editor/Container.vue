@@ -104,7 +104,9 @@ export default {
         }
       },
       widgetFormSelect: null,
-      configTab: 'form'
+      configTab: 'form',
+      operator: null,
+      formId: null
     }
   },
   methods: {
@@ -136,6 +138,17 @@ export default {
             console.log('error' + err)
           })
       }
+    },
+    queryParam () {
+      this.operator = this.$route.query.operator
+
+      if (this.operator === 'edit') {
+        this.formId = this.$route.query.operator
+      }
+
+      if (this.formId != null) {
+        // 查询对应的表单
+      }
     }
   },
   watch: {
@@ -145,6 +158,9 @@ export default {
         console.log(this.$refs.widgetForm)
       }
     }
+  },
+  mounted () {
+    this.test()
   }
 }
 </script>

@@ -3,10 +3,10 @@
     <div class="form-container flex-column">
       <div class="form-header flex-row">
         <div class="create-form-block">
-          <el-button type="primary" icon="el-icon-plus" >创建表单</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="addDynamicForm">创建表单</el-button>
         </div>
         <div class="query-box-block">
-          <el-input  placeholder="请输入表单名查询......" v-model="input5" class="input-with-select">
+          <el-input  placeholder="请输入表单名查询......" class="input-with-select">
             <el-button slot="append" icon="el-icon-search"></el-button>
           </el-input>
         </div>
@@ -16,15 +16,98 @@
       </div>
       <div class="form-line">
       </div>
-      <div class="form-list">
-        这里是表格
+      <div class="form-list flex-column">
+        <div class="list-block">
+          <el-table border style="width: 100%" :data="dynamicFormList" @selection-change="handleSelectionChange">
+            <el-table-column type="selection">
+            </el-table-column>
+            <el-table-column fixed prop="name" label="表单名称"></el-table-column>
+            <el-table-column fixed prop="method" label="请求方式"></el-table-column>
+            <el-table-column fixed prop="createTime" label="创建时间"></el-table-column>
+            <el-table-column fixed="right" label="操作">
+              <template slot-scope="scope">
+                <div class="flex-row">
+                  <el-button @click="display(scope.row)" size="mini" type="text">预览</el-button>
+                  <el-button @click="editDynamicForm(scope.row)" size="mini" type="text">编辑</el-button>
+                  <el-button @click="deleteDynamicForm(scope.row)" size="mini" type="text">删除</el-button>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="pagination-block flex-center">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="1000">
+          </el-pagination>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import moment from 'moment'
 export default {
-  name: 'dfList'
+  name: 'dfList',
+  components: {
+    moment
+  },
+  data () {
+    return {
+      dynamicFormList: [],
+      multipleSelection: []
+    }
+  },
+  mounted () {
+    this.findDynamicFormList()
+  },
+  methods: {
+    addDynamicForm () {
+      this.$router.push({path: '/dfWorkSpace', query: {operator: 'add'}})
+    },
+    editDynamicForm (row) {
+      this.$router.push({path: '/dfWorkSpace', query: {operator: 'edit', formId: row.id}})
+    },
+    display (index) {
+      console.log('dispaly: ' + index)
+    },
+    deleteDynamicForm (row) {
+      this.$axios.delete('/df/dynamic/form/' + row.id)
+        .then(res => {
+          const data = res.data
+          if (data.code === 200) {
+            console.log('sucess')
+            this.findDynamicFormList()
+          }
+        })
+        .catch(err => {
+          console.log('err: ' + err)
+        })
+    },
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+      console.log(val)
+    },
+    findDynamicFormList () {
+      this.$axios.get('/df/dynamic/form')
+        .then(res => {
+          const data = res.data
+          if (data != null) {
+            this.dynamicFormList = data.data.list
+
+            for (let i = 0; i < this.dynamicFormList.length; i++) {
+              this.dynamicFormList[i].createTime = this.timeGST(this.dynamicFormList[i].createTime)
+            }
+          }
+        })
+        .catch(err => {
+          console.log('err: ' + err)
+        })
+    },
+    timeGST (utcTime) {
+      return moment(utcTime).format('YYYY-MM-DD HH:mm:ss')
+    }
+  }
 }
 </script>
 <style>
@@ -40,5 +123,9 @@ export default {
     border-bottom: 1px solid #ddd;
     margin-bottom: 28px;
     text-align: center;
+  }
+
+  .pagination-block {
+    padding-top: 5px;
   }
 </style>

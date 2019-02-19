@@ -7,7 +7,7 @@ import login from '../components/base/Login.vue'
 import main from '../components/bms/Main.vue'
 import personal from '../components/bms/Personal.vue'
 import dfList from '../components/bms/DynamicFormList.vue'
-import test from '../components/form-editor/Container.vue'
+import dfWorkSpace from '../components/form-editor/Container.vue'
 
 Vue.use(Router)
 
@@ -55,10 +55,10 @@ export default new Router({
           ]
         },
         {
-          path: 'test',
-          name: 'test',
+          path: 'dfWorkSpace',
+          name: 'dfWorkSpace',
           meta: {index: 6},
-          component: test
+          component: dfWorkSpace
         }
       ]
     }
