@@ -93,6 +93,15 @@ export default {
        * widgetForm是传递给子组件的数据
        * list:存放拖拽带工作区的组件
        * config:为子组件中的el-form设置labelWidth,labelPosition属性
+       * {
+          type: "input",
+          name: "测试1",
+          options: {
+            defaultValue: "111",
+          },
+          key: '1550739614000_52521',
+          model: 'input_1550739614000_52521'
+        }
        */
       widgetForm: {
         list: [],
@@ -103,7 +112,7 @@ export default {
           method: ''
         }
       },
-      widgetFormSelect: null,
+      widgetFormSelect: '1550739614000_52521',
       configTab: 'form',
       operator: null,
       formId: null
@@ -143,12 +152,36 @@ export default {
       this.operator = this.$route.query.operator
 
       if (this.operator === 'edit') {
-        this.formId = this.$route.query.operator
+        this.formId = this.$route.query.formId
       }
 
       if (this.formId != null) {
         // 查询对应的表单
+        this.findDynamicForm(this.formId)
       }
+    },
+    findDynamicForm (formId) {
+      this.$axios.get('/df/dynamic/form/' + formId)
+        .then(res => {
+          const data = res.data
+          // 处理表单信息
+          console.log(data)
+          // 查询表单条目信息
+          this.findDynamicFormFieldsByFormId(formId)
+        })
+        .catch(err => {
+          console.log('err: ' + err)
+        })
+    },
+    findDynamicFormFieldsByFormId(formId) {
+      this.$axios.get('/df/form/field/findDynamicFormFieldsByFormId/' + formId)
+        .then(res => {
+          const data = res.data
+          console.log('条目信息: ' + data)
+        })
+        .catch(err => {
+          console.log('err: ' + err)
+        })
     }
   },
   watch: {
@@ -160,7 +193,7 @@ export default {
     }
   },
   mounted () {
-    this.test()
+    this.queryParam()
   }
 }
 </script>

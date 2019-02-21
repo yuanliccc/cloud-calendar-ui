@@ -43,7 +43,7 @@
           </template>
           <template v-else>
             <!-- 当组件被加入到主容器中后会调用handleWidgetAdd方法为组件添加key,通过这个key来确定当前选中的元素 -->
-            <widget-form-item v-if="element&&element.key" :key="index + '_' + element.key" :element="element"
+            <widget-form-item  v-if="element&&element.key" :key="index + '_' + element.key" :element="element"
               :index="index" :data="data" :select.sync="selectWidget"></widget-form-item>
           </template>
         </template>
@@ -71,6 +71,9 @@ export default {
       selectWidget: this.select
     }
   },
+  mounted () {
+      console.log(this.data)
+  },
   methods: {
     handleMoveEnd ({newIndex, oldIndex}) {
       console.log('拖拽主容器组件结束,新的下标及初始下标分别为: ', newIndex, oldIndex)
@@ -95,8 +98,7 @@ export default {
       this.$set(this.data.list, newIndex, {
         ...this.data.list[newIndex],
         options: {
-          ...this.data.list[newIndex].options,
-          remoteFunc: 'func_' + key
+          ...this.data.list[newIndex].options
         },
         key: key,
         model: this.data.list[newIndex].type + '_' + key,
@@ -151,8 +153,7 @@ export default {
       this.$set(row.columns[colIndex].list, newIndex, {
         ...row.columns[colIndex].list[newIndex],
         options: {
-          ...row.columns[colIndex].list[newIndex].options,
-          remoteFunc: 'func_' + key
+          ...row.columns[colIndex].list[newIndex].options
         },
         key: key,
         // 绑定键值
