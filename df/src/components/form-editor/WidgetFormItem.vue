@@ -1,6 +1,6 @@
 <template>
   <!-- 在Form表单中,每一个表单域由一个Form-Item组件构成 -->
-  <el-form-item v-if="element && element.key" class="widget-view" :label="element.name"
+  <el-form-item v-if="element && element.key" class="widget-view" :label="element.label"
     :class="{active: selectWidget.key === element.key}"
     @click.native="handleSelectWidget(index)">
     <template v-if="element.type === 'input'">

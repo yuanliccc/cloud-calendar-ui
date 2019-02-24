@@ -71,9 +71,6 @@ export default {
       selectWidget: this.select
     }
   },
-  mounted () {
-      console.log(this.data)
-  },
   methods: {
     handleMoveEnd ({newIndex, oldIndex}) {
       console.log('拖拽主容器组件结束,新的下标及初始下标分别为: ', newIndex, oldIndex)

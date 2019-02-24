@@ -21,7 +21,7 @@
           :move="handleMove">
           <li class="form-edit-widget-label" v-for="(item, index) in basicComponents" :key="index + item.type">
             <a>
-              <span>{{item.name}}</span>
+              <span>{{item.label}}</span>
             </a>
           </li>
         </draggable>
@@ -33,7 +33,7 @@
           :move="handleMove">
           <li class="form-edit-widget-label data-grid" v-for="(item, index) in layoutComponents" :key="index + item.type">
             <a>
-              <span>{{item.name}}</span>
+              <span>{{item.label}}</span>
             </a>
           </li>
         </draggable>
@@ -77,39 +77,32 @@ import WidgetForm from './WidgetForm'
 import FormConfig from './FormConfig'
 import WidgetConfig from './WidgetConfig'
 import {basicComponents, layoutComponents} from '../config/componentsConfig.js'
+import moment from 'moment'
 export default {
   name: 'df-container',
   components: {
     Draggable,
     WidgetForm,
     FormConfig,
-    WidgetConfig
+    WidgetConfig,
+    moment
   },
   data () {
     return {
       basicComponents,
       layoutComponents,
-      /**
-       * widgetForm是传递给子组件的数据
-       * list:存放拖拽带工作区的组件
-       * config:为子组件中的el-form设置labelWidth,labelPosition属性
-       * {
-          type: "input",
-          name: "测试1",
-          options: {
-            defaultValue: "111",
-          },
-          key: '1550739614000_52521',
-          model: 'input_1550739614000_52521'
-        }
-       */
       widgetForm: {
         list: [],
         config: {
           labelWidth: 100,
           labelPosition: 'left',
           name: '',
-          method: ''
+          method: '',
+          id: null,
+          createTime: null,
+          employeeId: null,
+          enctype: null,
+          action: null
         }
       },
       widgetFormSelect: '1550739614000_52521',
@@ -133,12 +126,22 @@ export default {
     },
     saveDynamicForm () {
       this.jsonTemplate = this.widgetForm
+      if (this.operator === 'add') {
+        // 判断组件列表是否为空
+        if (this.jsonTemplate.list.length === 0) {
 
-      // 判断组件列表是否为空
-      if (this.jsonTemplate.list.length === 0) {
-
-      } else {
-        this.$axios.post('/df/dynamic/form/addDynamicForm', this.jsonTemplate)
+        } else {
+          this.$axios.post('/df/dynamic/form/addDynamicForm', this.jsonTemplate)
+            .then(res => {
+              console.log('sucess')
+              this.$router.push({path: '/main/dfList'})
+            })
+            .catch(err => {
+              console.log('error' + err)
+            })
+        }
+      } else if (this.operator === 'edit') {
+        this.$axios.put('/df/dynamic/form/updateDynamicForm', this.jsonTemplate)
           .then(res => {
             console.log('sucess')
             // 跳转路由
@@ -164,8 +167,16 @@ export default {
       this.$axios.get('/df/dynamic/form/' + formId)
         .then(res => {
           const data = res.data
+
           // 处理表单信息
-          console.log(data)
+          this.widgetForm.config.name = data.data.name
+          this.widgetForm.config.method = data.data.method
+          this.widgetForm.config.id = data.data.id
+          this.widgetForm.config.createTime = this.timeGST(data.data.createTime)
+          this.widgetForm.config.employeeId = data.data.employeeId
+          this.widgetForm.config.enctype = data.data.enctype
+          this.widgetForm.config.action = data.data.action
+
           // 查询表单条目信息
           this.findDynamicFormFieldsByFormId(formId)
         })
@@ -173,15 +184,141 @@ export default {
           console.log('err: ' + err)
         })
     },
-    findDynamicFormFieldsByFormId(formId) {
+    timeGST (utcTime) {
+      return moment(utcTime).format('YYYY-MM-DD HH:mm:ss')
+    },
+    findDynamicFormFieldsByFormId (formId) {
       this.$axios.get('/df/form/field/findDynamicFormFieldsByFormId/' + formId)
         .then(res => {
-          const data = res.data
-          console.log('条目信息: ' + data)
+          const code = res.data.code
+
+          if (code === 200) {
+            const data = res.data.data
+            this.handleFields(data)
+          }
         })
         .catch(err => {
           console.log('err: ' + err)
         })
+    },
+    handleFields (data) {
+      // 要显示的组件列表
+      const components = []
+      // 栅栏列表
+      const grids = []
+      // 栅栏条目列表
+      const gridItems = []
+
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].dfFormField.type !== 'grid' && data[i].dfFormField.parentId == null) {
+          let field = this.handleField(data[i].dfFormField)
+
+          // 对于单选框,复选框和下拉框需要额外进行条目的处理
+          if (field.type === 'radio' || field.type === 'checkbox' || field.type === 'select') {
+            field = this.handleFieldItem(field, data[i].dfFormItems)
+          }
+
+          // 将例如aaa,bbb形式的字符串转为数字
+          if (field.type === 'checkbox') {
+            field.options.defaultValue = field.options.defaultValue.split(',')
+          }
+
+          // 从数组中删除已经添加的组件
+          data.splice(i--, 1)
+
+          // 将当前表单域添加到要显示的组件列表中
+          components.push(field)
+        } else {
+          if (data[i].dfFormField.type === 'grid') {
+            grids.push(data[i].dfFormField)
+          } else {
+            gridItems.push(data[i].dfFormField)
+          }
+        }
+      }
+
+      this.handleGrids(grids, gridItems, components)
+
+      this.widgetFormSelect = components[components.length - 1].id
+
+      this.widgetForm.list = components
+    },
+    handleGrids (grids, gridItems, components) {
+      for (let i = 0; i < grids.length; i++) {
+        let grid = this.handleGrid(grids[i])
+
+        for (let j = 0; j < gridItems.length; j++) {
+          if (gridItems[j].parentId === grid.id) {
+            grid.columns[gridItems[j].displayIndex].list.push(this.handleField(gridItems[j]))
+          }
+        }
+
+        components.push(grid)
+      }
+    },
+    handleGrid (dfGrid) {
+      const grid = {
+        type: dfGrid.type,
+        label: dfGrid.label,
+        id: dfGrid.id,
+        formId: dfGrid.formId,
+        name: dfGrid.name,
+        value: dfGrid.value,
+        parentId: dfGrid.parentId,
+        displayIndex: dfGrid.displayIndex,
+        key: dfGrid.key,
+        model: dfGrid.model,
+        columns: [
+          {
+            span: 12,
+            list: []
+          },
+          {
+            span: 12,
+            list: []
+          }
+        ],
+        options: {
+
+        }
+      }
+
+      return grid
+    },
+    handleField (dfFormField) {
+      // 将查询出来的表单域信息封装成一个对象
+      const field = {
+        id: dfFormField.id,
+        formId: dfFormField.formId,
+        label: dfFormField.label,
+        type: dfFormField.type,
+        options: {
+          defaultValue: dfFormField.value,
+          options: []
+        },
+        parentId: dfFormField.parentId,
+        displayIndex: dfFormField.displayIndex,
+        key: dfFormField.key,
+        model: dfFormField.model
+      }
+
+      return field
+    },
+    handleFieldItem (field, dfFormItems) {
+      // 处理表单条目
+      const options = []
+      for (let j = 0; j < dfFormItems.length; j++) {
+        options.push({
+          id: dfFormItems[j].id,
+          formFieldId: dfFormItems[j].formFieldId,
+          value: dfFormItems[j].value,
+          label: dfFormItems[j].label,
+          itemIndex: dfFormItems[j].itemIndex
+        })
+      }
+
+      field.options.options = options
+      return field
     }
   },
   watch: {

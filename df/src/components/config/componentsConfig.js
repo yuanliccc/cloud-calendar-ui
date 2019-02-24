@@ -1,21 +1,21 @@
 export const basicComponents = [
   {
     type: 'input',
-    name: '单行文本框',
+    label: '单行文本框',
     options: {
       defaultValue: ''
     }
   },
   {
     type: 'textarea',
-    name: '多行文本框',
+    label: '多行文本框',
     options: {
       defaultValue: ''
     }
   },
   {
     type: 'checkbox',
-    name: '多选框',
+    label: '多选框',
     options: {
       defaultValue: [],
       options: [
@@ -34,7 +34,7 @@ export const basicComponents = [
   },
   {
     type: 'radio',
-    name: '单选框',
+    label: '单选框',
     options: {
       defaultValue: '',
       options: [
@@ -53,7 +53,7 @@ export const basicComponents = [
   },
   {
     type: 'select',
-    name: '下拉框',
+    label: '下拉框',
     options: {
       defaultValue: '',
       options: [
@@ -72,7 +72,7 @@ export const basicComponents = [
   },
   {
     type: 'date',
-    name: '日期选择器',
+    label: '日期选择器',
     options: {
       defaultValue: '',
       format: 'yyyy-MM-dd HH:mm:ss'
@@ -83,7 +83,7 @@ export const basicComponents = [
 export const layoutComponents = [
   {
     type: 'grid',
-    name: '栅栏式布局',
+    label: '栅栏式布局',
     columns: [
       {
         span: 12,
