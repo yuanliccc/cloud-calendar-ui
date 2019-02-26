@@ -98,6 +98,7 @@
 
         for(let i = 1; i <= this.months[this.selectDay.month - 1]; i++)
           this.list.push(i);
+
         console.log(this.list);
       },
       nextMonth: function(){
@@ -124,6 +125,9 @@
         if(item != '')
           this.today.day = item;
       },
+      showOrClose: function(){
+          this.showDaily = !this.showDaily;
+      }
     }
   }
 </script>
@@ -175,7 +179,8 @@
     width:80px;
     height:30px;
   }
-  .toCenter{
-    text-align: center;
+  .index{
+    width:90%;
+    margin: 0 auto;
   }
 </style>

@@ -5,24 +5,29 @@
   </div>
   <div class="loginInput">
     <span>账号</span>
-    <input type="text" :model="account" />
+    <input type="text" v-model="account" />
   </div>
   <div class="loginInput">
     <span>密码</span>
-    <input type="password" :model="password"/>
+    <input type="password" v-model="password"/>
   </div>
   <div class="register">
     <router-link to="/register">注册</router-link>
   </div>
-  <div class="loginBt">
-    <button @click="" >登录</button>
+  <div class="loginBt_">
+    <button @click="login" >登录</button>
   </div>
+  <con ref="con"></con>
 </div>
 </template>
 
 <script>
+  import con from '../../confirm/index.vue'
   export default{
     name: 'login',
+    components: {
+      con,
+    },
     data() {
       return {
         account:'',
@@ -30,6 +35,12 @@
       }
     },
     methods:{
+        login: function() {
+          if (this.password == '' || this.account == '') {
+            this.$refs.con.show('请输入账号或密码！', null);
+            return;
+          }
+        }
     }
   }
 
@@ -80,14 +91,14 @@
   .register a:hover{
     color:red;
   }
-  .loginBt{
+  .loginBt_{
     text-align: center;
     height: 80px;
-    line-height: 80px;
   }
-  .loginBt button{
+  .loginBt_ button{
     width: 100px;
     height: 40px;
+    margin-top: 20px;
     border: none;
     color: #000;
     cursor: pointer;

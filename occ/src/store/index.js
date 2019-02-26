@@ -5,7 +5,7 @@ Vue.use(Vuex)
 const state = {
   showLoading: false,
   showTip: false,
-  userInfo: undefined
+  userInfo: undefined,
 }
 
 const getters = {
@@ -16,18 +16,21 @@ const getters = {
     return state.showTip
   },
   userInfo(userInfo) {
-
     if(!state.userInfo) {
       const localUserInfo = window.localStorage.getItem("userInfo")
       if(localUserInfo === null) {
         state.userInfo = undefined
+      }else if(localUserInfo === 'undefined') {
+        state.userInfo = undefined
       }
       else {
-        state.userInfo = localUserInfo
+        state.userInfo = JSON.parse(localUserInfo)
       }
     }
-
     return state.userInfo
+  },
+  errMessage: function (errMessage) {
+    return state.errMessage
   }
 }
 
@@ -44,11 +47,14 @@ const mutations = {
   hideTip: function () {
     state.showTip = false
   },
-  setUserInfo: function (newUserInfo) {
-    state.userInfo = newUserInfo
+  setUserInfo: function (state, newUseInfo) {
+    state.userInfo = newUseInfo
 
-    window.localStorage.setItem("userInfo", state.userInfo)
-
+    window.localStorage.setItem("userInfo", JSON.stringify(state.userInfo))
+  },
+  loginOut: function () {
+    state.userInfo = undefined
+    window.localStorage.removeItem("userInfo")
   }
 }
 

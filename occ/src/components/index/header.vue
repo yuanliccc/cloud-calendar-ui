@@ -8,8 +8,10 @@
       <span>加入我们</span>
     </div>
     <div class="login">
-      <span :class="{redColor:this.$route.name == route[1].name}" @click="jumpTo(route[1].url)">登录</span>
-      <span :class="{redColor:this.$route.name == route[2].name}" @click="jumpTo(route[2].url)">注册</span>
+      <span :class="{redColor:this.$route.name == route[1].name}" @click="jumpTo(route[1].url)" v-if="this.$store.state.userInfo == '' || this.$store.state.userInfo == null">登录</span>
+      <span :class="{redColor:this.$route.name == route[2].name}" @click="jumpTo(route[2].url)" v-if="this.$store.state.userInfo == '' || this.$store.state.userInfo == null">注册</span>
+      <span v-if="this.$store.state.userInfo != '' && this.$store.state.userInfo != undefined">Welcome，{{this.$store.state.userInfo.name == '' ? this.$store.state.userInfo.account : this.$store.state.userInfo.name}}</span>
+      <span class="smallRed" v-if="this.$store.state.userInfo != '' && this.$store.state.userInfo != null" @click="logout()">退出登录</span>
       <span :class="{redColor:this.$route.name == route[3].name}" @click="jumpTo(route[3].url)">日历</span>
     </div>
   </div>
@@ -20,7 +22,7 @@
     name: 'occHead',
     data () {
       return {
-          route : [
+        route : [
               {
               name: 'index',
               url : '/',
@@ -37,15 +39,20 @@
               name: 'calender',
               url : '/calender',
             },
-          ]
+          ],
+        userName: ''
       }
     },
     mounted : function(){
-
+        this.$store.getters.userInfo;
+        console.log(this.$store.state.userInfo);
     },
     methods: {
       jumpTo: function (url) {
         this.$router.push({path: url});
+      },
+      logout: function(){
+          this.$store.commit("loginOut");
       }
     },
   }
@@ -79,5 +86,9 @@
     float:right;
     line-height: 60px;
     font-size: 16px;
+  }
+  .smallRed{
+    font-size: 14px !important;
+    color:red !important;
   }
 </style>

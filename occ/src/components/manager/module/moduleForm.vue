@@ -29,7 +29,8 @@
         <input type="text" v-model="module.isSystem"/>
       </div>
       <div class="col-md-12 form_Bt">
-        <button @click="save" class="sure">保存</button>
+        <button @click="save" class="sure" v-if="add">保存</button>
+        <button @click="save" class="sure" v-if="!add">修改</button>
         <button @click="reBack" class="cancel">取消</button>
         <con ref="myConfirm"></con>
       </div>

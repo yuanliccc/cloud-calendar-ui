@@ -10,10 +10,18 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/occ': {
+        target: 'http://127.0.0.1:8000',//后端接口地址
+        changeOrigin: true,//是否允许跨越
+        pathRewrite: {
+          '^/occ': '/',//重写,
+        }
+      },
+    },
 
     // Various Dev Server settings
-    host: '0.0.0.0', // can be overwritten by process.env.HOST
+    host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

@@ -29,7 +29,7 @@ const router = new Router({
 router.beforeEach(async (to, from, next) => {
   NProgress.start();
   /** 判断用户是否已经登录 */
-  if (store.getters.isLogin) {
+  if (store.state.userInfo != undefined) {
     /** 已经登录情况下访问 /login, 则直接进入 /admin */
     if (to.path === '/login') {
       next();
