@@ -40,6 +40,24 @@
             this.$refs.con.show('请输入账号或密码！', null);
             return;
           }
+          this.$store.commit('showLoading');
+
+          this.$axios.get('/occ/user/login', {
+            params: {account: this.account, password: this.password}
+          }).then(res => {
+            const data = res.data;
+
+            if(data == '' || data.message != 'SUCCESS'){
+              this.$refs.con.show(data.message, null);
+            }else{
+              this.$store.commit('setUserInfo', data.data);
+              this.$router.push('/');
+            }
+            this.$store.commit('hideLoading');
+          }).catch(err => {
+            this.$refs.con.show(err.data.message, null);
+            this.$store.commit('hideLoading');
+          });
         }
     }
   }

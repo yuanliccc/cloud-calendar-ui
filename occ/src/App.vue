@@ -1,10 +1,22 @@
 <template>
+  <div>
     <router-view/>
+    <loading v-if="isLoad"></loading>
+  </div>
 </template>
 
 <script>
+  import loading from './confirm/loading.vue'
 export default {
-  name: 'App'
+  name: 'App',
+  components:{
+    loading,
+  },
+  computed: {
+    isLoad: function () {
+      return this.$store.getters.showLoading
+    }
+  }
 }
 
 </script>

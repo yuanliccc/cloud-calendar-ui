@@ -2,190 +2,55 @@
   <div class="left">
     <div v-for="(i, index) in info">
       <div class="left_Sidebar" @click="display(index)">
-        <i class="glyphicon glyphicon-th-large iLogo"></i>{{i.name}}
+        <i class="glyphicon glyphicon-th-large iLogo"></i>{{i.module.name}}
       </div>
-      <div v-for="t in i.children" v-if="i.showChild">
-        <div class="left_Sidebar_son">
+      <div v-for="t in i.children" v-if="i.showChild == 'true' || i.showChild">
+        <div class="left_Sidebar_son" @click="jumpTo(t.url)">
           <i class="glyphicon glyphicon-th-list iLogo"></i>{{t.name}}
         </div>
       </div>
     </div>
+    <con ref="con"></con>
   </div>
 </template>
 
 <script>
+  import con from '../../confirm/index.vue'
 export default{
   name:'left',
+  components:{
+      con,
+  },
   data(){
     return {
-      info:[
-        {
-          id: '0',
-          name: '用户管理',
-          url: '',
-          children: [
-            {
-              id: '01',
-              name: '用户管理',
-              url: '',
-              children: []
-            },
-            {
-              id: '02',
-              name: '角色管理',
-              url: '',
-              children: []
-            }
-          ],
-          showChild: false,
-        },
-        {
-          id: '1',
-          name: '团队管理',
-          url: '',
-          children: [
-            {
-              id: '11',
-              name: '团队管理',
-              url: '',
-              children: []
-            },
-            {
-              id: '12',
-              name: '日程管理',
-              url: '',
-              children: []
-            }
-          ],
-          showChild: false,
-        },
-        {
-          id: '0',
-          name: '用户管理',
-          url: '',
-          children: [
-            {
-              id: '01',
-              name: '用户管理',
-              url: '',
-              children: []
-            },
-            {
-              id: '02',
-              name: '角色管理',
-              url: '',
-              children: []
-            }
-          ],
-          showChild: false,
-        },
-        {
-          id: '1',
-          name: '团队管理',
-          url: '',
-          children: [
-            {
-              id: '11',
-              name: '团队管理',
-              url: '',
-              children: []
-            },
-            {
-              id: '12',
-              name: '日程管理',
-              url: '',
-              children: []
-            }
-          ],
-          showChild: false,
-        },
-        {
-          id: '0',
-          name: '用户管理',
-          url: '',
-          children: [
-            {
-              id: '01',
-              name: '用户管理',
-              url: '',
-              children: []
-            },
-            {
-              id: '02',
-              name: '角色管理',
-              url: '',
-              children: []
-            }
-          ],
-          showChild: false,
-        },
-        {
-          id: '1',
-          name: '团队管理',
-          url: '',
-          children: [
-            {
-              id: '11',
-              name: '团队管理',
-              url: '',
-              children: []
-            },
-            {
-              id: '12',
-              name: '日程管理',
-              url: '',
-              children: []
-            }
-          ],
-          showChild: false,
-        },
-        {
-          id: '0',
-          name: '用户管理',
-          url: '',
-          children: [
-            {
-              id: '01',
-              name: '用户管理',
-              url: '',
-              children: []
-            },
-            {
-              id: '02',
-              name: '角色管理',
-              url: '',
-              children: []
-            }
-          ],
-          showChild: false,
-        },
-        {
-          id: '1',
-          name: '团队管理',
-          url: '',
-          children: [
-            {
-              id: '11',
-              name: '团队管理',
-              url: '',
-              children: []
-            },
-            {
-              id: '12',
-              name: '日程管理',
-              url: '',
-              children: []
-            }
-          ],
-          showChild: false,
-        }
-      ]
+      info:[]
     }
   },
+  created:function(){
+      console.log(this.info);
+      this.init();
+  },
   methods:{
-      display: function(index){
-          this.info[index].showChild = !this.info[index].showChild;
-      }
+    display: function(index){
+      this.info[index].showChild = !this.info[index].showChild;
+    },
+    jumpTo: function (url) {
+      this.$router.push({path: url});
+    },
+    init: function(){
+      this.$store.commit('showLoading');
+      this.$axios.get('/occ/module/getLoginModule')
+        .then(res =>{
+          const data = res.data;
+          console.log(data);
+          this.info = data.data;
+          this.$store.commit('hideLoading');
+        })
+        .catch(err =>{
+          this.$refs.con.show(err.data.message, null);
+          this.$store.commit('hideLoading');
+        });
+    }
   }
 }
 </script>

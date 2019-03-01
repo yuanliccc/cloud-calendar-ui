@@ -100,6 +100,7 @@
         this.user.email = this.email;
         this.user.sex = this.sex;
 
+        this.$store.commit('showLoading');
         this.$axios.post("/occ/user/register",
           this.user
         ).then(res => {
@@ -110,9 +111,10 @@
             this.$store.commit('setUserInfo', data.data);
             this.$router.push('/');
           }
-
+          this.$store.commit('hideLoading');
         }).catch(err =>{
-          console.log(err);
+          this.$store.commit('hideLoading');
+          this.$refs.con.show(err.data.message, null);
         });
 
       }

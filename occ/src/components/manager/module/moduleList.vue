@@ -272,10 +272,10 @@
             },
           ],
           page:{
-            allPage: 2,
-            nowPage: 2,
+            allPage: 1,
+            nowPage: 1,
             display: 10,
-            allPages:[1,2]
+            allPages:[1]
           },
           display:[10, 20, 50]
         }

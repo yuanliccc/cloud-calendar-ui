@@ -32,7 +32,7 @@
 
       <li class="portraitLi">
         <img src="../../assets/image/testPortrait.jpg" class="portrait"/>
-        <span class="userName">{{userName}}</span>
+        <span class="userName">{{user.name != "" ? user.name : user.account}}</span>
         <i class="glyphicon glyphicon-triangle-bottom"></i>
 
         <div class="userMenu">
@@ -50,7 +50,6 @@
     name: 'managerHeader',
     data(){
       return {
-        userName: 'xiaoming',
         email:[
           {
             title: '尊敬的XX用户，明天在某地某时间集合，请勿迟到！！！',
@@ -95,6 +94,11 @@
             dateTime: '2019-01-25 15:58'
           }
         ]
+      }
+    },
+    computed:{
+      user: function () {
+        return this.$store.getters.userInfo.user
       }
     },
     methods:{
