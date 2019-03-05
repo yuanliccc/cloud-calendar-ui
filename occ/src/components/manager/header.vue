@@ -38,7 +38,7 @@
         <div class="userMenu">
           <div>用户中心</div>
           <div>修改密码</div>
-          <div>退出登录</div>
+          <div @click="singOut">退出登录</div>
         </div>
       </li>
     </ul>
@@ -93,16 +93,30 @@
             title: '机构消息：明天在某地某时间集合，请勿迟到！！！',
             dateTime: '2019-01-25 15:58'
           }
-        ]
+        ],
       }
     },
     computed:{
       user: function () {
         return this.$store.getters.userInfo.user
+      },
+      allInfo: function(){ //测试用 要删
+        return this.$store.getters.userInfo
       }
     },
     methods:{
-
+      singOut: function(){
+          this.$axios.get('/occ/user/singUp').then(res =>{
+            this.$store.commit("loginOut");
+            this.$router.push("/login");
+          }).catch(err =>{
+            this.$message({
+              showClose: true,
+              message: err,
+              type: 'error'
+            });
+          });
+      }
     }
   }
 </script>

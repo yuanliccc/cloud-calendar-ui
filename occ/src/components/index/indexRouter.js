@@ -5,7 +5,7 @@ export default [
     name: 'index',
     meta: {
       label: '首页',
-      icon: 'icon iconfont icon-fl-origin',
+      permission: '',
       requireAuth: false
     },
     component: () => import('./occ'),
@@ -15,7 +15,7 @@ export default [
         name: 'login',
         meta: {
           label: '登录',
-          icon: 'icon iconfont icon-fl-origin',
+          permission: '',
           requireAuth: false
         },
         component: () => import('./login'),
@@ -25,7 +25,7 @@ export default [
         name: 'register',
         meta: {
           label: '注册',
-          icon: 'icon iconfont icon-fl-origin',
+          permission: '',
           requireAuth: false
         },
         component: () => import('./register'),
@@ -35,7 +35,7 @@ export default [
         name: 'calender',
         meta: {
           label: '日历',
-          icon: 'icon iconfont icon-fl-origin',
+          permission: '',
           requireAuth: false
         },
         component: () => import('./calender'),

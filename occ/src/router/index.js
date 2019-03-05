@@ -6,6 +6,7 @@ import  App from '../App.vue'
 import store from '../store'
 import indexRouter from '../components/index/indexRouter'
 import  manageRouter from '../components/manager/manageRouter'
+import noPer from '../components/index/noPermission.vue'
 
 Vue.use(Router)
 
@@ -15,8 +16,17 @@ const routes = [
     component: App,
     meta: {
       label: '默认页面',
-      icon: 'icon iconfont icon-fl-origin',
+      permission: '',
       requireAuth: false
+    },
+  },
+  {
+    path: '/noPermission',
+    component: noPer,
+    meta: {
+      label: '权限不足',
+      permission: '',
+      requireAuth: true
     },
   },
     ...indexRouter,
@@ -31,10 +41,13 @@ router.beforeEach(async (to, from, next) => {
   /** 判断用户是否已经登录 */
   if (store.state.userInfo != undefined) {
     /** 已经登录情况下访问 /login, 则直接进入 /admin */
-    if (to.path === '/login') {
-      next();
+    if (to.path === '/login' || to.path === '/register') {
+      next('/');
       NProgress.done()
-    } else {
+    }else if(!hasPermission(to)){
+      next('/noPermission');
+      NProgress.done();
+    }else {
       next();
     }
   } else {
@@ -53,6 +66,13 @@ router.afterEach(() => {
 
 function noPermission(path) {
   return ['/404',].indexOf(path) > -1
+}
+function hasPermission(to){
+  /*if(to.meta.permission === "") return true;
+  if(store.getters.userInfo.permissions.indexOf(to.meta.permission) == -1)
+    return false;*/
+
+  return true;
 }
 
 export default router;

@@ -46,7 +46,6 @@
             params: {account: this.account, password: this.password}
           }).then(res => {
             const data = res.data;
-
             if(data == '' || data.message != 'SUCCESS'){
               this.$refs.con.show(data.message, null);
             }else{

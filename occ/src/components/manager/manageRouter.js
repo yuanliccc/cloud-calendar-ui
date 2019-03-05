@@ -1,17 +1,18 @@
-import moduleRoute from './module/moduleListRoute'
-
+import moduleRoute from './module/moduleRoute'
+import roleRoute from './role/roleRoute'
 export default [
   {
     path: '/manager',
     name: 'manager',
     meta: {
       label: '主页',
-      icon: 'icon iconfont icon-fl-origin',
-      requireAuth: false
+      requireAuth: true,
+      permission: ''
     },
     component: () => import('./manager'),
     children:[
-      ...moduleRoute
+      ...moduleRoute,
+      ...roleRoute
     ]
   }
 ]
