@@ -1,37 +1,24 @@
 <template>
   <div class="publicFrom">
-    <div class="publicTitle" v-if="!add">角色编辑</div>
-    <div class="publicTitle" v-if="add">新增角色</div>
+    <div class="publicTitle" v-if="!add">权限点编辑</div>
+    <div class="publicTitle" v-if="add">新增权限点</div>
     <div>
-      <el-form label-position="left" ref="role"class="add_Edit" :model="role" :rules="rules" :inline="true"
+      <el-form label-position="left" ref="permission"class="add_Edit" :model="permission" :rules="rules" :inline="true"
                 label-width="120px">
-        <el-form-item label="角色名称" prop="name">
-          <el-input v-model="role.name" placeholder="角色名称"></el-input>
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="permission.name"></el-input>
         </el-form-item>
-        <el-form-item label="角色key" prop="rolekey">
-          <el-input v-model="role.rolekey" placeholder="角色key"></el-input>
+        <el-form-item label="唯一标识" prop="identify">
+          <el-input v-model="permission.identify"></el-input>
         </el-form-item>
-        <el-form-item label="组织机构" prop="orgid" v-if="false">
-          <el-select v-model="role.orgid" filterable placeholder="请选择" clearable>
-            <el-option v-for="i in organizations" :value="i.id" :key="i.id" :label="i.name">
+        <el-form-item label="描述" prop="perexplain">
+          <el-input v-model="permission.perexplain"></el-input>
+        </el-form-item>
+        <el-form-item label="对应模块" prop="moduleid">
+          <el-select v-model="permission.moduleid">
+            <el-option v-for="i in modules" :value="i.id" :key="i.id" :label="i.name">
               <span style="float: left">{{i.name}}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">{{i.orgkey}}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="角色级别" prop="rolelevel" v-if="role.rolelevel != 6">
-          <el-select v-model="role.rolelevel" filterable placeholder="默认6最高，1最低">
-            <el-option v-for="i in roleLevels" :value="i" :key="i" :label="i">
-              <span style="float: left">{{i}}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">{{suggest[i]}}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="角色级别" prop="rolelevel" v-if="role.rolelevel == 6">
-          <el-select v-model="role.rolelevel" filterable placeholder="默认6最高，1最低" disabled="disabled">
-            <el-option v-for="i in roleLevels" :value="i" :key="i" :label="i">
-              <span style="float: left">{{i}}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">{{suggest[i]}}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{i.modulekey}}</span>
             </el-option>
           </el-select>
         </el-form-item>
@@ -49,54 +36,53 @@
 </template>
 <script>
   export default{
-    name: 'roleForm',
+    name: 'permissionForm',
     data(){
       return {
         add: true,
-        role: {
+        permission: {
           id: '',
           name: '',
-          rolekey: '',
-          orgid: '',
-          rolelevel: 0,
+          identify: '',
+          perexplain: '',
+          moduleid: '',
         },
-        roleLevels:[0,1,2,3,4,5],
-        organizations:[],
-        suggest:["游客类角色","普通员工类角色","负责管理员工类角色","低级机构管理类角色","上级机构管理类角色","机构总管理类角色"],
+        modules:[],
         rules:{
           name: [
-            { required: true, message: '请输入角色名称', trigger: 'blur' }
+            { required: true, message: '请输入名称', trigger: 'blur' }
           ],
-          rolekey: [
-            { required: true, message: '请输入角色key', trigger: 'blur' }
+          identify: [
+            { required: true, message: '请输入唯一标识', trigger: 'blur' }
           ],
-          rolelevel:[
-            { required: true, message: '请选择角色级别', trigger: 'blur' }
-          ]
+          perexplain: [
+            { required: true, message: '请输入描述', trigger: 'blur' }
+          ],
+          moduleid: [
+            { required: true, message: '请输入对应模块', trigger: 'blur' }
+          ],
         }
       }
     },
     mounted: function(){
-      this.add = (this.$route.name == 'roleForm_Add' ? true : false);
-      this.getAllOrg();
+      this.add = (this.$route.name == 'permissionForm_Add' ? true : false);
+      this.getAllModule();
       if(!this.add){
-        this.getInfoById(this.$route.params.roleId);
-       }else {
-        this.role.orgid = this.$store.getters.userInfo.organization.id;
-      }
+        this.getInfoById(this.$route.params.permissionId);
+       }
     },
     methods:{
       clear:function(){
-        this.role= {
+        this.permission= {
           id: '',
           name: '',
-          rolekey: '',
-          orgid: '',
-          rolelevel: 0,
+          identify: '',
+          perexplain: '',
+          moduleid: '',
         }
       },
       submit: function(){
-        this.$refs.role.validate((valid) => {
+        this.$refs.permission.validate((valid) => {
           if (valid) {
             if(this.add) {
               this.save();
@@ -110,7 +96,7 @@
       },
       save: function(){
         this.$store.commit("showLoading");
-        this.$axios.post('/occ/role/add', this.role)
+        this.$axios.post('/occ/permission/add', this.permission)
         .then(res =>{
           const data = res.data;
           if(data.code == '400'){
@@ -140,13 +126,13 @@
       reBack: function(){
         this.$router.go(-1);
       },
-      getInfoById: function(roleId){
+      getInfoById: function(permissionId){
         this.$store.commit("showLoading");
-        this.$axios.get('/occ/role/detail',{
-             params:{id: roleId}
+        this.$axios.get('/occ/permission/detail',{
+             params:{id: permissionId}
         }).then(res =>{
           const data = res.data;
-          this.role = data.data;
+          this.permission = data.data;
           this.$store.commit("hideLoading");
         }).catch(err => {
           this.$store.commit("hideLoading");
@@ -159,7 +145,7 @@
       },
       edit: function(){
         this.$store.commit("showLoading");
-        this.$axios.put('/occ/role/update', this.role)
+        this.$axios.put('/occ/permission/update', this.permission)
         .then(res =>{
           const data = res.data;
           if(data.code == '400'){
@@ -185,14 +171,14 @@
           });
         });
       },
-      getAllOrg:function(){
-        this.$store.commit("showLoading");
-        this.$axios.get("/occ/organization/getAllOrganization").then(res =>{
+      getAllModule: function(){
+        this.$store.commit('showLoading');
+        this.$axios.get('/occ/module/getAllModule').then(res =>{
+          this.$store.commit('hideLoading');
           const data = res.data;
-          this.organizations = data.data;
-          this.$store.commit("hideLoading");
+          this.modules = data.data;
         }).catch(err =>{
-          this.$store.commit("hideLoading");
+          this.$store.commit('showLoading');
           this.$message({
             showClose: true,
             message: err,

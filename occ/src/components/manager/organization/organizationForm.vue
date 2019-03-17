@@ -1,37 +1,33 @@
 <template>
   <div class="publicFrom">
-    <div class="publicTitle" v-if="!add">角色编辑</div>
-    <div class="publicTitle" v-if="add">新增角色</div>
+    <div class="publicTitle" v-if="!add">组织机构编辑</div>
+    <div class="publicTitle" v-if="add">新增组织机构</div>
     <div>
-      <el-form label-position="left" ref="role"class="add_Edit" :model="role" :rules="rules" :inline="true"
+      <el-form label-position="left" ref="organization"class="add_Edit" :model="organization" :rules="rules" :inline="true"
                 label-width="120px">
-        <el-form-item label="角色名称" prop="name">
-          <el-input v-model="role.name" placeholder="角色名称"></el-input>
+        <el-form-item label="机构名称" prop="name">
+          <el-input v-model="organization.name"></el-input>
         </el-form-item>
-        <el-form-item label="角色key" prop="rolekey">
-          <el-input v-model="role.rolekey" placeholder="角色key"></el-input>
+        <el-form-item label="机构标识" prop="orgkey" v-if="add">
+          <el-input v-model="organization.orgkey" placeholder="机构标识，一旦新建便无法修改"></el-input>
         </el-form-item>
-        <el-form-item label="组织机构" prop="orgid" v-if="false">
-          <el-select v-model="role.orgid" filterable placeholder="请选择" clearable>
+        <el-form-item label="机构标识" prop="orgkey" v-if="!add">
+          <el-input v-model="organization.orgkey" placeholder="机构标识，一旦新建便无法修改" disabled="disabled"></el-input>
+        </el-form-item>
+        <el-form-item label="父机构" prop="parentorgid" v-if="roleLevel != 6">
+          <el-select v-model="organization.parentorgid" placeholder="请选择" filterable clearable>
             <el-option v-for="i in organizations" :value="i.id" :key="i.id" :label="i.name">
               <span style="float: left">{{i.name}}</span>
               <span style="float: right; color: #8492a6; font-size: 13px">{{i.orgkey}}</span>
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="角色级别" prop="rolelevel" v-if="role.rolelevel != 6">
-          <el-select v-model="role.rolelevel" filterable placeholder="默认6最高，1最低">
-            <el-option v-for="i in roleLevels" :value="i" :key="i" :label="i">
-              <span style="float: left">{{i}}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">{{suggest[i]}}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="角色级别" prop="rolelevel" v-if="role.rolelevel == 6">
-          <el-select v-model="role.rolelevel" filterable placeholder="默认6最高，1最低" disabled="disabled">
-            <el-option v-for="i in roleLevels" :value="i" :key="i" :label="i">
-              <span style="float: left">{{i}}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">{{suggest[i]}}</span>
+
+        <el-form-item label="父机构" v-if="roleLevel == 6">
+          <el-select v-model="organization.parentorgid" placeholder="无" filterable clearable>
+            <el-option v-for="i in organizations" :value="i.id" :key="i.id" :label="i.name">
+              <span style="float: left">{{i.name}}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{i.orgkey}}</span>
             </el-option>
           </el-select>
         </el-form-item>
@@ -49,55 +45,65 @@
 </template>
 <script>
   export default{
-    name: 'roleForm',
+    name: 'organizationForm',
     data(){
       return {
         add: true,
-        role: {
+        organization: {
           id: '',
           name: '',
-          rolekey: '',
-          orgid: '',
-          rolelevel: 0,
+          orgkey: '',
+          parentorgid: '',
         },
-        roleLevels:[0,1,2,3,4,5],
+        roleLevel:0,
         organizations:[],
-        suggest:["游客类角色","普通员工类角色","负责管理员工类角色","低级机构管理类角色","上级机构管理类角色","机构总管理类角色"],
         rules:{
           name: [
-            { required: true, message: '请输入角色名称', trigger: 'blur' }
+            { required: true, message: '请输入机构名称', trigger: 'blur' }
           ],
-          rolekey: [
-            { required: true, message: '请输入角色key', trigger: 'blur' }
+          orgkey: [
+            { required: true, message: '请输入机构标识，一旦新建便无法修改', trigger: 'blur' }
           ],
-          rolelevel:[
-            { required: true, message: '请选择角色级别', trigger: 'blur' }
-          ]
+          parentorgid: [
+            { required: true, message: '请输入父模块', trigger: 'blur' }
+          ],
         }
       }
     },
     mounted: function(){
-      this.add = (this.$route.name == 'roleForm_Add' ? true : false);
-      this.getAllOrg();
+      this.add = (this.$route.name == 'organizationForm_Add' ? true : false);
+      this.roleLevel = this.$store.getters.userInfo.role.rolelevel;
+
+      if(this.roleLevel == 6)
+        this.getAllOrg();
+      else
+          this.getAllOrgByThisOrLow();
+
       if(!this.add){
-        this.getInfoById(this.$route.params.roleId);
-       }else {
-        this.role.orgid = this.$store.getters.userInfo.organization.id;
-      }
+        this.getInfoById(this.$route.params.organizationId);
+       }
     },
     methods:{
       clear:function(){
-        this.role= {
+        this.organization= {
           id: '',
           name: '',
-          rolekey: '',
-          orgid: '',
-          rolelevel: 0,
+          orgkey: '',
+          parentorgid: '',
         }
       },
       submit: function(){
-        this.$refs.role.validate((valid) => {
+        this.$refs.organization.validate((valid) => {
           if (valid) {
+              if(this.organization.id == this.organization.parentorgid){
+                this.$message({
+                  showClose: true,
+                  message: '父机构不能为自身',
+                  type: 'warning'
+                });
+                  return;
+              }
+
             if(this.add) {
               this.save();
             }else{
@@ -110,7 +116,7 @@
       },
       save: function(){
         this.$store.commit("showLoading");
-        this.$axios.post('/occ/role/add', this.role)
+        this.$axios.post('/occ/organization/add', this.organization)
         .then(res =>{
           const data = res.data;
           if(data.code == '400'){
@@ -140,13 +146,13 @@
       reBack: function(){
         this.$router.go(-1);
       },
-      getInfoById: function(roleId){
+      getInfoById: function(organizationId){
         this.$store.commit("showLoading");
-        this.$axios.get('/occ/role/detail',{
-             params:{id: roleId}
+        this.$axios.get('/occ/organization/detail',{
+             params:{id: organizationId}
         }).then(res =>{
           const data = res.data;
-          this.role = data.data;
+          this.organization = data.data;
           this.$store.commit("hideLoading");
         }).catch(err => {
           this.$store.commit("hideLoading");
@@ -159,7 +165,7 @@
       },
       edit: function(){
         this.$store.commit("showLoading");
-        this.$axios.put('/occ/role/update', this.role)
+        this.$axios.put('/occ/organization/update', this.organization)
         .then(res =>{
           const data = res.data;
           if(data.code == '400'){
@@ -188,6 +194,21 @@
       getAllOrg:function(){
         this.$store.commit("showLoading");
         this.$axios.get("/occ/organization/getAllOrganization").then(res =>{
+          const data = res.data;
+          this.organizations = data.data;
+          this.$store.commit("hideLoading");
+        }).catch(err =>{
+          this.$store.commit("hideLoading");
+          this.$message({
+            showClose: true,
+            message: err,
+            type: 'error'
+          });
+        });
+      },
+      getAllOrgByThisOrLow: function(){
+        this.$store.commit("showLoading");
+        this.$axios.get("/occ/organization/getAllOrgByThisOrLow").then(res =>{
           const data = res.data;
           this.organizations = data.data;
           this.$store.commit("hideLoading");

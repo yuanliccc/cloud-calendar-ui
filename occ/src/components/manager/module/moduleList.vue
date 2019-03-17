@@ -36,9 +36,9 @@
     <div class="publicListTable">
       <div class="publicList_Head">
         <div class="publicList_Head_Bt">
-          <el-button @click="jumpTo('/manager/moduleForm/add')" style="background-color: lightblue">新增</el-button>
+          <el-button @click="jumpTo('/manager/moduleForm/add')" style="background-color: lightblue" v-if="hasPermission('module_add')">新增</el-button>
           <el-button @click="displayInfo" style="background-color: #ccc">刷新</el-button>
-          <el-button @click="deleteAll" style="background-color: #ff000096">批量删除</el-button>
+          <el-button @click="deleteAll" style="background-color: #ff000096" v-if="hasPermission('module_delete')">批量删除</el-button>
         </div>
         <div class="publicList_Head_Find">
           <el-input v-model="findVal" class="findInput"></el-input>
@@ -59,9 +59,9 @@
           label="操作"
           width="150">
           <template slot-scope="scope">
-            <el-button @click="dis(scope.row.id)" type="text" size="mid">查看</el-button>
-            <el-button type="text" size="mid" @click="edit(scope.row.id)">编辑</el-button>
-            <el-button @click="del(scope.row.id)" type="text" size="mid">删除</el-button>
+            <el-button @click="dis(scope.row.id)" type="text" size="mid" v-if="hasPermission('module_display')">查看</el-button>
+            <el-button type="text" size="mid" @click="edit(scope.row.id)" v-if="hasPermission('module_edit')">编辑</el-button>
+            <el-button @click="del(scope.row.id)" type="text" size="mid" v-if="hasPermission('module_delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -147,6 +147,11 @@
     },
     mounted : function(){
       this.displayInfo();
+    },
+    computed:{
+      rolePers: function () {
+        return this.$store.getters.userInfo.permissions;
+      },
     },
     created: function(){
       this.findKey = this.findList[0].tip;
@@ -276,6 +281,9 @@
       },
       dis: function(id){
         this.$router.push('/manager/moduleDisplay/' + id);
+      },
+      hasPermission(permission){
+          return this.rolePers.indexOf(permission) > -1;
       }
     }
   }

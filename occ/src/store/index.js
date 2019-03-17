@@ -31,6 +31,20 @@ const getters = {
   },
   errMessage: function (errMessage) {
     return state.errMessage
+  },
+  permissions: function(){
+    if(!state.userInfo) {
+      const localUserInfo = window.localStorage.getItem("userInfo")
+      if(localUserInfo === null) {
+        state.userInfo = undefined
+      }else if(localUserInfo === 'undefined') {
+        state.userInfo = undefined
+      }
+      else {
+        state.userInfo = JSON.parse(localUserInfo)
+      }
+    }
+    return state.userInfo == undefined ? undefined : state.userInfo.permissions;
   }
 }
 

@@ -79,7 +79,10 @@
   padding: 50px 0 0 0;
   padding-left: 300px;
 }
-
+.form_Bt2{
+  height: 100px;
+  padding-left: 450px;
+}
 .centerTh{
   text-align: center;
 }
@@ -104,3 +107,22 @@
   font-weight: bolder;
   font-size: 18px;
 }
+.public_Display .el-date-editor--datetime{
+  width: 250px!important;
+}
+.transferDis{
+  height:400px;
+  width:660px;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+.transferDis .el-transfer-panel{
+  width: 280px;
+}
+.transferDis .el-transfer-panel__list.is-filterable{
+  height: 330px !important;
+}
+.transferDis .el-transfer-panel__body{
+  height: 330px !important;
+}
+

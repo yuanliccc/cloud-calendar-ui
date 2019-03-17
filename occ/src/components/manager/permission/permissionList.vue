@@ -1,12 +1,12 @@
 <template>
   <div class="publicList">
-    <div class="publicTitle">角色管理</div>
+    <div class="publicTitle">权限点管理</div>
     <div class="publicListTable">
       <div class="publicList_Head">
         <div class="publicList_Head_Bt">
-          <el-button @click="jumpTo('/manager/roleForm/add')" style="background-color: lightblue" v-if="hasPermission('role_add')">新增</el-button>
+          <el-button @click="jumpTo('/manager/permissionForm/add')" style="background-color: lightblue" v-if="hasPermission('permission_add')">新增</el-button>
             <el-button @click="displayInfo" style="background-color: #ccc">刷新</el-button>
-          <el-button @click="deleteAll" style="background-color: #ff000096" v-if="hasPermission('role_delete')">批量删除</el-button>
+          <el-button @click="deleteAll" style="background-color: #ff000096" v-if="hasPermission('permission_delete')">批量删除</el-button>
         </div>
         <div class="publicList_Head_Find">
           <el-input v-model="findVal" class="findInput"></el-input>
@@ -19,18 +19,23 @@
       <el-table :data="datas.list" ref="table">
         <el-table-column type="selection" width="50"></el-table-column>
         <el-table-column prop="name" :label="titles[0].name" sortable></el-table-column>
-        <el-table-column prop="rolekey" :label="titles[1].name" sortable></el-table-column>
-        <el-table-column prop="orgid" :label="titles[2].name" sortable></el-table-column>
-        <el-table-column prop="rolelevel" :label="titles[3].name" sortable></el-table-column>
+        <el-table-column prop="identify" :label="titles[1].name" sortable></el-table-column>
+        <el-table-column prop="perexplain" :label="titles[2].name" sortable></el-table-column>
+        <el-table-column prop="moduleid" :label="titles[3].name" sortable>
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.moduleid" disabled="disabled">
+              <el-option v-for="i in modules" :value="i.id" :key="i.id" :label="i.name"></el-option>
+            </el-select>
+          </template>
+        </el-table-column>
         <el-table-column
           fixed="right"
           label="操作"
-          width="250">
+          width="150">
           <template slot-scope="scope">
-            <el-button @click="dis(scope.row.id)" type="text" size="mid" v-if="hasPermission('role_display')">查看</el-button>
-            <el-button type="text" size="mid" @click="edit(scope.row.id)" v-if="hasPermission('role_edit')">编辑</el-button>
-            <el-button @click="del(scope.row.id)" type="text" size="mid" v-if="hasPermission('role_delete') && scope.row.rolelevel != 6 && scope.row.rolelevel != 5">删除</el-button>
-            <el-button @click="assign(scope.row.id)" type="text" size="mid" v-if="hasPermission('permission_assign')">分配权限</el-button>
+            <el-button @click="dis(scope.row.id)" type="text" size="mid" v-if="hasPermission('permission_display')">查看</el-button>
+            <el-button type="text" size="mid" @click="edit(scope.row.id)" v-if="hasPermission('permission_edit')">编辑</el-button>
+            <el-button @click="del(scope.row.id)" type="text" size="mid" v-if="hasPermission('permission_delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -52,27 +57,28 @@
 </template>
 <script>
   export default{
-    name: 'roleList',
+    name: 'permissionList',
     data(){
       return {
         findList:[
           {
-            name: '角色名称',
+            name: '名称',
             tip: 'name'
           },
           {
-            name: '角色key',
-            tip: 'rolekey'
+            name: '唯一标识',
+            tip: 'identify'
           },
           {
-            name: '组织机构Id',
-            tip: 'orgid'
+            name: '描述',
+            tip: 'perexplain'
           },
           {
-            name: '角色级别',
-            tip: 'rolelevel'
-          },{
-            name: '角色id',
+            name: '对应模块',
+            tip: 'moduleid'
+          },
+          {
+            name: '权限点id',
             tip: 'id'
           },
         ],
@@ -80,25 +86,26 @@
         findVal: '',
         titles:[
           {
-            name: '角色名称',
+            name: '名称',
             tip: 'name'
           },
           {
-            name: '角色key',
-            tip: 'rolekey'
+            name: '唯一标识',
+            tip: 'identify'
           },
           {
-            name: '组织机构Id',
-            tip: 'orgid'
+            name: '描述',
+            tip: 'perexplain'
           },
           {
-            name: '角色级别',
-            tip: 'rolelevel'
+            name: '对应模块',
+            tip: 'moduleid'
           },
         ],
         datas:{
-        pageNum: 1,
-      },
+          pageNum: 1,
+        },
+        modules:[],
         displays:[10, 20, 50],
         display: 10,
       }
@@ -113,6 +120,7 @@
     },
     mounted : function(){
       this.displayInfo();
+      this.getAllModule();
     },
     computed:{
       rolePers: function () {
@@ -148,7 +156,7 @@
         },
       displayInfo: function(){
         this.$store.commit('showLoading');
-        this.$axios.get('/occ/role/listByKey',{
+        this.$axios.get('/occ/permission/listByKey',{
             params:{page: this.datas.pageNum, size: this.display, key: this.findKey, value: this.findVal}
         }).then(res =>{
           const data = res.data;
@@ -164,7 +172,7 @@
           });
         });
       },
-      del: function(roleId){
+      del: function(permissionId){
         this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -172,8 +180,8 @@
         }).then(() => {
           this.$store.commit('showLoading');
 
-          this.$axios.get('/occ/role/delete',{
-            params:{id: roleId}
+          this.$axios.get('/occ/permission/delete',{
+            params:{id: permissionId}
           }).then(res =>{
             this.$store.commit('hideLoading');
             this.$message({
@@ -198,11 +206,11 @@
       },
       deleteAll: function(){
         if(this.$refs.table.store.states.selection.length == 0){
-            this.$message({
-                type: 'info',
-                message: '请选择删除的内容！'
-            });
-            return;
+          this.$message({
+            type: 'info',
+            message: '请选择删除的内容！'
+          });
+          return;
         }
 
         this.$confirm('此操作将永久删除所选数据, 是否继续?', '提示', {
@@ -212,22 +220,11 @@
         }).then(() => {
           const sel = this.$refs.table.store.states.selection;
           let arr = new Array();
-          let del = true;
           sel.forEach(row =>{
-              if(row.rolelevel == 6 || row.rolelevel == 5){
-                this.$message({
-                  showClose: true,
-                  message: '无法删除管理员',
-                  type: 'error'
-                });
-                del = false;
-                  return ;
-              }
             arr.push(row);
           });
-          if(!del) return ;
           this.$store.commit('showLoading');
-          this.$axios.post('/occ/role/deleteBatch',arr).then(res =>{
+          this.$axios.post('/occ/permission/deleteBatch',arr).then(res =>{
             this.$store.commit('hideLoading');
             this.$message({
               type: 'success',
@@ -250,16 +247,28 @@
         });
       },
       edit: function(id){
-            this.$router.push('/manager/roleForm/edit/' + id);
-        },
-      dis: function(id){
-            this.$router.push('/manager/roleDisplay/' + id);
+        this.$router.push('/manager/permissionForm/edit/' + id);
       },
-      assign: function(id){
-        this.$router.push('/manager/roleAssignPer/' + id);
+      dis: function(id){
+        this.$router.push('/manager/permissionDisplay/' + id);
       },
       hasPermission(permission){
         return this.rolePers.indexOf(permission) > -1;
+      },
+      getAllModule: function(){
+        this.$store.commit('showLoading');
+        this.$axios.get('/occ/module/getAllModule').then(res =>{
+          this.$store.commit('hideLoading');
+          const data = res.data;
+          this.modules = data.data;
+        }).catch(err =>{
+          this.$store.commit('showLoading');
+          this.$message({
+            showClose: true,
+            message: err,
+            type: 'error'
+          });
+        });
       }
     }
 }

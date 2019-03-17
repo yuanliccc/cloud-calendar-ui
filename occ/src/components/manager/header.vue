@@ -1,33 +1,16 @@
 <template>
   <div class="header">
     <div class="tip">
-      <router-link to="/manager" class="tipSpan"><i class="glyphicon glyphicon-home icon"></i>机构日历系统</router-link>
+      <router-link to="/" class="tipSpan"><i class="glyphicon glyphicon-home icon"></i>机构日历系统</router-link>
     </div>
     <ul class="right">
       <li class="li">
-        <i class="glyphicon glyphicon-envelope iIcon"></i>
-        <div class="emailTips">
-          <div v-for="i in email" class="item">
-            <div class="title">{{i.title}}</div>
-            <div class="date">{{i.dateTime}}</div>
-          </div>
-          <div class="item">
-            <div class="title">更多...</div>
-          </div>
-        </div>
-      </li>
-
-      <li class="li">
-        <i class="glyphicon glyphicon-bell iIcon"></i>
-        <div class="infomation">
-          <div v-for="i in infomation" class="item">
-            <div class="title">{{i.title}}</div>
-            <div class="date">{{i.dateTime}}</div>
-          </div>
-          <div class="item">
-            <div class="title">更多...</div>
-          </div>
-        </div>
+        <el-badge :value="email.length" :max="99" class="item">
+          <el-button size="small"><i class="el-icon-message"></i></el-button>
+        </el-badge>
+        <el-badge :value="infomation.length" :max="10" class="item">
+          <el-button size="small"><i class="el-icon-bell"></i></el-button>
+        </el-badge>
       </li>
 
       <li class="portraitLi">
@@ -38,15 +21,32 @@
         <div class="userMenu">
           <div>用户中心</div>
           <div>修改密码</div>
+          <div @click="selectOrNot">选择机构 </div>
           <div @click="singOut">退出登录</div>
         </div>
       </li>
     </ul>
+    <div class="selOrg" v-if="selOrNot">
+      <div class="chooseLogin">
+        <el-form>
+          <el-form-item label="选择登录的机构">
+            <el-select v-model="organization.id">
+              <el-option v-for="i in organizations" :key="i.id" :value="i.id" :label="i.name"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item class="chooseBt">
+            <el-button type="primary" @click="changeOrg()">进入</el-button>
+            <el-button @click="selectOrNot">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
   export default{
+    inject:['reload'],
     name: 'managerHeader',
     data(){
       return {
@@ -94,28 +94,83 @@
             dateTime: '2019-01-25 15:58'
           }
         ],
+        organizations:[],
+        selOrNot: false,
       }
     },
     computed:{
       user: function () {
         return this.$store.getters.userInfo.user
       },
+      organization: function () {
+        return this.$store.getters.userInfo.organization
+      },
       allInfo: function(){ //测试用 要删
         return this.$store.getters.userInfo
       }
     },
+    created:function(){
+      this.getAllLoginUserOrg();
+    },
     methods:{
       singOut: function(){
-          this.$axios.get('/occ/user/singUp').then(res =>{
-            this.$store.commit("loginOut");
-            this.$router.push("/login");
-          }).catch(err =>{
+        this.$axios.get('/occ/user/singUp').then(res =>{
+          this.$router.push("/login");
+          this.$store.commit("loginOut");
+        }).catch(err =>{
+          this.$message({
+            showClose: true,
+            message: err,
+            type: 'error'
+          });
+        });
+      },
+      getAllLoginUserOrg: function(){
+        this.$store.commit("showLoading");
+        this.$axios.get("/occ/organization/getAllLoginUserOrg").then(res =>{
+          this.organizations = res.data.data;
+          this.$store.commit("hideLoading");
+        }).catch(err =>{
+          this.$store.commit("hideLoading");
+          this.$message({
+            showClose: true,
+            message: err,
+            type: 'error'
+          });
+        })
+      },
+      jumpTo: function (url) {
+        this.$router.push({path: url});
+      },
+      selectOrNot:function(){
+        this.selOrNot = !this.selOrNot;
+      },
+      changeOrg: function(){
+        this.$store.commit("showLoading");
+        this.$axios.get("/occ/user/switchOrg",{
+            params:{orgId: this.organization.id}
+        }).then(res =>{
+          const data = res.data;
+          if(data.code == '400'){
             this.$message({
               showClose: true,
-              message: err,
-              type: 'error'
+              message: data.message,
+              type: 'warning'
             });
+          }else{
+            this.$store.commit('setUserInfo', data.data);
+            this.selectOrNot();
+            this.reload();
+          }
+          this.$store.commit("hideLoading");
+        }).catch(err =>{
+          this.$store.commit("hideLoading");
+          this.$message({
+            showClose: true,
+            message: err,
+            type: 'error'
           });
+        });
       }
     }
   }
@@ -150,7 +205,7 @@
     padding-left: 40px;
   }
   .right{
-    width:350px;
+    width:450px;
     padding: 0 10px;
     padding-left: 60px;
     height:60px;
@@ -159,20 +214,12 @@
     display: inline;
   }
   .li, .portraitLi{
-    width: 60px;
+    width: 100px;
     cursor:pointer;
     display: inline;
-    padding-bottom: 22px;
   }
-  .iIcon{
-    cursor: pointer;
-    font-size: 20px;
-    font-weight: bold;
-    color: rgba(0,0,0,0.4);
-    margin-right: 20px;
-  }
-  .iIcon:hover{
-    color:red
+  .portraitLi{
+    padding-bottom: 23px;
   }
   .portrait{
     width: 40px;
@@ -180,38 +227,20 @@
     border: 1px solid #ccc;
     border-radius: 50%;
   }
-  .emailTips, .infomation{
-    top: 60px;
-    position: absolute;
-    width:250px;
-    margin-left: -100px;
-    border: 1px solid #ccc;
-    display: none;
-    background: #ffffff;
-  }
   .item{
-    width:250px;
-    padding:0 10px 5px 10px;
-    border-bottom: 1px solid #cccccc;
-  }
-  .title, .date{
-    height: 30px;
-    overflow: hidden;
-    line-height: 45px;
+    margin-top: 10px;
+    margin-right: 30px;
+    display: inline;
   }
   .item:hover{
-    text-decoration: underline;
     color: deepskyblue;
-  }
-  .infomation{
-    margin-left: -70px;
   }
   .userMenu{
     top: 60px;
     position: absolute;
-    width:120px;
+    width:150px;
     border: 1px solid #ccc;
-    margin-left: 100px;
+    margin-left: 170px;
     display: none;
     background: #ffffff;
   }
@@ -220,20 +249,41 @@
     text-align: left;
     line-height: 40px;
     padding-left: 20px;
+    border-bottom: 1px solid #ccc;
   }
   .userMenu div:hover{
     background: #cccccc;
     color: #000;
   }
-  li:hover .emailTips, li:hover .userMenu, li:hover .infomation{
+  li:hover .userMenu{
     display: block;
   }
-  .emailTips:hover, .userMenu:hover{
+  li:hover .chooseOrg{
+    display: block;
+  }
+  .userMenu:hover{
     display: block;
   }
   .userName{
     margin: 0 2px;
     font-size: 13px;
     font-weight: bold;
+  }
+  .selOrg{
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background-color: #fff;
+  }
+  .chooseLogin{
+    width: 400px;
+    margin: 0 auto;
+    margin-top:15%;
+  }
+  .chooseBt{
+    text-align: center;
   }
 </style>
