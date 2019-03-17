@@ -1,42 +1,42 @@
 <template>
   <!-- 在Form表单中,每一个表单域由一个Form-Item组件构成 -->
-  <el-form-item v-if="element && element.key" class="widget-view" :label="element.name"
-    :class="{active: selectWidget.key == element.key}"
+  <el-form-item v-if="element && element.key" class="widget-view" :label="element.label"
+    :class="{active: selectWidget.key === element.key}"
     @click.native="handleSelectWidget(index)">
-    <template v-if="element.type == 'input'">
+    <template v-if="element.type === 'input'">
       <el-input v-model="element.options.defaultValue">
       </el-input>
     </template>
 
-    <template v-if="element.type == 'textarea'">
+    <template v-if="element.type === 'textarea'">
       <el-input type="textarea" :rows="4" v-model="element.options.defaultValue">
       </el-input>
     </template>
 
-    <template v-if="element.type == 'checkbox'">
+    <template v-if="element.type === 'checkbox'">
       <el-checkbox-group v-model="element.options.defaultValue">
         <el-checkbox v-for="(item, index) in element.options.options" :key="item.value + index" :label="item.value"></el-checkbox>
       </el-checkbox-group>
     </template>
 
-    <template v-if="element.type == 'radio'">
+    <template v-if="element.type === 'radio'">
       <el-radio-group v-model="element.options.defaultValue">
         <el-radio v-for="(item, index) in element.options.options" :key="item.value + index" :label="item.value"></el-radio>
       </el-radio-group>
     </template>
 
-    <template v-if="element.type == 'select'">
+    <template v-if="element.type === 'select'">
       <el-select v-model="element.options.defaultValue">
         <el-option v-for="item in element.options.options" :key="item.value" :value="item.value" :label="item.value"></el-option>
       </el-select>
     </template>
 
-    <template v-if="element.type == 'date'">
+    <template v-if="element.type === 'date'">
       <el-date-picker v-model="element.options.defaultValue" type="date">
       </el-date-picker>
     </template>
 
-    <el-button title="删除" v-if="selectWidget.key == element.key" circle plain type="danger"
+    <el-button title="删除" v-if="selectWidget.key === element.key" circle plain type="danger"
       @click.stop="handleWidgetDelete(index)" icon="el-icon-delete">
     </el-button>
   </el-form-item>
