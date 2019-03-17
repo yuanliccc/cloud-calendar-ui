@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-view/>
+    <router-view v-if="isRouterAlive"/>
     <loading v-if="isLoad"></loading>
   </div>
 </template>
@@ -12,9 +12,27 @@ export default {
   components:{
     loading,
   },
+  data(){
+    return{
+      isRouterAlive:true
+    }
+  },
+  provide(){
+    return{
+      reload:this.reload
+    }
+  },
   computed: {
     isLoad: function () {
       return this.$store.getters.showLoading
+    }
+  },
+  methods:{
+    reload(){
+      this.isRouterAlive = false;
+      this.$nextTick(function(){
+        this.isRouterAlive = true;
+      })
     }
   }
 }

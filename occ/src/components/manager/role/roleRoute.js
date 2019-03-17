@@ -38,5 +38,15 @@ export default [
       permission: 'role_display'
     },
     component: () => import('./roleDisplay')
+  },
+  {
+    path: '/manager/roleAssignPer/:roleId',
+    name: 'roleAssignPer',
+    meta: {
+      label: '分配权限',
+      requireAuth: true,
+      permission: 'permission_assign'
+    },
+    component: () => import('./roleAssign')
   }
 ]

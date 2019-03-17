@@ -68,9 +68,9 @@ function noPermission(path) {
   return ['/404',].indexOf(path) > -1
 }
 function hasPermission(to){
-  /*if(to.meta.permission === "") return true;
+  if(to.meta.permission === "") return true;
   if(store.getters.userInfo.permissions.indexOf(to.meta.permission) == -1)
-    return false;*/
+    return false;
 
   return true;
 }
