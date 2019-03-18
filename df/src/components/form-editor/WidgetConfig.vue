@@ -2,7 +2,7 @@
   <div v-if="show">
     <el-form label-position="top">
       <el-form-item label="标题" v-if="data.type != 'grid'">
-        <el-input v-model="data.name"></el-input>
+        <el-input v-model="data.label"></el-input>
       </el-form-item>
       <el-form-item label="选项" v-if="Object.keys(data.options).indexOf('options') >= 0">
         <template v-if="data.type == 'radio' || data.type == 'select'">

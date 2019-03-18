@@ -1,4 +1,4 @@
-import dynamicFormComponent from './components/Container.vue'
+import dynamicFormComponent from './components/form-editor/Container.vue'
 
 const components = [
   dynamicFormComponent
