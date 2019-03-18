@@ -3,7 +3,7 @@ import Axios from 'axios'
 import store from '../store/index'
 import router from '../router/index'
 
-Axios.defaults.baseURL='http://127.0.0.1:8000'
+//Axios.defaults.baseURL='http://127.0.0.1:8000'
 
 Axios.interceptors.request.use(
   config => {

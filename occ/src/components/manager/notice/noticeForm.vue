@@ -4,22 +4,31 @@
     <div class="publicTitle" v-if="add">新增通知</div>
     <div>
       <el-form label-position="left" ref="notice"class="add_Edit" :model="notice" :rules="rules" :inline="true"
-                label-width="120px">
-        <el-form-item label="用户id" prop="userid">
-          <el-input v-model="notice.userid" placeholder="用户id，一旦新建便无法修改"></el-input>
-        </el-form-item>
-        <el-form-item label="状态" prop="state">
-          <el-input v-model="notice.state" placeholder="状态，一旦新建便无法修改"></el-input>
+                label-width="130px">
+        <el-form-item label="用户">
+          <el-select v-model="notice.userid">
+            <el-option v-for="i in users" :key="i.id" :value="i.id" :label="i.name">
+              <span style="float:left;">{{i.name}}</span>
+              <span style="float:right;">{{i.account}}</span>
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="标题" prop="title">
-          <el-input v-model="notice.title" placeholder="标题，一旦新建便无法修改"></el-input>
+          <el-input v-model="notice.title" placeholder="标题"></el-input>
         </el-form-item>
-        <el-form-item label="提交时间" prop="starttime">
-          <el-input v-model="notice.starttime" placeholder="提交时间，一旦新建便无法修改"></el-input>
+        <el-form-item label="所有用户推送">
+          <el-switch v-model="allUser"></el-switch>
         </el-form-item>
         <el-form-item label="类型" prop="type">
-          <el-input v-model="notice.type" placeholder="类型，一旦新建便无法修改"></el-input>
+          <el-select v-model="notice.type" placeholder="请选择类型">
+            <el-option v-for="i in types" :key="i" :value="i" :label="i">
+            </el-option>
+          </el-select>
         </el-form-item>
+        <el-form-item label="内容" prop="content">
+          <el-input type="textarea"  class="text" v-model="notice.content" placeholder="请输入内容"></el-input>
+        </el-form-item>
+
         <div class="form_Bt">
           <el-form-item>
             <el-button v-if="add" type="primary" @click="submit">立即创建</el-button>
@@ -46,23 +55,17 @@
           content: '',
           starttime: '',
           checktime: '',
-          type: '',
+          type: '消息通知',
         },
+        allUser: false,
+        users:[],
+        types:['部门通知','紧急通知','消息通知'],
         rules:{
-          userid: [
-            { required: true, message: '请输入用户id，一旦新建便无法修改', trigger: 'blur' }
-          ],
-          state: [
-            { required: true, message: '请输入状态，一旦新建便无法修改', trigger: 'blur' }
-          ],
           title: [
             { required: true, message: '请输入标题，一旦新建便无法修改', trigger: 'blur' }
           ],
-          starttime: [
-            { required: true, message: '请输入提交时间，一旦新建便无法修改', trigger: 'blur' }
-          ],
           type: [
-            { required: true, message: '请输入类型，一旦新建便无法修改', trigger: 'blur' }
+            { required: true, message: '请选择类型，一旦新建便无法修改', trigger: 'blur' }
           ],
         }
       }
@@ -72,6 +75,7 @@
       if(!this.add){
         this.getInfoById(this.$route.params.noticeId);
        }
+       this.getUserByLoginOrgId();
     },
     methods:{
       clear:function(){
@@ -83,7 +87,7 @@
           content: '',
           starttime: '',
           checktime: '',
-          type: '',
+          type: '消息通知',
         }
       },
       submit: function(){
@@ -100,6 +104,19 @@
         });
       },
       save: function(){
+          if(this.notice.userid == '' && !this.allUser){
+            this.$message({
+              showClose: true,
+              message: '请选择通知的用户！',
+              type: 'warning'
+            });
+            return;
+          }
+
+          if(this.allUser){
+            this.notice.id = -1;
+          }
+
         this.$store.commit("showLoading");
         this.$axios.post('/occ/notice/add', this.notice)
         .then(res =>{
@@ -176,10 +193,29 @@
           });
         });
       },
+      getUserByLoginOrgId: function(){
+        this.$store.commit("showLoading");
+        this.$axios.get("/occ/user/getUserByLoginOrgId").then(res =>{
+          this.$store.commit("hideLoading");
+          this.users = res.data.data;
+        }).catch(err =>{
+         this.$store.commit("hideLoading");
+          this.$message({
+            showClose: true,
+            message: err,
+            type: 'error'
+          });
+        });
+      }
     }
   }
 </script>
 
 <style scoped>
-
+  .text{
+    width: 630px !important;
+  }
+  .el-switch{
+    width:250px;
+  }
 </style>

@@ -18,9 +18,8 @@
       </div>
       <el-table :data="datas.list" ref="table">
         <el-table-column type="selection" width="50"></el-table-column>
-        <el-table-column prop="userid" :label="titles[0].name" sortable></el-table-column>
-        <el-table-column prop="state" :label="titles[1].name" sortable></el-table-column>
         <el-table-column prop="title" :label="titles[2].name" sortable></el-table-column>
+        <el-table-column prop="state" :label="titles[1].name" sortable></el-table-column>
         <el-table-column prop="starttime" :label="titles[3].name" sortable></el-table-column>
         <el-table-column prop="type" :label="titles[4].name" sortable></el-table-column>
         <el-table-column
@@ -57,10 +56,6 @@
       return {
         findList:[
           {
-            name: '用户id',
-            tip: 'userid'
-          },
-          {
             name: '状态',
             tip: 'state'
           },
@@ -69,16 +64,8 @@
             tip: 'title'
           },
           {
-            name: '提交时间',
-            tip: 'starttime'
-          },
-          {
             name: '类型',
             tip: 'type'
-          },
-          {
-            name: '通知id',
-            tip: 'id'
           },
         ],
         findKey: '',

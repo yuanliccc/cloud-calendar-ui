@@ -12,16 +12,23 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/occ': {
-        target: 'http://127.0.0.1:8000',//后端接口地址
+        target: 'http://127.0.0.1:8000/occ',//后端接口地址
         changeOrigin: true,//是否允许跨越
         pathRewrite: {
           '^/occ': '/',//重写,
         }
       },
+      '/scoket': {
+        target: 'http://127.0.0.1:8008',//后端接口地址
+        changeOrigin: true,//是否允许跨越
+        pathRewrite: {
+          '^/scoket': '/',//重写,
+        }
+      },
     },
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: '0.0.0.0', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

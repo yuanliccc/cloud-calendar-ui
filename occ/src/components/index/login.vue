@@ -17,17 +17,12 @@
   <div class="loginBt_">
     <button @click="login" >登录</button>
   </div>
-  <con ref="con"></con>
 </div>
 </template>
 
 <script>
-  import con from '../../confirm/index.vue'
   export default{
     name: 'login',
-    components: {
-      con,
-    },
     data() {
       return {
         account:'',
@@ -37,7 +32,11 @@
     methods:{
         login: function() {
           if (this.password == '' || this.account == '') {
-            this.$refs.con.show('请输入账号或密码！', null);
+            this.$message({
+              showClose: true,
+              message: '请输入账号或密码！',
+              type: 'warning'
+            });
             return;
           }
           this.$store.commit('showLoading');
@@ -47,15 +46,23 @@
           }).then(res => {
             const data = res.data;
             if(data == '' || data.message != 'SUCCESS'){
-              this.$refs.con.show(data.message, null);
+              this.$message({
+                showClose: true,
+                message: data.message,
+                type: 'warning'
+              });
             }else{
               this.$store.commit('setUserInfo', data.data);
               this.$router.push('/');
             }
             this.$store.commit('hideLoading');
           }).catch(err => {
-            this.$refs.con.show(err.data.message, null);
             this.$store.commit('hideLoading');
+            this.$message({
+              showClose: true,
+              message: err,
+              type: 'error'
+            });
           });
         }
     }
