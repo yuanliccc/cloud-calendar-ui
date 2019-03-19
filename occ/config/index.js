@@ -19,7 +19,7 @@ module.exports = {
         }
       },
       '/scoket': {
-        target: 'http://127.0.0.1:8008',//后端接口地址
+        target: 'ws://localhost:8000',//后端接口地址
         changeOrigin: true,//是否允许跨越
         pathRewrite: {
           '^/scoket': '/',//重写,
