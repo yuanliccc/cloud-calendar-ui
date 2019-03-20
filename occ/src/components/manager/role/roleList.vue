@@ -43,6 +43,7 @@
           :current-page="datas.pageNum"
           :page-sizes="displays"
           :page-size="display"
+          :pager-count="5"
           layout="total, sizes, prev, pager, next, jumper"
           :total="datas.total">
         </el-pagination>
@@ -51,6 +52,7 @@
   </div>
 </template>
 <script>
+
   export default{
     name: 'roleList',
     data(){

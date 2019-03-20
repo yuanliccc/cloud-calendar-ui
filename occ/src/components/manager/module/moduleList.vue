@@ -71,6 +71,7 @@
           @current-change="sizeChange"
           @prev-click="prePage"
           @next-click="nextPage"
+          :pager-count="5"
           :current-page="datas.pageNum"
           :page-sizes="displays"
           :page-size="display"
@@ -106,6 +107,7 @@
           ],
           findKey: '',
           findVal: '',
+          pageCount: 4,
           page:{
             allPage: 1,
             nowPage: 1,

@@ -47,6 +47,7 @@
           @next-click="nextPage"
           :current-page="datas.pageNum"
           :page-sizes="displays"
+          :pager-count="5"
           :page-size="display"
           layout="total, sizes, prev, pager, next, jumper"
           :total="datas.total">

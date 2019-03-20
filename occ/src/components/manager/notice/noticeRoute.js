@@ -1,9 +1,18 @@
 export default [
   {
-    path: '/manager/noticeList',
-    name: 'noticeList',
+    path: '/manager/noticeList/notice',
+    name: 'notice',
     meta: {
-      label: '通知管理',
+      label: '通知',
+      requireAuth: true,
+      permission: "notice_left"
+    },
+    component: () => import('./noticeList'),
+  },{
+    path: '/manager/noticeList/perLetter',
+    name: 'perLetter',
+    meta: {
+      label: '私信',
       requireAuth: true,
       permission: "notice_left"
     },

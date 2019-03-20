@@ -5,11 +5,11 @@
     </div>
     <ul class="right">
       <li class="li">
-        <el-badge :value="email.length" :max="99" class="item">
-          <el-button size="small"><i class="el-icon-message"></i></el-button>
+        <el-badge :value="chat" :max="99" class="item">
+          <el-button @click="jumpTo('/manager/noticeList/perLetter')" size="small"><i class="el-icon-message"></i></el-button>
         </el-badge>
-        <el-badge :value="infomation.length" :max="10" class="item">
-          <el-button size="small"><i class="el-icon-bell"></i></el-button>
+        <el-badge :value="infomation.length" :max="99" class="item" type="primary">
+          <el-button size="small" @click="jumpTo('/manager/noticeList/notice')"><i class="el-icon-bell"></i></el-button>
         </el-badge>
       </li>
 
@@ -50,50 +50,8 @@
     name: 'managerHeader',
     data(){
       return {
-        email:[
-          {
-            title: '尊敬的XX用户，明天在某地某时间集合，请勿迟到！！！',
-            dateTime: '2019-01-25 15:58'
-          },
-          {
-            title: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-            dateTime: '2019-01-25 15:58'
-          },
-          {
-            title: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-            dateTime: '2019-01-25 15:58'
-          },
-          {
-            title: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-            dateTime: '2019-01-25 15:58'
-          },
-          {
-            title: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-            dateTime: '2019-01-25 15:58'
-          }
-        ],
-        infomation:[
-          {
-            title: '系统消息：明天在某地某时间集合，请勿迟到！！！',
-            dateTime: '2019-01-25 15:58'
-          },
-          {
-            title: '机构消息：明天在某地某时间集合，请勿迟到！！！',
-            dateTime: '2019-01-25 15:58'
-          },
-          {
-            title: '机构消息：明天在某地某时间集合，请勿迟到！！！',
-            dateTime: '2019-01-25 15:58'
-          },
-          {
-            title: '机构消息：明天在某地某时间集合，请勿迟到！！！',
-            dateTime: '2019-01-25 15:58'
-          },
-          {
-            title: '机构消息：明天在某地某时间集合，请勿迟到！！！',
-            dateTime: '2019-01-25 15:58'
-          }
-        ],
+        chat:0,
+        infomation:[],
         organizations:[],
         testNotice:{
           id:1,
@@ -112,11 +70,13 @@
       },
       allInfo: function(){ //测试用 要删
         return this.$store.getters.userInfo
-      }
+      },
     },
     created:function(){
       this.getAllLoginUserOrg();
-      this.initWebSocket();
+      //this.initWebSocket();
+      this.flushUnreadNotice();
+      this.flushUnreadChatMessage();
     },
     destroyed: function() {
       //页面销毁时关闭长连接
@@ -125,6 +85,7 @@
     methods:{
       singOut: function(){
         this.$axios.get('/occ/user/singUp').then(res =>{
+          //this.websocket.onclose;
           this.$router.push("/login");
           this.$store.commit("loginOut");
         }).catch(err =>{
@@ -184,8 +145,9 @@
         });
       },
       initWebSocket(){ //初始化weosocket
+        const ip = window.location.href.split('/')[2].split(":")[0];
+        const wsuri = "ws://" + ip + ":8000/notice/" + this.user.id;//ws地址
 
-        const wsuri = "ws://192.168.20.65:8000/notice/" + this.user.id;//ws地址
         this.websocket = new WebSocket(wsuri);
         this.websocket.onopen = this.websocketonopen;
 
@@ -194,7 +156,6 @@
         this.websocket.onmessage = this.websocketonmessage;
         this.websocket.onclose = this.websocketclose;
       },
-
       websocketonopen() {
         console.log("WebSocket连接成功");
       },
@@ -220,7 +181,6 @@
           });
         }
       },
-
       websocketsend(){//数据发送
         const message ={
           senduserid: this.user.id,
@@ -231,10 +191,37 @@
         }
         this.websocket.send(JSON.stringify(message));
       },
-
       websocketclose(e){ //关闭
         console.log("connection closed (" + e + ")");
       },
+      flushUnreadNotice: function(){
+        this.$store.commit("showLoading");
+        this.$axios.get("/occ/notice/getAllUnread").then(res =>{
+          this.infomation = res.data.data;
+          this.$store.commit("hideLoading");
+        }).catch(err =>{
+          this.$store.commit("hideLoading");
+          this.$message({
+            showClose: true,
+            message: err,
+            type: 'error'
+          });
+        })
+      },
+      flushUnreadChatMessage: function(){
+        this.$store.commit("showLoading");
+        this.$axios.get("/occ/notice/getUnreadMessage").then(res =>{
+          this.chat = res.data.data;
+          this.$store.commit("hideLoading");
+        }).catch(err =>{
+          this.$store.commit("hideLoading");
+          this.$message({
+            showClose: true,
+            message: err,
+            type: 'error'
+          });
+        })
+      }
     }
   }
 </script>
