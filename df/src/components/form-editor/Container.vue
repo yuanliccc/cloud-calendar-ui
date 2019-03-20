@@ -150,6 +150,8 @@ export default {
             console.log('error' + err)
           })
       }
+
+      this.$router.push({path: '/main/dfList'})
     },
     queryParam () {
       this.operator = this.$route.query.operator

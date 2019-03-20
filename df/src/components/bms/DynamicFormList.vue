@@ -18,7 +18,7 @@
       </div>
       <div class="form-list flex-column">
         <div class="list-block">
-          <el-table border style="width: 100%" :data="dynamicFormList" @selection-change="handleSelectionChange">
+          <el-table border style="width: 100%" :data="dynamicFormList" @selection-change="handleSelectionChange" max-height="350">
             <el-table-column type="selection">
             </el-table-column>
             <el-table-column fixed prop="name" label="表单名称"></el-table-column>
@@ -27,7 +27,6 @@
             <el-table-column fixed="right" label="操作">
               <template slot-scope="scope">
                 <div class="flex-row">
-                  <el-button @click="display(scope.row)" size="mini" type="text">预览</el-button>
                   <el-button @click="editDynamicForm(scope.row)" size="mini" type="text">编辑</el-button>
                   <el-button @click="deleteDynamicForm(scope.row)" size="mini" type="text">删除</el-button>
                 </div>
@@ -37,8 +36,12 @@
         </div>
         <div class="pagination-block flex-center">
           <el-pagination
+            :page-size="pageSize"
+            :current-page="pageNum"
             layout="prev, pager, next"
-            :total="1000">
+            @size-change="handlePageSizeChange"
+            @current-change="handleCurrentPageChange"
+            :total="dataCount">
           </el-pagination>
         </div>
       </div>
@@ -54,22 +57,30 @@ export default {
   },
   data () {
     return {
+      pageSize: 10,
+      pageNum: 1,
+      dataCount: 0,
       dynamicFormList: [],
       multipleSelection: []
     }
   },
   mounted () {
-    this.findDynamicFormList()
+    this.findDynamicFormList(this.pageNum, this.pageSize)
   },
   methods: {
+    handlePageSizeChange: function (pageSize) {
+      this.pageSize = pageSize
+      this.findDynamicFormList(this.pageNum, this.pageSize)
+    },
+    handleCurrentPageChange: function (currentPage) {
+      this.pageNum = currentPage
+      this.findDynamicFormList(this.pageNum, this.pageSize)
+    },
     addDynamicForm () {
       this.$router.push({path: '/dfWorkSpace', query: {operator: 'add'}})
     },
     editDynamicForm (row) {
       this.$router.push({path: '/dfWorkSpace', query: {operator: 'edit', formId: row.id}})
-    },
-    display (index) {
-      console.log('dispaly: ' + index)
     },
     deleteDynamicForm (row) {
       this.$axios.delete('/df/dynamic/form/' + row.id)
@@ -88,16 +99,30 @@ export default {
       this.multipleSelection = val
       console.log(val)
     },
-    findDynamicFormList () {
-      this.$axios.get('/df/dynamic/form')
+    findDynamicFormCount: function () {
+      this.$axios.get('/df/dynamic/form/findDynamicFormCount')
         .then(res => {
           const data = res.data
           if (data != null) {
-            this.dynamicFormList = data.data.list
+            this.dataCount = data.data
+          }
+        })
+        .catch(err => {
+          console.log('err: ' + err)
+        })
+    },
+    findDynamicFormList: function (pageNum, pageSize) {
+      this.$axios.get('/df/dynamic/form/findDynamicFormByLimit?pageNum=' + pageNum + '&pageSize=' + pageSize)
+        .then(res => {
+          const data = res.data
+          if (data != null) {
+            this.dynamicFormList = data.data
 
             for (let i = 0; i < this.dynamicFormList.length; i++) {
               this.dynamicFormList[i].createTime = this.timeGST(this.dynamicFormList[i].createTime)
             }
+
+            this.findDynamicFormCount()
           }
         })
         .catch(err => {

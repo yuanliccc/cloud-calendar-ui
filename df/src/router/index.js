@@ -24,30 +24,30 @@ export default new Router({
           component: index
         },
         {
-          path: 'login',
+          path: '/login',
           name: 'login',
           meta: {index: 1},
           component: login
         },
         {
-          path: 'signup',
+          path: '/signup',
           name: 'signup',
           meta: {index: 2},
           component: signup
         },
         {
-          path: 'main',
+          path: '/main',
           component: main,
           meta: {index: 3},
           children: [
             {
-              path: 'personal',
+              path: '/main/personal',
               name: 'personal',
               meta: {index: 4},
               component: personal
             },
             {
-              path: 'dfList',
+              path: '/main/dfList',
               name: 'dfList',
               meta: {index: 5},
               component: dfList
@@ -55,7 +55,7 @@ export default new Router({
           ]
         },
         {
-          path: 'dfWorkSpace',
+          path: '/dfWorkSpace',
           name: 'dfWorkSpace',
           meta: {index: 6},
           component: dfWorkSpace
