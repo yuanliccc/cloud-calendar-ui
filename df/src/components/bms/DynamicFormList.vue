@@ -27,7 +27,6 @@
             <el-table-column fixed="right" label="操作">
               <template slot-scope="scope">
                 <div class="flex-row">
-                  <el-button @click="display(scope.row)" size="mini" type="text">预览</el-button>
                   <el-button @click="editDynamicForm(scope.row)" size="mini" type="text">编辑</el-button>
                   <el-button @click="deleteDynamicForm(scope.row)" size="mini" type="text">删除</el-button>
                 </div>
@@ -67,9 +66,6 @@ export default {
     },
     editDynamicForm (row) {
       this.$router.push({path: '/dfWorkSpace', query: {operator: 'edit', formId: row.id}})
-    },
-    display (index) {
-      console.log('dispaly: ' + index)
     },
     deleteDynamicForm (row) {
       this.$axios.delete('/df/dynamic/form/' + row.id)
