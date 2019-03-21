@@ -74,7 +74,7 @@
     },
     created:function(){
       this.getAllLoginUserOrg();
-      //this.initWebSocket();
+      this.initWebSocket();
       this.flushUnreadNotice();
       this.flushUnreadChatMessage();
     },
@@ -86,8 +86,6 @@
       singOut: function(){
         this.$axios.get('/occ/user/singUp').then(res =>{
           //this.websocket.onclose;
-          this.$router.push("/login");
-          this.$store.commit("loginOut");
         }).catch(err =>{
           this.$message({
             showClose: true,
@@ -95,6 +93,9 @@
             type: 'error'
           });
         });
+
+        this.$router.push("/login");
+        this.$store.commit("loginOut");
       },
       getAllLoginUserOrg: function(){
         this.$store.commit("showLoading");
@@ -167,13 +168,27 @@
         //注意：长连接我们是后台直接1秒推送一条数据，
         //但是点击某个列表时，会发送给后台一个标识，后台根据此标识返回相对应的数据，
         //这个时候数据就只能从一个出口出，所以让后台加了一个键，例如键为1时，是每隔1秒推送的数据，为2时是发送标识后再推送的数据，以作区分
-        console.log(e.data);
+        console.log(data);
+
+
 
         if(data.type == 1) {
           this.$notify.info({
             title: '私信通知',
             message: data.obj.content
           });
+          if(this.$parent.$children[2].showImg != true){
+            this.$parent.$children[2].chatMessages.push({
+              content: data.obj.content,
+              senduserid: data.obj.senduserid,
+              receiveuserid: data.obj.receiveuserid,
+              sendtime: data.obj.sendtime,
+            });
+
+            setTimeout(()=>{
+              this.$parent.$children[2].chatBottom();
+            },100);
+          }
         }else {
           this.$notify.info({
             title: '消息通知',
@@ -181,17 +196,11 @@
           });
         }
       },
-      websocketsend(){//数据发送
-        const message ={
-          senduserid: this.user.id,
-          receiveuserid: this.user.id,
-          sendtime: new Date(),
-          content:'hello',
-          type:'文字'
-        }
+      websocketsend(message){//数据发送
         this.websocket.send(JSON.stringify(message));
       },
       websocketclose(e){ //关闭
+        this.websocket.close();
         console.log("connection closed (" + e + ")");
       },
       flushUnreadNotice: function(){

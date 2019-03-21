@@ -78,12 +78,43 @@
 
           </el-aside>
 
-          <el-container>
-            <el-main style="background-color: #f3f5f7;">
-              <div class="chat_Window">
-                <img src="../../../assets/logo.png" style="margin: 0 auto"/>
+          <el-container direction="vertical">
+            <el-main style="background-color: #f3f5f7;padding-top: 50px;" class="innerbox">
+              <div class="chat_Window" ref="chatMain">
+                <img src="../../../assets/logo.png" style="margin: 0 auto" v-if="showImg"/>
+
+                <div :class="[i.senduserid == chatUser.id ? 'messageItem_Left' : 'messageItem_Right']" v-for=" i in chatMessages" v-if="!showImg">
+                  <div :class="[i.senduserid == chatUser.id ? 'chat_Logo_Left' : 'chat_Logo_Right']">
+                    <img src="../../../assets/image/testPortrait.jpg" class="chat_Img"/>
+                  </div>
+                  <div :class="[i.senduserid == chatUser.id ? 'chat_Text_Left' : 'chat_Text_Right']">
+                    <pre>{{i.content}}</pre>
+                  </div>
+                  <div :class="[i.senduserid == chatUser.id ? 'chat_subTime_Left' : 'chat_subTime_Right']">{{i.sendtime | formatDate}}</div>
+                </div>
+                <!--<div class="messageItem_Right" v-if="!showImg">
+                  <div class="chat_Logo_Right">
+                    <img src="../../../assets/image/testPortrait.jpg" class="chat_Img"/>
+                  </div>
+                  <div class="chat_Text_Right">
+                    <pre>618大促，慕课网与千万级程序员，“惠”战到底！详情请查看：<a href="https://www.imooc.com/act/discount">https://www.imooc.com/act/discount</a></pre>
+                  </div>
+                  <div class="chat_subTime_Right">2019-03-20 16:58:42</div>
+                </div>-->
               </div>
             </el-main>
+
+            <el-footer style="height:75px;padding: 0;">
+              <div class="submit">
+               <div class="submit_Text">
+                  <el-input type="textarea" :rows="3" resize="none" v-model="chatContent" @keydown.native="listen($event)"></el-input>
+                </div>
+                <div class="submit_Button">
+                  <el-button @click="sendToOther" type="primary">发送</el-button>
+                </div>;
+              </div>
+            </el-footer>
+
           </el-container>
         </el-container>
       </el-tab-pane>
@@ -132,12 +163,12 @@
       },
         displays:[10, 20, 50],
         display: 10,
-        orgUsers:[
-          {"id":1,"name":"系统管理员","account":"admin","password":"admin","phone":"15310490986","email":"965537330@qq.com","sex":"男", "display": true},
-          {"id":2,"name":"管理员","account":"admin","password":"admin","phone":"15310490986","email":"965537330@qq.com","sex":"男", "display": true}
-        ],
+        orgUsers:[],
+        chatContent:'',
+        showImg:true,
         findUser:"",
         chatUser:{},
+        chatMessages:new Array()
       }
     },
     filters: {
@@ -361,6 +392,9 @@
       },
       chooseThis: function(obj){
         this.chatUser = obj;
+        this.showImg = false;
+        this.getChatUserMessage();
+        this.seeAllMessage();
       },
       getChatUser: function(){
         this.$store.commit('showLoading');
@@ -376,6 +410,75 @@
             type: 'error'
           });
         });
+      },
+      getChatUserMessage:function(){
+        this.$store.commit("showLoading");
+        this.$axios.get("/occ/notice/getChatUserMessage",{
+            params:{chatUserId: this.chatUser.id}
+        }).then(res =>{
+          this.chatMessages = res.data.data;
+          this.$store.commit("hideLoading");
+
+          setTimeout(()=>{
+              this.chatBottom();
+          }, 100)
+        }).catch(err =>{
+          this.$store.commit("hideLoading");
+          this.$message({
+            showClose: true,
+            message: err,
+            type: 'error'
+          });
+        });
+      },
+      chatBottom:function(){
+        const container = this.$el.querySelector(".el-main");
+        container.scrollTop = container.scrollHeight;
+      },
+      sendToOther:function(){
+        const chat = {
+          sendtime: new Date(),
+          senduserid: this.$parent.$children[0].user.id,
+          receiveuserid: this.chatUser.id,
+          type:'文字',
+          hadseen:'否',
+          content: this.chatContent,
+        };
+        this.$parent.$children[0].websocketsend(chat);
+        this.chatMessages.push({
+          sendtime: new Date(),
+          senduserid: this.$parent.$children[0].user.id,
+          receiveuserid: this.chatUser.id,
+          type:'文字',
+          content: this.chatContent,
+        });
+        this.chatContent= '';
+        setTimeout(()=>{
+          this.chatBottom();
+        }, 100)
+      },
+      listen (event) {
+        if (event.keyCode === 13) {
+          this.sendToOther() // 发送文本
+          event.preventDefault() // 阻止浏览器默认换行操作
+          return false
+        }
+      },
+      seeAllMessage:function(){
+        this.$store.commit("showLoading");
+        this.$axios.get("/occ/notice/seeAllMessage",{
+            params:{sendUserId: this.chatUser.id}
+        }).then(res =>{
+          this.$store.commit("hideLoading");
+          this.$parent.$children[0].flushUnreadChatMessage();
+        }).catch(err =>{
+          this.$store.commit("hideLoading");
+          this.$message({
+            showClose: true,
+            message: err,
+            type: 'error'
+          });
+        });
       }
     }
 }
@@ -383,6 +486,20 @@
 
 <style scoped>
   .noticeTabs{
+  }
+  pre{
+    white-space: pre-wrap;
+    word-break: break-all;
+    word-wrap: break-word;
+    border: none;
+    line-height: 40px;
+    background-color: #fff;
+    font-family: 微软雅黑;
+    margin: 0;
+    font-size: 14px;
+    padding: 0;
+    width: 100%;
+    height: 100%;
   }
   .notice_Page{
     width:430px;
@@ -441,6 +558,26 @@
     margin: 15px 0 15px 10px;
     border-radius: 50%;
   }
+  .messageItem_Left, .messageItem_Right{
+    overflow:hidden;
+    margin:0 0 60px 0;
+  }
+  .chat_Logo_Right{
+    width: 52px;
+    height: 52px;
+    float: right;
+  }
+  .chat_Logo_Left{
+    width: 52px;
+    height: 52px;
+    float: left;
+  }
+  .chat_Img{
+    width: 50px;
+    height: 50px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+  }
   .user_Nmae{
     font-weight: bolder;
     font-size: 16px;
@@ -468,9 +605,69 @@
   }
   .chat_Window{
     width: 100%;
-    height:100%;
   }
-  .chat_Window img{
+  .chat_Window .img{
     margin: 25% 38% 25% 38%!important;
+  }
+  .chat_Text_Right{
+    max-width: 550px;
+    min-width: 10px;
+    line-height: 25px;
+    min-height: 50px;
+    max-height: 1000px;
+    padding: 5px;
+    margin-right: 15px;
+    border-radius: 10px;
+    display: inline-block;
+    background-color: #fff;
+    word-wrap:break-word;
+    float: right;
+  }
+
+  .chat_Text_Left{
+    max-width: 550px;
+    min-width: 10px;
+    line-height: 25px;
+    min-height: 50px;
+    max-height: 1000px;
+    padding: 5px;
+    margin-left: 15px;
+    border-radius: 10px;
+    display: inline-block;
+    background-color: #fff;
+    word-wrap:break-word;
+    float: left;
+  }
+  .chat_subTime_Right{
+    margin-top: 13px;
+    margin-right: 20px;
+    float: right;
+  }
+  .chat_subTime_Left{
+    margin-top: 13px;
+    margin-left: 20px;
+    float: left;
+  }
+  .submit{
+    height: 75px;
+    width: 100%;
+  }
+  .submit_Text{
+    width: 85%;
+    height: 80px;
+    float: left;
+  }
+  .submit_Text .el-textarea .el-textarea__inner{
+    width: 700px!important;
+    font-size: 16px;
+  }
+  .submit_Button{
+    width: 15%;;
+    height: 75px;
+    float: left;
+  }
+  .submit_Button .el-button{
+    width: 100%;
+    height: 75px;
   }
 </style>
