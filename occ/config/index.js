@@ -11,15 +11,15 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/occ': {
-        target: 'http://127.0.0.1:8000/occ',//后端接口地址
+      '/': {
+        target: 'http://127.0.0.1:8000',//后端接口地址
         changeOrigin: true,//是否允许跨越
         pathRewrite: {
-          '^/occ': '/',//重写,
+          '^/': '',//重写,
         }
       },
       '/scoket': {
-        target: 'ws://localhost:8000',//后端接口地址
+        target: 'ws://127.0.0.1:8000',//后端接口地址
         changeOrigin: true,//是否允许跨越
         pathRewrite: {
           '^/scoket': '/',//重写,
@@ -65,7 +65,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps
