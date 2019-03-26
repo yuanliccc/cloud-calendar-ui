@@ -13,6 +13,9 @@
               <el-input class="input-style" placeholder="昵称" v-model="user.name"></el-input>
             </div>
             <div class="input-item-block">
+              <el-input class="input-style" placeholder="用户名" v-model="user.userName"></el-input>
+            </div>
+            <div class="input-item-block">
               <el-input class="input-style" type="password" placeholder="密码" v-model="user.password"></el-input>
             </div>
             <div class="input-item-block">
@@ -46,7 +49,8 @@ export default {
         name: null,
         email: null,
         phone: null,
-        password: null
+        password: null,
+        userName: null
       },
       verifyPassword: null
     }
@@ -60,9 +64,11 @@ export default {
       }
     },
     addUser: function () {
-      this.$axios.post('/df/user', this.user)
+      this.$axios.post('/df/user/add', this.user)
         .then(res => {
-          this.$router.push({path: 'login'})
+          if (res.data.code === 200) {
+            this.$router.push({path: '/login'})
+          }
         })
         .catch(err => {
           console.log('error' + err)

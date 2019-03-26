@@ -19,7 +19,7 @@
             <div class="login-container-right-context flex-column">
               <el-form>
                 <div class="input-item-block">
-                  <el-input class="input-style" placeholder="邮箱或手机号" v-model="loginUserInfo.identityCode"></el-input>
+                  <el-input class="input-style" placeholder="用户名" v-model="loginUserInfo.identityCode"></el-input>
                 </div>
                 <div class="input-item-block">
                   <el-input class="input-style" type="password" placeholder="密码" v-model="loginUserInfo.verifyPassword"></el-input>
@@ -41,7 +41,7 @@
                     <button class="login-page-button blue-button left-button" @click="login()">登录</button>
                   </div>
                   <div class="right-button-block">
-                    <button class="login-page-button white-button right-button" @click="jump('signup')">注册</button>
+                    <button class="login-page-button white-button right-button" @click="toSignup()">注册</button>
                   </div>
                 </div>
               </el-form>
@@ -65,8 +65,8 @@ export default {
     }
   },
   methods: {
-    jump: function (path) {
-      this.$router.push({path: path})
+    toSignup: function (path) {
+      this.$router.push({path: '/signup'})
     },
     login: function () {
       this.$axios.post('/df/user/login', this.loginUserInfo)
