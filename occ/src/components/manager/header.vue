@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="tip">
-      <router-link to="/" class="tipSpan"><i class="glyphicon glyphicon-home icon"></i>机构日历系统</router-link>
+      <router-link to="/" class="tipSpan"><i class="el-icon-star-off"></i>机构日历系统</router-link>
     </div>
     <ul class="right">
       <li class="li">
@@ -16,12 +16,12 @@
       <li class="portraitLi">
         <img src="../../assets/image/testPortrait.jpg" class="portrait"/>
         <span class="userName">{{user.name != "" ? user.name : user.account}}</span>
-        <i class="glyphicon glyphicon-triangle-bottom"></i>
+        <i class="el-icon-caret-bottom"></i>
 
         <div class="userMenu">
           <div>用户中心</div>
           <div>修改密码</div>
-          <div @click="websocketsend">选择机构 </div>
+          <div @click="selectOrNot">选择机构 </div>
           <div @click="singOut">退出登录</div>
         </div>
       </li>
