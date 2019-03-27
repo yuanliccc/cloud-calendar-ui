@@ -19,10 +19,10 @@
             <div class="login-container-right-context flex-column">
               <el-form>
                 <div class="input-item-block">
-                  <el-input class="input-style" placeholder="用户名" v-model="loginUserInfo.identityCode"></el-input>
+                  <el-input class="input-style" placeholder="用户名" v-model="loginUserInfo.userName"></el-input>
                 </div>
                 <div class="input-item-block">
-                  <el-input class="input-style" type="password" placeholder="密码" v-model="loginUserInfo.verifyPassword"></el-input>
+                  <el-input class="input-style" type="password" placeholder="密码" v-model="loginUserInfo.password"></el-input>
                 </div>
                 <div class="prompt-block flex-row flex-space-between">
                   <div class="prompt-left flex-row">
@@ -58,9 +58,10 @@ export default {
   data () {
     return {
       test: null,
+      userInfo: null,
       loginUserInfo: {
-        identityCode: null,
-        verifyPassword: null
+        userName: null,
+        password: null
       }
     }
   },
@@ -71,11 +72,11 @@ export default {
     login: function () {
       this.$axios.post('/df/user/login', this.loginUserInfo)
         .then(res => {
-          const data = res.data
-          if (data.data == null) {
-            alert('账号或密码错误')
-          } else {
-            alert('跳转路由')
+          const code = res.data.code
+          if (code === 200) {
+            this.userInfo = res.data.data
+            this.$emit('userInfo', this.userInfo)
+            this.$router.push({path: '/main/dfList'})
           }
         })
         .catch(err => {

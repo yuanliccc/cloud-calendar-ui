@@ -6,12 +6,17 @@
           <router-link to="/">Cloud-calendar</router-link>
         </div>
       </div>
-      <div class="header-content-right flex-row">
+      <div class="header-content-right flex-row" v-if="this.userInfo == null">
         <div class="header-content-item" :class="[titles[0].isActive ? 'header-item-active' : '']">
           <a @click="jump(0)">{{titles[0].title}}</a>
         </div>
         <div class="header-content-item" :class="[titles[1].isActive ? 'header-item-active' : '']">
           <a @click="jump(1)">{{titles[1].title}}</a>
+        </div>
+      </div>
+      <div class="header-content-right flex-row" v-else>
+        <div class="header-content-item">
+          {{this.userInfo.name}}
         </div>
       </div>
     </div>
@@ -21,6 +26,7 @@
 <script>
 export default {
   name: 'df-header',
+  props: ['userInfo'],
   data: function () {
     return {
       titles: [
