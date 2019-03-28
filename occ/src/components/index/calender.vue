@@ -2,32 +2,38 @@
   <div class="calender col-lg-12">
     <div class="guide">
       <div class="today">
-        <button @click="toDay" class="nextBt">
+        <el-button @click="toDay" class="nextBt">
           今天
-        </button>
+        </el-button>
       </div>
       <div class="toCenter">
-        <button @click="preMonth" class="nextBt"><</button>
-        <select  v-model="selectDay.year" @change="initDay" class="sel">
-          <option v-for="item in selYear">{{item}}</option>
-        </select>
-        <select  v-model="selectDay.month" @change="initDay" class="sel">
-          <option v-for="item in selMonth">{{item}}</option>
-        </select>
-        <button @click="nextMonth" class="nextBt">></button>
+        <el-button @click="preMonth" class="nextBt"><</el-button>
+        <el-select  v-model="year" class="sel">
+          <el-option v-for="i in yearList" :key="i.year" :value="i.year">{{i.year}}</el-option>
+        </el-select>
+        <el-select  v-model="month" class="sel">
+          <el-option v-for="i in monthList" :key="i.month" :value="i.month">{{i.month}}</el-option>
+        </el-select>
+        <el-button @click="nextMonth" class="nextBt">></el-button>
       </div>
     </div>
-
     <div v-for="(item, index) in days" class="calender_day" >
       {{item}}
     </div>
-    <div v-for="(item, index) in list" class="calender_day" @click="changeDay(item)">
-      <span v-if="item == today.day" class="red">{{item}}</span>
-      <span v-else>{{item}}</span>
-      <div class="calender_detail">
-
-      </div>
+    <div class="calender_day" v-for="i in space">
+      {{i}}
     </div>
+    <el-tooltip v-for="(item, index) in list" :key="item" effect="light" placement="top">
+      <div slot="content">
+        <span style="color: orangered">今日日程：每日9点会议室开会</span><br/>
+        <span style="color: red">今日节日：国庆节</span>
+      </div>
+      <div class="calender_day" @click="changeDay(item)">
+        <span :class="[item == day ? 'red':'']">{{item}}</span><br>
+        <span style="color: red">国庆节</span><br/>
+        <span style="color: orangered">每日9点会议室开会</span>
+      </div>
+    </el-tooltip>
   </div>
 </template>
 
@@ -36,43 +42,46 @@
     name: 'calender',
     data: function () {
       return {
-        today: {
-          year: Number,
-          month: Number,
-          day: Number
-        },
-        selectDay: {
-          year: Number,
-          month: Number,
-          day: Number
-        },
+        today:Number,
         year: Number,
         month: Number,
         day: Number,
         months: [31, 1, 31, 30, 31, 30, 31, 31, 30, 31, 30 ,31],
         list: [1,2,3,4,5,6,7,8,9,10],
-        days:["日","一","二","三","四","五","六"],
-        selYear:[],
-        selMonth:[1,2,3,4,5,6,7,8,9,10,11,12],
+        days:["一","二","三","四","五","六","日"],
+        yearList:[],
+        monthList:[],
+        showDaily: true,
+        space:[]
       }
     },
     mounted: function () {
       for(let i = 1980; i < 2100;i++)
-        this.selYear.push(i);
+        this.yearList.push({"year":i});
+      for(let i = 1; i <= 12; i++)
+        this.monthList.push({"month":i});
       this.getToday();
       this.initDay();
 
     },
+    watch:{
+      day(value){
+
+      },
+      month(value){
+        this.initDay();
+      },
+      year(value){
+        this.initDay();
+      }
+    },
     methods: {
       getToday: function(){
         let date = new Date();
-        this.today.day = date.getDate();
-        this.today.month = date.getMonth() + 1; //月数+1位 月
-        this.today.year = date.getFullYear();
-
-        this.selectDay.day = date.getDate();
-        this.selectDay.month = date.getMonth() + 1; //月数+1位 月
-        this.selectDay.year = date.getFullYear();
+        this.today = date.getDate()
+        this.day = date.getDate();
+        this.month = date.getMonth() + 1; //月数+1位 月
+        this.year = date.getFullYear();
       },
       toDay: function(){
         this.getToday();
@@ -80,53 +89,54 @@
       },
       selectDate: function(day){
         let date = new Date(day);
-        this.selectDay.day = date.getDate();
-        this.selectDay.month = date.getMonth() + 1; //月数+1位 月
-        this.selectDay.year = date.getFullYear();
+        this.day = date.getDate();
+        this.month = date.getMonth() + 1; //月数+1位 月
+        this.year = date.getFullYear();
       },
       initDay: function() {
-        let startDay = new Date(this.selectDay.year + "-" + this.selectDay.month + "-01");
+        let startDay = new Date(this.year + "-" + this.month + "-01");
         this.list = [];
-        for (let i = 0; i < startDay.getDay(); i++) {
-          this.list.push('');
+        this.space = [];
+        //星期一为1，星期六为6，星期天为0
+        const space = startDay.getDay() > 0 ? startDay.getDay() - 1 : 6;
+        for (let i = 0; i < space; i++) {
+          this.space.push('');
         }
-        let isRunNian = ((this.selectDay.year % 4 == 0) && (this.selectDay.year % 100 != 0)) || (this.selectDay.year % 400 == 0);
-        if(this.selectDay.month == 2 && isRunNian)
+
+        let isRunNian = ((this.year % 4 == 0) && (this.year % 100 != 0)) || (this.year % 400 == 0);
+        if(this.month == 2 && isRunNian)
           this.months[1] = 29;
         else
           this.months[1] = 28;
 
-        for(let i = 1; i <= this.months[this.selectDay.month - 1]; i++)
+        for(let i = 1; i <= this.months[this.month - 1]; i++)
           this.list.push(i);
-
-        console.log(this.list);
       },
       nextMonth: function(){
-        if(this.selectDay.month == 12){
-          this.selectDay.month = 1;
-          this.selectDay.year += 1;
-          this.selectDay.day = 1;
+        if(this.month == 12){
+          this.month = 1;
+          this.year += 1;
+          this.day = 1;
         }else
-          this.selectDay.month += 1;
+          this.month += 1;
 
         this.initDay();
       },
       preMonth: function(){
-        if(this.selectDay.month == 1){
-          this.selectDay.month = 12;
-          this.selectDay.year -= 1;
-          this.selectDay.day = 1;
+        if(this.month == 1){
+          this.month = 12;
+          this.year -= 1;
+          this.day = 1;
         }else
-          this.selectDay.month -= 1;
+          this.month -= 1;
 
         this.initDay();
       },
-      changeDay: function(item){
-        if(item != '')
-          this.today.day = item;
-      },
       showOrClose: function(){
           this.showDaily = !this.showDaily;
+      },
+      changeDay:function(item){
+        this.day = item;
       }
     }
   }
@@ -150,27 +160,32 @@
   .calender{
     border: 2px solid #f5f5f5;
     width:100%;
-    height: 560px;
+    overflow:hidden;
     padding-bottom: 20px;
   }
   .calender_day{
     width: 14.28%;
     border: 1px solid #ccc;
-    height:80px;
+    height:90px;
+    font-weight: bolder;
+    padding-top: 30px;
     text-align: center;
     float: left;
-    display: inline;
-    line-height: 80px;
     cursor: pointer;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap
   }
   .calender_detail{
     width:50%;
   }
+  .toCenter{
+    text-align: center;
+  }
   .nextBt{
-    width:50px;
-    height:30px;
-    border: none;
-    background-color: #eeecf8;
+    width:80px;
+    height:40px;
+    line-height: 14px;
   }
   .guide{
     margin: 10px 0;
