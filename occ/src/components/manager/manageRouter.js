@@ -4,6 +4,8 @@ import userRoute from './user/userRoute'
 import permissionRoute from  './permission/permissionRoute'
 import  organizationRoute from './organization/organizationRoute'
 import noticeRoute from './notice/noticeRoute'
+import orgCalenderRoute from './orgCalender/orgCalenderRoute'
+import scheduleRoute from './schedule/scheduleRoute'
 export default [
   {
     path: '/manager',
@@ -15,12 +17,24 @@ export default [
     },
     component: () => import('./manager'),
     children:[
+      {
+        path: '/manager/main',
+        name: 'managerMain',
+        meta: {
+          label: '主页',
+          requireAuth: true,
+          permission: ''
+        },
+        component: () => import('./index'),
+      },
       ...moduleRoute,
       ...roleRoute,
       ...userRoute,
       ...permissionRoute,
       ...organizationRoute,
-      ...noticeRoute
+      ...noticeRoute,
+      ...orgCalenderRoute,
+      ...scheduleRoute
     ]
   }
 ]

@@ -107,8 +107,11 @@
   font-weight: bolder;
   font-size: 18px;
 }
-.public_Display .el-date-editor--datetime{
+.public_Display .el-date-editor--datetime, .el-textarea__inner, .el-date-editor--date{
   width: 250px!important;
+}
+.el-textarea__inner{
+  contenteditable:true;
 }
 .transferDis{
   height:400px;

@@ -9,7 +9,7 @@
     </div>
     <div class="login">
       <span :class="{redColor:this.$route.name == route[1].name}" @click="jumpTo(route[1].url)" v-if="this.$store.state.userInfo == '' || this.$store.state.userInfo == null">登录</span>
-      <span :class="{redColor:this.$route.name == route[2].name}" @click="jumpTo(route[2].url)" v-if="this.$store.state.userInfo == '' || this.$store.state.userInfo == null">注册</span>
+      <!--<span :class="{redColor:this.$route.name == route[2].name}" @click="jumpTo(route[2].url)" v-if="this.$store.state.userInfo == '' || this.$store.state.userInfo == null">注册</span>-->
       <em v-if="user != '' && user != undefined">Welcome，</em>
       <span @click="jumpTo(route[4].url)" v-if="user != '' && user != undefined">{{user.user == '' ? user.user.account : user.user.name}}</span>
       <span class="smallRed" v-if="user != '' && user != null" @click="logout()">退出登录</span>

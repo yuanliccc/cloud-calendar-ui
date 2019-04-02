@@ -350,7 +350,7 @@
           const sel = this.$refs.table.store.states.selection;
           let arr = new Array();
           sel.forEach(row =>{
-            if(!row.state == '已读')
+            if(row.state != '已读')
               arr.push(row);
           });
           if(arr.length == 0){
