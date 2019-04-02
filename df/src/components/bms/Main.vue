@@ -14,14 +14,14 @@
             </div>
           </div>
           <el-menu-item v-for="(item, index) in meunItems" :index="item.title" :key="index" @click="clickMenu(item.route)">
-            <i v-bind:class="item.icon" class="flex-center"></i>
+            <i :class="item.icon" class="flex-center"></i>
             <span slot="title">{{item.title}}</span>
           </el-menu-item>
         </el-menu>
       </div>
       <div class="main-content">
         <transition :name="transitionName">
-          <router-view></router-view>
+          <router-view :userInfo="userInfo"></router-view>
         </transition>
       </div>
     </div>
@@ -30,6 +30,7 @@
 <script>
 export default {
   name: 'mainContainer',
+  props: ['userInfo'],
   data () {
     return {
       isShowMenu: true,
@@ -134,9 +135,8 @@ export default {
   }
 
   .main-content {
-    min-height: 576px;
+    height:90vh;
     flex-grow: 1;
-    padding: 56px 20px;
   }
 
   .el-menu-vertical-demo {

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Axios from 'axios'
 
 /* baseURL将被添加到URL前面,除非URL是绝对的 */
-Axios.defaults.baseURL = 'http://127.0.0.1:80/api'
+Axios.defaults.baseURL = 'http://127.0.0.1:81/api'
 Axios.defaults.withCredentials = true
 
 /* 添加请求拦截器 */

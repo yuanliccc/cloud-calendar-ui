@@ -2,7 +2,7 @@
   <div>
     <df-header :userInfo="userInfo"></df-header>
     <transition :name="transitionName">
-      <router-view class="main-block" v-on:userInfo="getUserInfo"></router-view>
+      <router-view class="main-block" @userInfoCallback="getUserInfo" :userInfo="userInfo"></router-view>
     </transition>
     <df-foot></df-foot>
   </div>

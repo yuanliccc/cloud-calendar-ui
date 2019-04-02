@@ -69,6 +69,7 @@ export default {
 
 <style>
   .header-block {
+    height: 6vh;
     background-color: #409EFF;
   }
 

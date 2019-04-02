@@ -27,8 +27,7 @@ export default {
   .foot-block {
     border-top:1px solid #3333;
     bottom: 0px;
-    min-height: 50px;
-    height: 50px;
+    height: 4vh;
     width: 100%;
   }
 

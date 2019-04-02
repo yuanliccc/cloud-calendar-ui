@@ -41,7 +41,7 @@
                     <button class="login-page-button blue-button left-button" @click="login()">登录</button>
                   </div>
                   <div class="right-button-block">
-                    <button class="login-page-button white-button right-button" @click="toSignup()">注册</button>
+                    <button type="button" class="login-page-button white-button right-button" @click="toSignup()">注册</button>
                   </div>
                 </div>
               </el-form>
@@ -75,7 +75,7 @@ export default {
           const code = res.data.code
           if (code === 200) {
             this.userInfo = res.data.data
-            this.$emit('userInfo', this.userInfo)
+            this.$emit('userInfoCallback', this.userInfo)
             this.$router.push({path: '/main/dfList'})
           }
         })

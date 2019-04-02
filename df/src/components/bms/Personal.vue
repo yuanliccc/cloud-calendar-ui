@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="personal-container">
-      <div class="personal-header-block">hi, 高旭东</div>
+      <div class="personal-header-block">hi {{this.userInfo.name}}</div>
       <div class="personal-line"></div>
       <div class="personal-form-block">
         <el-form ref="form" :model="user" label-width="80px">
@@ -45,6 +45,7 @@
 <script>
 export default {
   name: 'Personal',
+  props: ['userInfo'],
   data () {
     return {
       user: {

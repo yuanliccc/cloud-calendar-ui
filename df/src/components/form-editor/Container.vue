@@ -43,8 +43,8 @@
     <el-container class="center-container" direction="vertical">
       <!-- el-header:顶栏容器 -->
       <el-header>
-        <div style="text-align:center">这里后期会有几个按钮:预览,保存</div>
-        <el-button type="text" size="medium" icon="el-icon-tickets" @click="saveDynamicForm">保存</el-button>
+        <el-button type="text" size="medium" icon="el-icon-back" @click="goback">返回</el-button>
+        <el-button type="text" size="medium" icon="el-icon-tickets" @click="saveOrUpdateDynamicForm">保存</el-button>
       </el-header>
       <!-- el-main:主要区域容器 -->
       <el-main>
@@ -124,45 +124,53 @@ export default {
     handleConfigSelect (value) {
       this.configTab = value
     },
-    saveDynamicForm () {
-      this.jsonTemplate = this.widgetForm
+    // 点击保存按钮后的操作
+    saveOrUpdateDynamicForm: function () {
       if (this.operator === 'add') {
-        // 判断组件列表是否为空
-        if (this.jsonTemplate.list.length === 0) {
-
-        } else {
-          this.$axios.post('/df/dynamic/form/addDynamicForm', this.jsonTemplate)
-            .then(res => {
-              console.log('sucess')
-              this.$router.push({path: '/main/dfList'})
-            })
-            .catch(err => {
-              console.log('error' + err)
-            })
-        }
+        this.saveDynamicForm(this.widgetForm)
       } else if (this.operator === 'edit') {
-        this.$axios.put('/df/dynamic/form/updateDynamicForm', this.jsonTemplate)
+        this.updateDynamicForm(this.widgetForm)
+      }
+    },
+    // 新增动态表单
+    saveDynamicForm: function (dynamicForm) {
+      if (dynamicForm.list.length === 0) {
+        alert('请构建有组件的动态表单')
+      } else {
+        this.$axios.post('/df/dynamic/form/addDynamicForm', dynamicForm)
           .then(res => {
             console.log('sucess')
-            // 跳转路由
+            this.$router.push({path: '/main/dfList'})
           })
           .catch(err => {
             console.log('error' + err)
           })
       }
-
-      this.$router.push({path: '/main/dfList'})
+    },
+    // 更新动态表单
+    updateDynamicForm: function (dynamicForm) {
+      if (dynamicForm.list.length === 0) {
+        alert('请构建有组件的动态表单')
+      } else {
+        this.$axios.put('/df/dynamic/form/updateDynamicForm', dynamicForm)
+          .then(res => {
+            this.$router.push({path: '/main/dfList'})
+          })
+          .catch(err => {
+            console.log('error' + err)
+          })
+      }
     },
     queryParam () {
       this.operator = this.$route.query.operator
 
       if (this.operator === 'edit') {
         this.formId = this.$route.query.formId
-      }
 
-      if (this.formId != null) {
-        // 查询对应的表单
-        this.findDynamicForm(this.formId)
+        if (this.formId != null) {
+          // 查询对应的表单
+          this.findDynamicForm(this.formId)
+        }
       }
     },
     findDynamicForm (formId) {
@@ -321,6 +329,10 @@ export default {
 
       field.options.options = options
       return field
+    },
+    // 点击返回按钮后的操作
+    goback: function () {
+      this.$router.push({path: '/main/dfList'})
     }
   },
   watch: {

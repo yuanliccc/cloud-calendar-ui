@@ -11,7 +11,6 @@
           </el-input>
         </div>
         <div class="query-condition-block">
-
         </div>
       </div>
       <div class="form-line">
@@ -135,8 +134,10 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
+
   .form-container {
+    padding-top:25px;
     width: 80%;
     margin: 0 auto;
   }
