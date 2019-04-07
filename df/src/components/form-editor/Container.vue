@@ -259,7 +259,8 @@ export default {
 
         for (let j = 0; j < gridItems.length; j++) {
           if (gridItems[j].parentId === grid.id) {
-            grid.columns[gridItems[j].displayIndex].list.push(this.handleField(gridItems[j]))
+            // 如果该条目是目前栅栏下的条目,将其插入到当前栅栏中
+            grid.columns[j].list.push(this.handleField(gridItems[j]))
           }
         }
 
@@ -332,7 +333,7 @@ export default {
     },
     // 点击返回按钮后的操作
     goback: function () {
-      this.$router.push({path: '/main/dfList'})
+      this.$router.go(-1)
     }
   },
   watch: {

@@ -87,7 +87,8 @@ export default {
           const data = res.data
           if (data.code === 200) {
             console.log('sucess')
-            this.findDynamicFormList()
+            this.pageNum = 1
+            this.findDynamicFormList(this.pageNum, this.pageSize)
           }
         })
         .catch(err => {

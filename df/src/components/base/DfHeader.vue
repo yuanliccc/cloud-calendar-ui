@@ -18,6 +18,9 @@
         <div class="header-content-item">
           {{this.userInfo.name}}
         </div>
+        <div class="header-content-item">
+          <a @click="logout">退出</a>
+        </div>
       </div>
     </div>
   </div>
@@ -47,6 +50,16 @@ export default {
     '$route': 'changeActive'
   },
   methods: {
+    // 点击退出按钮后的操作
+    logout: function () {
+      this.$axios.get('/df/logout')
+        .then(res => {
+          this.$router.push({path: '/login'})
+        })
+        .catch(err => {
+          console.log('err: ' + err)
+        })
+    },
     jump: function (index) {
       this.$router.push({path: this.titles[index].route})
     },

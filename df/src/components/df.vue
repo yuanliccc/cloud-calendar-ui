@@ -35,7 +35,6 @@ export default {
           const code = res.data.code
           if (code === 200) {
             this.userInfo = res.data.data
-            this.$router.push({path: '/main/dfList'})
           } else if (code === 400) {
             this.$router.push({path: '/'})
           }
