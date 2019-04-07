@@ -17,17 +17,18 @@
       </div>
       <div class="form-list flex-column">
         <div class="list-block">
-          <el-table border style="width: 100%" :data="dynamicFormList" @selection-change="handleSelectionChange" max-height="350">
+          <el-table border style="width: 100%" :data="dynamicFormInfo" @selection-change="handleSelectionChange" max-height="350">
             <el-table-column type="selection">
             </el-table-column>
-            <el-table-column fixed prop="name" label="表单名称"></el-table-column>
-            <el-table-column fixed prop="method" label="请求方式"></el-table-column>
-            <el-table-column fixed prop="createTime" label="创建时间"></el-table-column>
+            <el-table-column fixed prop="dfDynamicForm.name" label="表单名称"></el-table-column>
+            <el-table-column fixed prop="dfDynamicForm.method" label="请求方式"></el-table-column>
+            <el-table-column fixed prop="dfDynamicForm.createTime" label="创建时间"></el-table-column>
+            <el-table-column fixed prop="holder.name" label="创建人"></el-table-column>
             <el-table-column fixed="right" label="操作">
               <template slot-scope="scope">
                 <div class="flex-row">
                   <el-button @click="editDynamicForm(scope.row)" size="mini" type="text">编辑</el-button>
-                  <el-button @click="deleteDynamicForm(scope.row)" size="mini" type="text">删除</el-button>
+                  <el-button @click="handleDelete(scope.row)" size="mini" type="text">删除</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -59,7 +60,7 @@ export default {
       pageSize: 10,
       pageNum: 1,
       dataCount: 0,
-      dynamicFormList: [],
+      dynamicFormInfo: [],
       multipleSelection: []
     }
   },
@@ -79,20 +80,40 @@ export default {
       this.$router.push({path: '/dfWorkSpace', query: {operator: 'add'}})
     },
     editDynamicForm (row) {
-      this.$router.push({path: '/dfWorkSpace', query: {operator: 'edit', formId: row.id}})
+      this.$router.push({path: '/dfWorkSpace', query: {operator: 'edit', formId: row.dfDynamicForm.id}})
     },
-    deleteDynamicForm (row) {
-      this.$axios.delete('/df/dynamic/form/' + row.id)
+    // 点击删除按钮后的操作
+    handleDelete: function (entity) {
+      this.$confirm('此操作将删除表单信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.deleteDynamicForm(entity)
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
+    deleteDynamicForm: function (entity) {
+      this.$axios.delete('/df/dynamic/form/deleteDynamicForm/' + entity.dfDynamicForm.id)
         .then(res => {
           const data = res.data
           if (data.code === 200) {
-            console.log('sucess')
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
             this.pageNum = 1
             this.findDynamicFormList(this.pageNum, this.pageSize)
           }
         })
         .catch(err => {
-          console.log('err: ' + err)
+          this.$message.error(err)
         })
     },
     handleSelectionChange (val) {
@@ -108,7 +129,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log('err: ' + err)
+          this.$message.error(err)
         })
     },
     findDynamicFormList: function (pageNum, pageSize) {
@@ -116,17 +137,18 @@ export default {
         .then(res => {
           const data = res.data
           if (data != null) {
-            this.dynamicFormList = data.data
+            const result = data.data
 
-            for (let i = 0; i < this.dynamicFormList.length; i++) {
-              this.dynamicFormList[i].createTime = this.timeGST(this.dynamicFormList[i].createTime)
+            for (let i = 0; i < result.length; i++) {
+              result[i].dfDynamicForm.createTime = this.timeGST(result[i].dfDynamicForm.createTime)
             }
 
+            this.dynamicFormInfo = result
             this.findDynamicFormCount()
           }
         })
         .catch(err => {
-          console.log('err: ' + err)
+          this.$message.error(err)
         })
     },
     timeGST (utcTime) {

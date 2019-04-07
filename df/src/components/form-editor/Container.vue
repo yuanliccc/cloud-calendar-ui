@@ -143,7 +143,7 @@ export default {
             this.$router.push({path: '/main/dfList'})
           })
           .catch(err => {
-            console.log('error' + err)
+            this.$message.error(err)
           })
       }
     },
@@ -157,7 +157,7 @@ export default {
             this.$router.push({path: '/main/dfList'})
           })
           .catch(err => {
-            console.log('error' + err)
+            this.$message.error(err)
           })
       }
     },
@@ -191,7 +191,7 @@ export default {
           this.findDynamicFormFieldsByFormId(formId)
         })
         .catch(err => {
-          console.log('err: ' + err)
+          this.$message.error(err)
         })
     },
     timeGST (utcTime) {
@@ -208,7 +208,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log('err: ' + err)
+          this.$message.error(err)
         })
     },
     handleFields (data) {

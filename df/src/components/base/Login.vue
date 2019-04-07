@@ -80,7 +80,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log('err: ' + err)
+          this.$message.error(err)
         })
     }
   }

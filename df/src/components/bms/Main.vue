@@ -33,7 +33,7 @@ export default {
   props: ['userInfo'],
   data () {
     return {
-      isShowMenu: true,
+      isShowMenu: false,
       transitionName: '',
       meunItems: [
         {
@@ -49,16 +49,6 @@ export default {
         {
           title: '模板管理',
           icon: 'fa fa-paste',
-          route: '/'
-        },
-        {
-          title: '系统参数配置',
-          icon: 'fa fa-gears',
-          route: '/'
-        },
-        {
-          title: '社区中心',
-          icon: 'fa fa-users',
           route: '/'
         },
         {

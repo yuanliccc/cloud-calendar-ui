@@ -54,10 +54,11 @@ export default {
     logout: function () {
       this.$axios.get('/df/logout')
         .then(res => {
-          this.$router.push({path: '/login'})
+          window.location.reload()
+          /* this.$router.push({path: '/login'}) */
         })
         .catch(err => {
-          console.log('err: ' + err)
+          this.$message.error(err)
         })
     },
     jump: function (index) {
