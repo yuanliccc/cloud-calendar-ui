@@ -6,8 +6,8 @@
           <el-button type="primary" icon="el-icon-plus" @click="addDynamicForm">创建表单</el-button>
         </div>
         <div class="query-box-block">
-          <el-input  placeholder="请输入表单名查询......" class="input-with-select">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input  placeholder="请输入表单名查询......" class="input-with-select" v-model="selectCondtion.name">
+            <el-button slot="append" icon="el-icon-search" @click="selectDynamicForm"></el-button>
           </el-input>
         </div>
         <div class="query-condition-block">
@@ -36,12 +36,12 @@
         </div>
         <div class="pagination-block flex-center">
           <el-pagination
-            :page-size="pageSize"
-            :current-page="pageNum"
+            :page-size="selectCondtion.pageSize"
+            :current-page="selectCondtion.pageNum"
             layout="prev, pager, next"
             @size-change="handlePageSizeChange"
             @current-change="handleCurrentPageChange"
-            :total="dataCount">
+            :total="selectCondtion.dataCount">
           </el-pagination>
         </div>
       </div>
@@ -61,20 +61,31 @@ export default {
       pageNum: 1,
       dataCount: 0,
       dynamicFormInfo: [],
-      multipleSelection: []
+      multipleSelection: [],
+      selectCondtion: {
+        name: '',
+        pageSize: 10,
+        pageNum: 1,
+        dataCount: 0
+      }
     }
   },
   mounted () {
-    this.findDynamicFormList(this.pageNum, this.pageSize)
+    this.findDynamicFormByCondition()
   },
   methods: {
+    // 根据条件查询表单信息
+    selectDynamicForm: function () {
+      this.selectCondtion.pageNum = 1
+      this.findDynamicFormByCondition()
+    },
     handlePageSizeChange: function (pageSize) {
-      this.pageSize = pageSize
-      this.findDynamicFormList(this.pageNum, this.pageSize)
+      this.selectCondtion.pageSize = pageSize
+      this.findDynamicFormByCondition()
     },
     handleCurrentPageChange: function (currentPage) {
-      this.pageNum = currentPage
-      this.findDynamicFormList(this.pageNum, this.pageSize)
+      this.selectCondtion.pageNum = currentPage
+      this.findDynamicFormByCondition()
     },
     addDynamicForm () {
       this.$router.push({path: '/dfWorkSpace', query: {operator: 'add'}})
@@ -108,8 +119,8 @@ export default {
               type: 'success',
               message: '删除成功!'
             })
-            this.pageNum = 1
-            this.findDynamicFormList(this.pageNum, this.pageSize)
+            this.selectCondtion.pageNum = 1
+            this.findDynamicFormByCondition()
           }
         })
         .catch(err => {
@@ -120,31 +131,19 @@ export default {
       this.multipleSelection = val
       console.log(val)
     },
-    findDynamicFormCount: function () {
-      this.$axios.get('/df/dynamic/form/findDynamicFormCount')
+    findDynamicFormByCondition: function () {
+      this.$axios.post('/df/dynamic/form/findDynamicFormByCondition', this.selectCondtion)
         .then(res => {
           const data = res.data
           if (data != null) {
-            this.dataCount = data.data
-          }
-        })
-        .catch(err => {
-          this.$message.error(err)
-        })
-    },
-    findDynamicFormList: function (pageNum, pageSize) {
-      this.$axios.get('/df/dynamic/form/findDynamicFormByLimit?pageNum=' + pageNum + '&pageSize=' + pageSize)
-        .then(res => {
-          const data = res.data
-          if (data != null) {
-            const result = data.data
+            const result = data.data.listInfo
 
             for (let i = 0; i < result.length; i++) {
               result[i].dfDynamicForm.createTime = this.timeGST(result[i].dfDynamicForm.createTime)
             }
 
             this.dynamicFormInfo = result
-            this.findDynamicFormCount()
+            this.selectCondtion.dataCount = data.data.total
           }
         })
         .catch(err => {
