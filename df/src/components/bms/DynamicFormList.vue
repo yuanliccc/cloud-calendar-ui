@@ -28,6 +28,8 @@
               <template slot-scope="scope">
                 <div class="flex-row">
                   <el-button @click="editDynamicForm(scope.row)" size="mini" type="text">编辑</el-button>
+                  <el-button @click="share(scope.row)" size="mini" type="text">分享</el-button>
+                  <el-button @click="publish(scope.row)" size="mini" type="text">发布</el-button>
                   <el-button @click="handleDelete(scope.row)" size="mini" type="text">删除</el-button>
                 </div>
               </template>
@@ -74,6 +76,14 @@ export default {
     this.findDynamicFormByCondition()
   },
   methods: {
+    // 点击分享后的操作
+    share: function (entity) {
+
+    },
+    // 点击发布模板后的操作
+    publish: function () {
+
+    },
     // 根据条件查询表单信息
     selectDynamicForm: function () {
       this.selectCondtion.pageNum = 1
