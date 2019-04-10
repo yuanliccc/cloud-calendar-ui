@@ -6,7 +6,7 @@
           <el-button type="primary" icon="el-icon-plus" @click="addDynamicForm">创建表单</el-button>
         </div>
         <div class="query-box-block">
-          <el-input  placeholder="请输入表单名查询......" class="input-with-select" v-model="selectCondtion.name">
+          <el-input  placeholder="请输入表单名查询......" class="input-with-select" v-model="selectCondition.name">
             <el-button slot="append" icon="el-icon-search" @click="selectDynamicForm"></el-button>
           </el-input>
         </div>
@@ -28,7 +28,7 @@
               <template slot-scope="scope">
                 <div class="flex-row">
                   <el-button @click="editDynamicForm(scope.row)" size="mini" type="text">编辑</el-button>
-                  <el-button @click="share(scope.row)" size="mini" type="text">分享</el-button>
+                  <el-button @click="clickShare(scope.row)" size="mini" type="text">分享</el-button>
                   <el-button @click="publish(scope.row)" size="mini" type="text">发布</el-button>
                   <el-button @click="handleDelete(scope.row)" size="mini" type="text">删除</el-button>
                 </div>
@@ -38,12 +38,12 @@
         </div>
         <div class="pagination-block flex-center">
           <el-pagination
-            :page-size="selectCondtion.pageSize"
-            :current-page="selectCondtion.pageNum"
+            :page-size="selectCondition.pageSize"
+            :current-page="selectCondition.pageNum"
             layout="prev, pager, next"
             @size-change="handlePageSizeChange"
             @current-change="handleCurrentPageChange"
-            :total="selectCondtion.dataCount">
+            :total="selectCondition.total">
           </el-pagination>
         </div>
       </div>
@@ -59,16 +59,13 @@ export default {
   },
   data () {
     return {
-      pageSize: 10,
-      pageNum: 1,
-      dataCount: 0,
       dynamicFormInfo: [],
       multipleSelection: [],
-      selectCondtion: {
+      selectCondition: {
         name: '',
         pageSize: 10,
         pageNum: 1,
-        dataCount: 0
+        total: 0
       }
     }
   },
@@ -77,8 +74,37 @@ export default {
   },
   methods: {
     // 点击分享后的操作
-    share: function (entity) {
-
+    clickShare: function (entity) {
+      this.$confirm('该操作将会分享该模板, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        this.share(entity.dfDynamicForm.id)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+    // 分享
+    share: function (formId) {
+      this.$axios.get('/df/dynamic/form/shareDynamicForm/' + formId)
+        .then(res => {
+          const code = res.data.code
+          if (code === 200) {
+            this.$message({
+              message: '分享成功',
+              type: 'success'
+            })
+            this.selectCondition.pageNum = 1
+            this.findDynamicFormByCondition()
+          }
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
     },
     // 点击发布模板后的操作
     publish: function () {
@@ -86,15 +112,15 @@ export default {
     },
     // 根据条件查询表单信息
     selectDynamicForm: function () {
-      this.selectCondtion.pageNum = 1
+      this.selectCondition.pageNum = 1
       this.findDynamicFormByCondition()
     },
     handlePageSizeChange: function (pageSize) {
-      this.selectCondtion.pageSize = pageSize
+      this.selectCondition.pageSize = pageSize
       this.findDynamicFormByCondition()
     },
     handleCurrentPageChange: function (currentPage) {
-      this.selectCondtion.pageNum = currentPage
+      this.selectCondition.pageNum = currentPage
       this.findDynamicFormByCondition()
     },
     addDynamicForm () {
@@ -129,7 +155,7 @@ export default {
               type: 'success',
               message: '删除成功!'
             })
-            this.selectCondtion.pageNum = 1
+            this.selectCondition.pageNum = 1
             this.findDynamicFormByCondition()
           }
         })
@@ -142,7 +168,7 @@ export default {
       console.log(val)
     },
     findDynamicFormByCondition: function () {
-      this.$axios.post('/df/dynamic/form/findDynamicFormByCondition', this.selectCondtion)
+      this.$axios.post('/df/dynamic/form/findDynamicFormByCondition', this.selectCondition)
         .then(res => {
           const data = res.data
           if (data != null) {
@@ -153,7 +179,7 @@ export default {
             }
 
             this.dynamicFormInfo = result
-            this.selectCondtion.dataCount = data.data.total
+            this.selectCondition.total = data.data.total
           }
         })
         .catch(err => {

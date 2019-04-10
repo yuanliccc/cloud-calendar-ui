@@ -38,10 +38,10 @@
                 </div>
                 <div class="button-block flex-row flex-space-between">
                   <div class="left-button-block">
-                    <button class="login-page-button blue-button left-button" @click="login">登录</button>
+                    <button class="login-page-button blue-button left-button" @click.prevent="login">登录</button>
                   </div>
                   <div class="right-button-block">
-                    <button type="button" class="login-page-button white-button right-button" @click="toSignup">注册</button>
+                    <button type="button" class="login-page-button white-button right-button" @click.prevent="toSignup">注册</button>
                   </div>
                 </div>
               </el-form>

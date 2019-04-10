@@ -12,7 +12,7 @@
           </div>
 
           <div class="giant-screen-signup-button-block">
-            <button class="giant-screen-signup-button" @click="toSignUp">立即注册</button>
+            <button class="giant-screen-signup-button" @click.prevent="toSignUp">立即注册</button>
           </div>
         </div>
       </div>

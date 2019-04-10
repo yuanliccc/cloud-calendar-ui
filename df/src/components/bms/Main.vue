@@ -2,18 +2,19 @@
   <div>
     <div class="flex-row">
       <div class="meun-container flex-column">
-        <el-menu default-active="动态表单管理"
-                 class="el-menu-vertical-demo"
-                 @open="controlMenuDisplay"
-                 @close="controlMenuDisplay"
-                 :collapse="isShowMenu">
+        <el-menu
+          :default-active="defaultActive"
+          class="el-menu-vertical-demo"
+          @open="controlMenuDisplay"
+          @close="controlMenuDisplay"
+          :collapse="isShowMenu">
           <div class="control-menu-block text-center" @click="controlMenuDisplay">
             <div class="flex-row control-menu-btn flex-center">
               <div class="fa fa-angle-left fa-lg flex-column flex-center" v-if="!isShowMenu"></div>
               <div class="fa fa-angle-right fa-lg" v-else></div>
             </div>
           </div>
-          <el-menu-item v-for="(item, index) in meunItems" :index="item.title" :key="index" @click="clickMenu(item.route)">
+          <el-menu-item v-for="(item, index) in meunItems" :index="item.route" :key="index" @click="clickMenu(item.route)">
             <i :class="item.icon" class="flex-center"></i>
             <span slot="title">{{item.title}}</span>
           </el-menu-item>
@@ -35,6 +36,7 @@ export default {
     return {
       isShowMenu: false,
       transitionName: '',
+      defaultActive: '',
       meunItems: [
         {
           title: '动态表单管理',
@@ -47,9 +49,9 @@ export default {
           route: '/main/personal'
         },
         {
-          title: '模板管理',
+          title: '分享模板',
           icon: 'fa fa-paste',
-          route: '/'
+          route: '/main/shareList'
         },
         {
           title: '帮助中心',
@@ -60,6 +62,11 @@ export default {
     }
   },
   methods: {
+    // 根据路由来选中对应的导航栏项
+    chooseNavItem: function () {
+      let routePath = this.$route.path
+      this.defaultActive = routePath
+    },
     controlMenuDisplay: function () {
       this.isShowMenu = !this.isShowMenu
     },
@@ -76,7 +83,11 @@ export default {
       } else {
         this.transitionName = 'slide-right'
       }
+      this.chooseNavItem()
     }
+  },
+  mounted () {
+    this.chooseNavItem()
   }
 }
 </script>

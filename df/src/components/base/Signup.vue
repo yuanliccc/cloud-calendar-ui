@@ -28,7 +28,7 @@
               <el-input class="input-style" type="email" placeholder="邮箱" v-model="user.email"></el-input>
             </div>
             <div class="input-item-block">
-              <button class="signup-button" @click="submit()">立即创建</button>
+              <button class="signup-button" @click.prevent="submit()">立即创建</button>
             </div>
             <div class="to-login-block">
               <router-link to="/login">已有账号,直接登录></router-link>

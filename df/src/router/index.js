@@ -8,6 +8,7 @@ import main from '../components/bms/Main.vue'
 import personal from '../components/bms/Personal.vue'
 import dfList from '../components/bms/DynamicFormList.vue'
 import dfWorkSpace from '../components/form-editor/Container.vue'
+import shareList from '../components/bms/ShareDynamicFormList.vue'
 
 Vue.use(Router)
 
@@ -51,6 +52,12 @@ export default new Router({
               name: 'dfList',
               meta: {index: 5},
               component: dfList
+            },
+            {
+              path: '/main/shareList',
+              name: 'shareList',
+              meta: {index: 6},
+              component: shareList
             }
           ]
         },
