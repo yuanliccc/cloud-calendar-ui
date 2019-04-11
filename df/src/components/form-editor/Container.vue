@@ -230,7 +230,9 @@ export default {
 
           // 将例如aaa,bbb形式的字符串转为数字
           if (field.type === 'checkbox') {
-            field.options.defaultValue = field.options.defaultValue.split(',')
+            if (field.options.defaultValue !== null) {
+              field.options.defaultValue = field.options.defaultValue.split(',')
+            }
           }
 
           // 从数组中删除已经添加的组件

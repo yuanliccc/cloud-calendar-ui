@@ -4,7 +4,7 @@
     <transition :name="transitionName">
       <router-view class="main-block" @userInfoCallback="getUserInfo" :userInfo="userInfo"></router-view>
     </transition>
-    <df-foot></df-foot>
+    <!--<df-foot></df-foot>-->
   </div>
 </template>
 

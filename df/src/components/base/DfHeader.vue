@@ -84,6 +84,7 @@ export default {
 <style>
   .header-block {
     height: 6vh;
+    min-height: 35px;
     background-color: #409EFF;
   }
 

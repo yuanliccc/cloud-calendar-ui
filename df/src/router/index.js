@@ -9,6 +9,7 @@ import personal from '../components/bms/Personal.vue'
 import dfList from '../components/bms/DynamicFormList.vue'
 import dfWorkSpace from '../components/form-editor/Container.vue'
 import shareList from '../components/bms/ShareDynamicFormList.vue'
+import dfDisplay from '../components/bms/DynamicFormDisplay.vue'
 
 Vue.use(Router)
 
@@ -64,8 +65,14 @@ export default new Router({
         {
           path: '/dfWorkSpace',
           name: 'dfWorkSpace',
-          meta: {index: 6},
+          meta: {index: 7},
           component: dfWorkSpace
+        },
+        {
+          path: '/dynamicFormDisplay',
+          name: 'dynamicFormDisplay',
+          meta: {index: 8},
+          component: dfDisplay
         }
       ]
     }

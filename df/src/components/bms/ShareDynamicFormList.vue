@@ -100,7 +100,8 @@ export default {
     },
     // 点击预览按钮后的操作
     displaySharedForm: function (entity) {
-      console.log(entity)
+      const formId = entity.form.id
+      this.$router.push({path: '/dynamicFormDisplay', query: {formId: formId}})
     },
     // pageNum改变时调用的方法
     handleCurrentPageChange: function (currentPage) {
