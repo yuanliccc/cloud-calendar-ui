@@ -94,9 +94,36 @@ export default {
     }
   },
   methods: {
+    cloneDynamicForm: function (sharedId, formId) {
+      this.$axios.get('/df/shared/dynamic/form/cloneDynamicForm/' + sharedId + '/' + formId)
+        .then(res => {
+          const code = res.data.code
+          if (code === 200) {
+            this.$message.success('克隆成功')
+          }
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
+    },
     // 点击克隆按钮按钮后的操作
     clickClone: function (entity) {
-      console.log(entity)
+      this.$confirm('确定克隆该表单吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          const sharedId = entity.sharedDynamicForm.id
+          const formId = entity.form.id
+          this.cloneDynamicForm(sharedId, formId)
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
     },
     // 点击预览按钮后的操作
     displaySharedForm: function (entity) {
