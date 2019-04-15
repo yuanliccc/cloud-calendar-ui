@@ -29,7 +29,7 @@
                 <div class="flex-row">
                   <el-button @click="editDynamicForm(scope.row)" size="mini" type="text">编辑</el-button>
                   <el-button @click="clickShare(scope.row)" size="mini" type="text">分享</el-button>
-                  <el-button @click="publish(scope.row)" size="mini" type="text">发布</el-button>
+                  <el-button @click="clicPublish(scope.row)" size="mini" type="text">发布</el-button>
                   <el-button @click="handleDelete(scope.row)" size="mini" type="text">删除</el-button>
                 </div>
               </template>
@@ -73,6 +73,39 @@ export default {
     this.findDynamicFormByCondition()
   },
   methods: {
+    // 点击发布按钮后的操作
+    clicPublish: function (entity) {
+      this.$confirm('是否分享该表单?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        this.publishForm(entity.dfDynamicForm.id)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+    // 发布表单
+    publishForm: function (formId) {
+      this.$axios.get('/df/dynamic/form/publishDynamicForm/' + formId)
+        .then(res => {
+          const code = res.data.code
+          if (code === 200) {
+            this.$alert(window.location.host + '/collectForm/' + formId, '发布地址', {
+              confirmButtonText: '确定',
+              callback: (action) => {
+                this.$message.info(action)
+              }
+            })
+          }
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
+    },
     // 点击分享后的操作
     clickShare: function (entity) {
       this.$confirm('该操作将会分享该模板, 是否继续?', '提示', {

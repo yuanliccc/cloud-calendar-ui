@@ -10,10 +10,12 @@ import dfList from '../components/bms/DynamicFormList.vue'
 import dfWorkSpace from '../components/form-editor/Container.vue'
 import shareList from '../components/bms/ShareDynamicFormList.vue'
 import dfDisplay from '../components/bms/DynamicFormDisplay.vue'
+import collectForm from '../components/bms/CollectForm.vue'
 
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -73,6 +75,12 @@ export default new Router({
           name: 'dynamicFormDisplay',
           meta: {index: 8},
           component: dfDisplay
+        },
+        {
+          path: '/collectForm/:formId/',
+          name: 'collectForm',
+          meta: {index: 9},
+          component: collectForm
         }
       ]
     }
