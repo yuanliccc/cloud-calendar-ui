@@ -60,7 +60,17 @@ export default {
   methods: {
     // 点击保存按钮后的操作
     saveCollectForm: function () {
-      console.log(this.widgetForm)
+      this.$axios.post('/df/collect/form/saveCollectForm', this.widgetForm)
+        .then(res => {
+          const code = res.data.code
+          if (code === 200) {
+            this.$message.success('保存成功')
+            this.$router.push({path: '/main/dfList'})
+          }
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
     },
     // 处理单个栅栏表单域
     handleGrid (data) {
