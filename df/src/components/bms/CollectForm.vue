@@ -1,6 +1,6 @@
 <template>
   <div class="collect-form-container">
-    <div class="collect-form-main">
+    <div class="collect-form-main" v-if="showForm">
       <el-form label-width="80px">
         <div v-for="(item, index) in widgetForm.list" :key="index">
           <div v-if="item.type === 'grid'">
@@ -37,6 +37,7 @@
 import FormItem from './FormItem.vue'
 export default {
   name: 'collectForm',
+  props: ['userInfo'],
   components: {
     FormItem
   },
@@ -54,10 +55,38 @@ export default {
           createTime: null,
           action: ''
         }
-      }
+      },
+      showForm: false
     }
   },
   methods: {
+    // 弹出提示弹窗,提示用户返回
+    openCancelAlert: function () {
+      this.$alert('您已经填写过该表单了,点击确定返回首页', '提示', {
+        confirmButtonText: '确定',
+        callback: action => {
+          this.$router.push({path: '/main/dfList'})
+        }
+      })
+    },
+    // 根据表单Id查询当前用户是否填写过该表单
+    findSelfCollectFormByFormId: function (formId) {
+      this.$axios.get('/df/collect/form/findSelfCollectFormByFormId/' + formId)
+        .then(res => {
+          const code = res.data.code
+          if (code === 200) {
+            const data = res.data.data
+            if (data == null) {
+              this.findDynamicFormByFormId(formId)
+            } else {
+              this.openCancelAlert()
+            }
+          }
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
+    },
     // 点击保存按钮后的操作
     saveCollectForm: function () {
       this.$axios.post('/df/collect/form/saveCollectForm', this.widgetForm)
@@ -197,7 +226,6 @@ export default {
           if (code === 200) {
             const data = res.data.data
             this.handleFields(data)
-            console.log(this.widgetForm)
           }
         })
         .catch(error => {
@@ -211,9 +239,19 @@ export default {
           const code = res.data.code
           if (code === 200) {
             const data = res.data.data
-            data.createTime = this.dateFormat(data.createTime)
-            this.widgetForm.config = data
-            this.findFormFieldsByFormId(formId)
+            if (data != null && data.publishState != null && data.publishState !== '未发布') {
+              this.showForm = true
+              data.createTime = this.dateFormat(data.createTime)
+              this.widgetForm.config = data
+              this.findFormFieldsByFormId(formId)
+            } else {
+              this.$alert('不存在的数据,点击确定返回首页', '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  this.$router.push({path: '/main/dfList'})
+                }
+              })
+            }
           }
         })
         .catch(error => {
@@ -247,7 +285,7 @@ export default {
   },
   mounted () {
     this.formId = this.$route.params.formId
-    this.findDynamicFormByFormId(this.formId)
+    this.findSelfCollectFormByFormId(this.formId)
   }
 }
 </script>

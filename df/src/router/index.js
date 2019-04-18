@@ -11,6 +11,7 @@ import dfWorkSpace from '../components/form-editor/Container.vue'
 import shareList from '../components/bms/ShareDynamicFormList.vue'
 import dfDisplay from '../components/bms/DynamicFormDisplay.vue'
 import collectForm from '../components/bms/CollectForm.vue'
+import collectList from '../components/bms/CollectList.vue'
 
 Vue.use(Router)
 
@@ -81,6 +82,12 @@ export default new Router({
           name: 'collectForm',
           meta: {index: 9},
           component: collectForm
+        },
+        {
+          path: '/collectList',
+          name: 'collectList',
+          meta: {index: 10},
+          component: collectList
         }
       ]
     }

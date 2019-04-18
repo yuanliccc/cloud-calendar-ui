@@ -24,13 +24,23 @@
             <el-table-column fixed prop="dfDynamicForm.method" label="请求方式"></el-table-column>
             <el-table-column fixed prop="dfDynamicForm.createTime" label="创建时间"></el-table-column>
             <el-table-column fixed prop="holder.name" label="创建人"></el-table-column>
-            <el-table-column fixed="right" label="操作">
+            <el-table-column fixed prop="dfDynamicForm.publishState" label="发布状态"></el-table-column>
+            <el-table-column  fixed prop="sharedForm.state" label="分享状态"></el-table-column>
+            <el-table-column fixed="right" label="操作" width="265">
               <template slot-scope="scope">
                 <div class="flex-row">
                   <el-button @click="editDynamicForm(scope.row)" size="mini" type="text">编辑</el-button>
-                  <el-button @click="clickShare(scope.row)" size="mini" type="text">分享</el-button>
-                  <el-button @click="clicPublish(scope.row)" size="mini" type="text">发布</el-button>
+                  <el-button @click="clickShare(scope.row)" size="mini" type="text"
+                             v-if="scope.row.sharedForm == null || scope.row.sharedForm.state !== '正常'">分享</el-button>
+                  <el-button @click="cancelShare(scope.row)" size="mini" type="text"
+                             v-if="scope.row.sharedForm != null && scope.row.sharedForm.state === '正常'">取消分享</el-button>
+                  <el-button @click="clickPublish(scope.row)" size="mini" type="text"
+                             v-if="scope.row.dfDynamicForm.publishState !== '已发布'">发布</el-button>
+                  <el-button @click="getPublishLink(scope.row)" size="mini" type="text"
+                             v-if="scope.row.dfDynamicForm.publishState === '已发布'">发布地址</el-button>
                   <el-button @click="handleDelete(scope.row)" size="mini" type="text">删除</el-button>
+                  <el-button v-if="scope.row.dfDynamicForm.publishState === '已发布'"
+                             @click="clickCollectInfoBtn(scope.row)" size="mini" type="text">信息收集</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -73,8 +83,34 @@ export default {
     this.findDynamicFormByCondition()
   },
   methods: {
+    // 点击信息收集按钮后的操作
+    clickCollectInfoBtn: function (entity) {
+      this.$router.push({path: '/collectList', query: {formId: entity.dfDynamicForm.id}})
+    },
+    // 取消分享
+    cancelShare: function (entity) {
+      this.$axios.get('/df/shared/dynamic/form/cancelShareDynamicForm/' + entity.dfDynamicForm.id)
+        .then(res => {
+          this.$message.success('操作成功')
+          this.selectCondition.pageNum = 1
+          this.findDynamicFormByCondition()
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
+    },
+    // 点击获取发布链接后的操作
+    getPublishLink: function (entity) {
+      const formId = entity.dfDynamicForm.id
+      this.$alert(window.location.host + '/collectForm/' + formId, '发布地址', {
+        confirmButtonText: '确定',
+        callback: (action) => {
+          this.$message.info(action)
+        }
+      })
+    },
     // 点击发布按钮后的操作
-    clicPublish: function (entity) {
+    clickPublish: function (entity) {
       this.$confirm('是否分享该表单?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

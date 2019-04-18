@@ -44,6 +44,7 @@
       <div class="share-list-main flex-column">
         <div class="share-list-main-table">
           <el-table
+            v-if="this.userInfo != null"
             border
             style="width: 100%"
             :data="shareFormInfo"
@@ -51,12 +52,13 @@
             <el-table-column prop="form.name" label="表单名称"></el-table-column>
             <el-table-column prop="holder.name" label="创建人"></el-table-column>
             <el-table-column prop="sharedDynamicForm.shareTime" label="分享时间"></el-table-column>
-            <el-table-column prop="sharedDynamicForm.clonedcount" label="被克隆次数"></el-table-column>
+            <el-table-column prop="sharedDynamicForm.clonedCount" label="被克隆次数"></el-table-column>
             <el-table-column fixed="right" label="操作">
               <template slot-scope="scope">
                 <div class="flex-row">
                   <el-button @click="displaySharedForm(scope.row)" size="mini" type="text">预览</el-button>
-                  <el-button @click="clickClone(scope.row)" size="mini" type="text">克隆</el-button>
+                  <el-button @click="clickClone(scope.row)" size="mini"
+                              v-if="userInfo.id != scope.row.holder.id" type="text">克隆</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -80,6 +82,7 @@
 <script>
 export default {
   name: 'shareList',
+  props: ['userInfo'],
   data () {
     return {
       selectCondition: {
@@ -100,6 +103,8 @@ export default {
           const code = res.data.code
           if (code === 200) {
             this.$message.success('克隆成功')
+            this.selectCondition.pageNum = 1
+            this.findNormalSharedDynamicFormByCondition()
           }
         })
         .catch(error => {

@@ -44,14 +44,14 @@ export default {
           route: '/main/dfList'
         },
         {
-          title: '个人信息管理',
-          icon: 'fa fa-user-circle-o',
-          route: '/main/personal'
-        },
-        {
           title: '分享模板',
           icon: 'fa fa-paste',
           route: '/main/shareList'
+        },
+        {
+          title: '个人信息管理',
+          icon: 'fa fa-user-circle-o',
+          route: '/main/personal'
         },
         {
           title: '帮助中心',
