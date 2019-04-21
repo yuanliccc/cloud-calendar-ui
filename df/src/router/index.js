@@ -12,6 +12,7 @@ import shareList from '../components/bms/ShareDynamicFormList.vue'
 import dfDisplay from '../components/bms/DynamicFormDisplay.vue'
 import collectForm from '../components/bms/CollectForm.vue'
 import collectList from '../components/bms/CollectList.vue'
+import collectDisplay from '../components/bms/CollectDisplay.vue'
 
 Vue.use(Router)
 
@@ -88,6 +89,12 @@ export default new Router({
           name: 'collectList',
           meta: {index: 10},
           component: collectList
+        },
+        {
+          path: '/collectDisplay',
+          name: 'collectDisplay',
+          meta: {index: 11},
+          component: collectDisplay
         }
       ]
     }

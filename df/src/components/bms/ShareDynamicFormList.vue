@@ -12,6 +12,7 @@
                       v-model="selectCondition.holderId"
                       filterable
                       remote
+                      clearable
                       reserve-keyword
                       placeholder="请输入关键词"
                       :remote-method="findUserLikeName"
@@ -20,7 +21,7 @@
                         v-for="item in userOptions"
                         :key="item.name"
                         :label="item.name"
-                        :value="item.name">
+                        :value="item.id">
                       </el-option>
                     </el-select>
                   </el-form-item>
