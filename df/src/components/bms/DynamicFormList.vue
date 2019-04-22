@@ -104,9 +104,7 @@ export default {
       const formId = entity.dfDynamicForm.id
       this.$alert(window.location.host + '/collectForm/' + formId, '发布地址', {
         confirmButtonText: '确定',
-        callback: (action) => {
-          this.$message.info(action)
-        }
+        callback: (action) => {}
       })
     },
     // 点击发布按钮后的操作

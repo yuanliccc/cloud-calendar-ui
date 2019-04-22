@@ -7,7 +7,9 @@
             <el-row>
               <el-col v-for="(col, colIndex) in item.columns" :key="colIndex" :span="col.span">
                 <div v-for="(element, elementIndex) in col.list" :key="elementIndex">
-                  {{element.label}}:{{element.options.defaultValue}}
+                  <el-form-item :label="element.label">
+                    <span>{{element.options.defaultValue}}</span>
+                  </el-form-item>
                 </div>
               </el-col>
             </el-row>
@@ -15,7 +17,11 @@
           <div v-else>
             <el-row>
               <el-col :span="24">
-                {{item.label}}:{{item.options.defaultValue}}
+                <div>
+                  <el-form-item :label="item.label">
+                    <span>{{item.options.defaultValue}}</span>
+                  </el-form-item>
+                </div>
               </el-col>
             </el-row>
           </div>
@@ -125,11 +131,10 @@ export default {
           /* if (field.type === 'radio' || field.type === 'checkbox' || field.type === 'select') {
             field = this.handleFieldItem(field, data[i].dfFormItems)
           } */
-
-          // 对于多选框,转换其值
           if (field.type === 'checkbox') {
-            if (field.options.defaultValue !== null) {
+            if (field.options.defaultValue !== '' && field.options.defaultValue != null) {
               field.options.defaultValue = field.options.defaultValue.split(',')
+              field.options.defaultValue = field.options.defaultValue.join(',')
             }
           }
 
@@ -158,7 +163,6 @@ export default {
           if (code === 200) {
             const data = res.data.data
             this.handleFields(data)
-            console.log(this.widgetForm)
           }
         })
         .catch(error => {

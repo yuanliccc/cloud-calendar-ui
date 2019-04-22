@@ -78,6 +78,10 @@ export default {
             this.$emit('userInfoCallback', this.userInfo)
             this.$router.push({path: '/main/dfList'})
           }
+          if (code === 500) {
+            const message = res.data.message
+            this.$message.error(message)
+          }
         })
         .catch(err => {
           this.$message.error(err)
