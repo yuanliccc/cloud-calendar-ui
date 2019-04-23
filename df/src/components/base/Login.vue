@@ -19,10 +19,10 @@
             <div class="login-container-right-context flex-column">
               <el-form>
                 <div class="input-item-block">
-                  <el-input class="input-style" placeholder="邮箱或手机号" v-model="loginUserInfo.identityCode"></el-input>
+                  <el-input class="input-style" placeholder="用户名" v-model="loginUserInfo.userName"></el-input>
                 </div>
                 <div class="input-item-block">
-                  <el-input class="input-style" type="password" placeholder="密码" v-model="loginUserInfo.verifyPassword"></el-input>
+                  <el-input class="input-style" type="password" placeholder="密码" v-model="loginUserInfo.password"></el-input>
                 </div>
                 <div class="prompt-block flex-row flex-space-between">
                   <div class="prompt-left flex-row">
@@ -38,10 +38,10 @@
                 </div>
                 <div class="button-block flex-row flex-space-between">
                   <div class="left-button-block">
-                    <button class="login-page-button blue-button left-button" @click="login()">登录</button>
+                    <button class="login-page-button blue-button left-button" @click.prevent="login">登录</button>
                   </div>
                   <div class="right-button-block">
-                    <button class="login-page-button white-button right-button" @click="jump('signup')">注册</button>
+                    <button type="button" class="login-page-button white-button right-button" @click.prevent="toSignup">注册</button>
                   </div>
                 </div>
               </el-form>
@@ -58,28 +58,33 @@ export default {
   data () {
     return {
       test: null,
+      userInfo: null,
       loginUserInfo: {
-        identityCode: null,
-        verifyPassword: null
+        userName: null,
+        password: null
       }
     }
   },
   methods: {
-    jump: function (path) {
-      this.$router.push({path: path})
+    toSignup: function (path) {
+      this.$router.push({path: '/signup'})
     },
     login: function () {
       this.$axios.post('/df/user/login', this.loginUserInfo)
         .then(res => {
-          const data = res.data
-          if (data.data == null) {
-            alert('账号或密码错误')
-          } else {
-            alert('跳转路由')
+          const code = res.data.code
+          if (code === 200) {
+            this.userInfo = res.data.data
+            this.$emit('userInfoCallback', this.userInfo)
+            this.$router.push({path: '/main/dfList'})
+          }
+          if (code === 500) {
+            const message = res.data.message
+            this.$message.error(message)
           }
         })
         .catch(err => {
-          console.log('err: ' + err)
+          this.$message.error(err)
         })
     }
   }

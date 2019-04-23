@@ -1,14 +1,42 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
+  <div>
+    <router-view v-if="isRouterAlive"/>
+    <loading v-if="isLoad"></loading>
   </div>
 </template>
 
 <script>
+  import loading from './confirm/loading.vue'
 export default {
-  name: 'App'
+  name: 'App',
+  components:{
+    loading,
+  },
+  data(){
+    return{
+      isRouterAlive:true
+    }
+  },
+  provide(){
+    return{
+      reload:this.reload
+    }
+  },
+  computed: {
+    isLoad: function () {
+      return this.$store.getters.showLoading
+    }
+  },
+  methods:{
+    reload(){
+      this.isRouterAlive = false;
+      this.$nextTick(function(){
+        this.isRouterAlive = true;
+      })
+    }
+  }
 }
+
 </script>
 
 <style>

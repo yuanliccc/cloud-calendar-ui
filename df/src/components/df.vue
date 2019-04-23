@@ -1,10 +1,10 @@
 <template>
   <div>
-    <df-header></df-header>
+    <df-header :userInfo="userInfo"></df-header>
     <transition :name="transitionName">
-      <router-view class="main-block"></router-view>
+      <router-view class="main-block" @userInfoCallback="getUserInfo" :userInfo="userInfo"></router-view>
     </transition>
-    <df-foot></df-foot>
+    <!--<df-foot></df-foot>-->
   </div>
 </template>
 
@@ -19,7 +19,29 @@ export default {
   },
   data () {
     return {
-      transitionName: ''
+      transitionName: '',
+      userInfo: null
+    }
+  },
+  methods: {
+    // 获取用户信息的回调
+    getUserInfo: function (data) {
+      this.userInfo = data
+    },
+    // 判断用户是否登录
+    isLogin: function () {
+      this.$axios.get('/df/user/isLogin')
+        .then(res => {
+          const code = res.data.code
+          if (code === 200) {
+            this.userInfo = res.data.data
+          } else if (code === 400) {
+            this.$router.push({path: '/'})
+          }
+        })
+        .catch(err => {
+          console.log('err: ' + err)
+        })
     }
   },
   watch: {
@@ -32,6 +54,9 @@ export default {
         this.transitionName = 'slide-right'
       }
     }
+  },
+  mounted () {
+    this.isLogin()
   }
 }
 </script>

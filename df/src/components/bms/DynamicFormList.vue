@@ -6,30 +6,41 @@
           <el-button type="primary" icon="el-icon-plus" @click="addDynamicForm">创建表单</el-button>
         </div>
         <div class="query-box-block">
-          <el-input  placeholder="请输入表单名查询......" class="input-with-select">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input  placeholder="请输入表单名查询......" class="input-with-select" v-model="selectCondition.name">
+            <el-button slot="append" icon="el-icon-search" @click="selectDynamicForm"></el-button>
           </el-input>
         </div>
         <div class="query-condition-block">
-
         </div>
       </div>
       <div class="form-line">
       </div>
       <div class="form-list flex-column">
         <div class="list-block">
-          <el-table border style="width: 100%" :data="dynamicFormList" @selection-change="handleSelectionChange">
+          <el-table border style="width: 100%" :data="dynamicFormInfo" @selection-change="handleSelectionChange" max-height="350">
             <el-table-column type="selection">
             </el-table-column>
-            <el-table-column fixed prop="name" label="表单名称"></el-table-column>
-            <el-table-column fixed prop="method" label="请求方式"></el-table-column>
-            <el-table-column fixed prop="createTime" label="创建时间"></el-table-column>
-            <el-table-column fixed="right" label="操作">
+            <el-table-column fixed prop="dfDynamicForm.name" label="表单名称"></el-table-column>
+            <el-table-column fixed prop="dfDynamicForm.method" label="请求方式"></el-table-column>
+            <el-table-column fixed prop="dfDynamicForm.createTime" label="创建时间"></el-table-column>
+            <el-table-column fixed prop="holder.name" label="创建人"></el-table-column>
+            <el-table-column fixed prop="dfDynamicForm.publishState" label="发布状态"></el-table-column>
+            <el-table-column  fixed prop="sharedForm.state" label="分享状态"></el-table-column>
+            <el-table-column fixed="right" label="操作" width="265">
               <template slot-scope="scope">
                 <div class="flex-row">
-                  <el-button @click="display(scope.row)" size="mini" type="text">预览</el-button>
                   <el-button @click="editDynamicForm(scope.row)" size="mini" type="text">编辑</el-button>
-                  <el-button @click="deleteDynamicForm(scope.row)" size="mini" type="text">删除</el-button>
+                  <el-button @click="clickShare(scope.row)" size="mini" type="text"
+                             v-if="scope.row.sharedForm == null || scope.row.sharedForm.state !== '正常'">分享</el-button>
+                  <el-button @click="cancelShare(scope.row)" size="mini" type="text"
+                             v-if="scope.row.sharedForm != null && scope.row.sharedForm.state === '正常'">取消分享</el-button>
+                  <el-button @click="clickPublish(scope.row)" size="mini" type="text"
+                             v-if="scope.row.dfDynamicForm.publishState !== '已发布'">发布</el-button>
+                  <el-button @click="getPublishLink(scope.row)" size="mini" type="text"
+                             v-if="scope.row.dfDynamicForm.publishState === '已发布'">发布地址</el-button>
+                  <el-button @click="handleDelete(scope.row)" size="mini" type="text">删除</el-button>
+                  <el-button v-if="scope.row.dfDynamicForm.publishState === '已发布'"
+                             @click="clickCollectInfoBtn(scope.row)" size="mini" type="text">信息收集</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -37,8 +48,12 @@
         </div>
         <div class="pagination-block flex-center">
           <el-pagination
+            :page-size="selectCondition.pageSize"
+            :current-page="selectCondition.pageNum"
             layout="prev, pager, next"
-            :total="1000">
+            @size-change="handlePageSizeChange"
+            @current-change="handleCurrentPageChange"
+            :total="selectCondition.total">
           </el-pagination>
         </div>
       </div>
@@ -54,54 +69,188 @@ export default {
   },
   data () {
     return {
-      dynamicFormList: [],
-      multipleSelection: []
+      dynamicFormInfo: [],
+      multipleSelection: [],
+      selectCondition: {
+        name: '',
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
+      }
     }
   },
   mounted () {
-    this.findDynamicFormList()
+    this.findDynamicFormByCondition()
   },
   methods: {
+    // 点击信息收集按钮后的操作
+    clickCollectInfoBtn: function (entity) {
+      this.$router.push({path: '/collectList', query: {formId: entity.dfDynamicForm.id}})
+    },
+    // 取消分享
+    cancelShare: function (entity) {
+      this.$axios.get('/df/shared/dynamic/form/cancelShareDynamicForm/' + entity.dfDynamicForm.id)
+        .then(res => {
+          this.$message.success('操作成功')
+          this.selectCondition.pageNum = 1
+          this.findDynamicFormByCondition()
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
+    },
+    // 点击获取发布链接后的操作
+    getPublishLink: function (entity) {
+      const formId = entity.dfDynamicForm.id
+      this.$alert(window.location.host + '/collectForm/' + formId, '发布地址', {
+        confirmButtonText: '确定',
+        callback: (action) => {}
+      })
+    },
+    // 点击发布按钮后的操作
+    clickPublish: function (entity) {
+      this.$confirm('是否分享该表单?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        this.publishForm(entity.dfDynamicForm.id)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+    // 发布表单
+    publishForm: function (formId) {
+      this.$axios.get('/df/dynamic/form/publishDynamicForm/' + formId)
+        .then(res => {
+          const code = res.data.code
+          if (code === 200) {
+            this.$alert(window.location.host + '/collectForm/' + formId, '发布地址', {
+              confirmButtonText: '确定',
+              callback: (action) => {
+                this.$message.info(action)
+              }
+            })
+          }
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
+    },
+    // 点击分享后的操作
+    clickShare: function (entity) {
+      this.$confirm('该操作将会分享该模板, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        this.share(entity.dfDynamicForm.id)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+    // 分享
+    share: function (formId) {
+      this.$axios.get('/df/dynamic/form/shareDynamicForm/' + formId)
+        .then(res => {
+          const code = res.data.code
+          if (code === 200) {
+            this.$message({
+              message: '分享成功',
+              type: 'success'
+            })
+            this.selectCondition.pageNum = 1
+            this.findDynamicFormByCondition()
+          }
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
+    },
+    // 点击发布模板后的操作
+    publish: function () {
+
+    },
+    // 根据条件查询表单信息
+    selectDynamicForm: function () {
+      this.selectCondition.pageNum = 1
+      this.findDynamicFormByCondition()
+    },
+    handlePageSizeChange: function (pageSize) {
+      this.selectCondition.pageSize = pageSize
+      this.findDynamicFormByCondition()
+    },
+    handleCurrentPageChange: function (currentPage) {
+      this.selectCondition.pageNum = currentPage
+      this.findDynamicFormByCondition()
+    },
     addDynamicForm () {
       this.$router.push({path: '/dfWorkSpace', query: {operator: 'add'}})
     },
     editDynamicForm (row) {
-      this.$router.push({path: '/dfWorkSpace', query: {operator: 'edit', formId: row.id}})
+      this.$router.push({path: '/dfWorkSpace', query: {operator: 'edit', formId: row.dfDynamicForm.id}})
     },
-    display (index) {
-      console.log('dispaly: ' + index)
+    // 点击删除按钮后的操作
+    handleDelete: function (entity) {
+      this.$confirm('此操作将删除表单信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.deleteDynamicForm(entity)
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     },
-    deleteDynamicForm (row) {
-      this.$axios.delete('/df/dynamic/form/' + row.id)
+    deleteDynamicForm: function (entity) {
+      this.$axios.delete('/df/dynamic/form/deleteDynamicForm/' + entity.dfDynamicForm.id)
         .then(res => {
           const data = res.data
           if (data.code === 200) {
-            console.log('sucess')
-            this.findDynamicFormList()
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.selectCondition.pageNum = 1
+            this.findDynamicFormByCondition()
           }
         })
         .catch(err => {
-          console.log('err: ' + err)
+          this.$message.error(err)
         })
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
       console.log(val)
     },
-    findDynamicFormList () {
-      this.$axios.get('/df/dynamic/form')
+    findDynamicFormByCondition: function () {
+      this.$axios.post('/df/dynamic/form/findDynamicFormByCondition', this.selectCondition)
         .then(res => {
           const data = res.data
           if (data != null) {
-            this.dynamicFormList = data.data.list
+            const result = data.data.listInfo
 
-            for (let i = 0; i < this.dynamicFormList.length; i++) {
-              this.dynamicFormList[i].createTime = this.timeGST(this.dynamicFormList[i].createTime)
+            for (let i = 0; i < result.length; i++) {
+              result[i].dfDynamicForm.createTime = this.timeGST(result[i].dfDynamicForm.createTime)
             }
+
+            this.dynamicFormInfo = result
+            this.selectCondition.total = data.data.total
           }
         })
         .catch(err => {
-          console.log('err: ' + err)
+          this.$message.error(err)
         })
     },
     timeGST (utcTime) {
@@ -110,8 +259,10 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
+
   .form-container {
+    padding-top:25px;
     width: 80%;
     margin: 0 auto;
   }

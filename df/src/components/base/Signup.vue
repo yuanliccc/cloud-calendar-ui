@@ -8,24 +8,39 @@
       </div>
       <div class="signup-container-block">
         <div class="signup-container flex-column">
-          <el-form>
+          <el-form :model="user" ref="userForm" :rules="userRules">
             <div class="input-item-block">
-              <el-input class="input-style" placeholder="昵称" v-model="user.name"></el-input>
+              <el-form-item prop="name">
+                <el-input class="input-style" placeholder="昵称" v-model="user.name"></el-input>
+              </el-form-item>
             </div>
             <div class="input-item-block">
-              <el-input class="input-style" type="password" placeholder="密码" v-model="user.password"></el-input>
+              <el-form-item prop="userName">
+                <el-input class="input-style" placeholder="用户名" v-model="user.userName"></el-input>
+              </el-form-item>
             </div>
             <div class="input-item-block">
-              <el-input class="input-style" type="password" placeholder="重复密码" v-model="verifyPassword"></el-input>
+              <el-form-item prop="password">
+                <el-input class="input-style" type="password" placeholder="密码" v-model="user.password"></el-input>
+              </el-form-item>
             </div>
             <div class="input-item-block">
-              <el-input class="input-style" placeholder="手机" v-model="user.phone"></el-input>
+              <el-form-item prop="verifyPassword">
+                <el-input class="input-style" type="password" placeholder="重复密码" v-model="user.verifyPassword"></el-input>
+              </el-form-item>
             </div>
             <div class="input-item-block">
-              <el-input class="input-style" type="email" placeholder="邮箱" v-model="user.email"></el-input>
+              <el-form-item prop="phone">
+                <el-input class="input-style" placeholder="手机" v-model="user.phone"></el-input>
+              </el-form-item>
             </div>
             <div class="input-item-block">
-              <button class="signup-button" @click="submit()">立即创建</button>
+              <el-form-item prop="email">
+                <el-input class="input-style" type="email" placeholder="邮箱" v-model="user.email"></el-input>
+              </el-form-item>
+            </div>
+            <div class="input-item-block">
+              <button class="signup-button" @click.prevent="submit('userForm')">立即创建</button>
             </div>
             <div class="to-login-block">
               <router-link to="/login">已有账号,直接登录></router-link>
@@ -41,31 +56,74 @@
 export default {
   name: 'signup',
   data () {
+    var validateEmail = (rule, value, callback) => {
+      if (value !== '') {
+        var reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+        if (!reg.test(value)) {
+          return callback(new Error('请输入有效的邮箱'))
+        }
+      }
+      callback()
+    }
+    var validatePhone = (rule, value, callback) => {
+      if (value !== '') {
+        var reg = /^1[3456789]\d{9}$/
+        if (!reg.test(value)) {
+          return callback(new Error('请输入有效的手机号码'))
+        }
+      }
+      callback()
+    }
     return {
       user: {
         name: null,
         email: null,
         phone: null,
-        password: null
+        password: null,
+        userName: null,
+        verifyPassword: null
+
       },
-      verifyPassword: null
+      userRules: {
+        userName: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        verifyPassword: [
+          { required: true, message: '请重复输入密码', trigger: 'blur' }
+        ],
+        phone: [
+          {validator: validatePhone, trigger: 'blur'}
+        ],
+        email: [
+          {validator: validateEmail, trigger: 'blur'}
+        ]
+      }
     }
   },
   methods: {
-    submit: function () {
-      if (this.user.password === this.verifyPassword) {
-        this.addUser()
-      } else {
-        alert('两次输入的密码不一致')
-      }
+    submit: function (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          if (this.user.password === this.user.verifyPassword) {
+            this.addUser()
+          } else {
+            this.$message.warning('两次输入的密码不一致')
+          }
+        }
+      })
     },
     addUser: function () {
-      this.$axios.post('/df/user', this.user)
+      this.$axios.post('/df/user/add', this.user)
         .then(res => {
-          this.$router.push({path: 'login'})
+          if (res.data.code === 200) {
+            this.$router.push({path: '/login'})
+          }
         })
         .catch(err => {
-          console.log('error' + err)
+          this.$message.error(err)
         })
     }
   }

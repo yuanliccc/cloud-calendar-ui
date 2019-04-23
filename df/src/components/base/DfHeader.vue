@@ -6,12 +6,20 @@
           <router-link to="/">Cloud-calendar</router-link>
         </div>
       </div>
-      <div class="header-content-right flex-row">
+      <div class="header-content-right flex-row" v-if="this.userInfo == null">
         <div class="header-content-item" :class="[titles[0].isActive ? 'header-item-active' : '']">
           <a @click="jump(0)">{{titles[0].title}}</a>
         </div>
         <div class="header-content-item" :class="[titles[1].isActive ? 'header-item-active' : '']">
           <a @click="jump(1)">{{titles[1].title}}</a>
+        </div>
+      </div>
+      <div class="header-content-right flex-row" v-else>
+        <div class="header-content-item">
+          {{this.userInfo.name}}
+        </div>
+        <div class="header-content-item">
+          <a @click="logout">退出</a>
         </div>
       </div>
     </div>
@@ -21,6 +29,7 @@
 <script>
 export default {
   name: 'df-header',
+  props: ['userInfo'],
   data: function () {
     return {
       titles: [
@@ -41,6 +50,17 @@ export default {
     '$route': 'changeActive'
   },
   methods: {
+    // 点击退出按钮后的操作
+    logout: function () {
+      this.$axios.get('/df/logout')
+        .then(res => {
+          window.location.reload()
+          /* this.$router.push({path: '/login'}) */
+        })
+        .catch(err => {
+          this.$message.error(err)
+        })
+    },
     jump: function (index) {
       this.$router.push({path: this.titles[index].route})
     },
@@ -63,6 +83,8 @@ export default {
 
 <style>
   .header-block {
+    height: 6vh;
+    min-height: 35px;
     background-color: #409EFF;
   }
 
