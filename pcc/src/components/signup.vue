@@ -3,35 +3,6 @@
       <div class="content flex-column flex-center">
         <div class="content-container flex-row flex-center">
           <div class="content-left">
-            <!--<div id="carousel-example-generic" class="carousel slide full" data-ride="carousel">
-              &lt;!&ndash; Indicators &ndash;&gt;
-              &lt;!&ndash;<ol class="carousel-indicators">
-                  <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                  <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                  <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-              </ol>&ndash;&gt;
-
-              &lt;!&ndash; Wrapper for slides &ndash;&gt;
-              <div class="carousel-inner" role="listbox">
-                <div class="item active img-item">
-                  <img class="img-size" src="../assets/images/signup/one.jpg" alt="...">
-                </div>
-                <div class="item img-item">
-                  <img class="img-size" src="../assets/images/signup/two.jpg" alt="...">
-                </div>
-              </div>
-
-              &lt;!&ndash; Controls &ndash;&gt;
-              <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-              </a>
-              <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-              </a>
-            </div>-->
-
             <el-carousel class="full" indicator-position="outside">
               <el-carousel-item class="img-block" v-for="(item, index) in images" :key="index">
                 <img class="full" v-bind:src="item.src">
@@ -197,16 +168,16 @@ export default {
 
   .content-container {
     width: 70%;
-    height: 400px;
+    height: 500px;
     margin: 0 auto;
   }
 
   .content-left {
-    width: 65%;
+    width: 650px;
   }
 
   .content-right {
-    width: 35%;
+    width: 350px;
     padding-left: 30px;
   }
 
