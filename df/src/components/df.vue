@@ -2,7 +2,7 @@
   <div>
     <df-header :userInfo="userInfo"></df-header>
     <transition :name="transitionName">
-      <router-view class="main-block" @userInfoCallback="getUserInfo" :userInfo="userInfo"></router-view>
+      <router-view class="main-block" @userInfoCallback="getUserInfo" :userInfo="userInfo" v-if="sign"></router-view>
     </transition>
     <!--<df-foot></df-foot>-->
   </div>
@@ -20,7 +20,8 @@ export default {
   data () {
     return {
       transitionName: '',
-      userInfo: null
+      userInfo: null,
+      sign: false
     }
   },
   methods: {
@@ -33,8 +34,10 @@ export default {
       this.$axios.get('/df/user/isLogin')
         .then(res => {
           const code = res.data.code
+          this.sign = false
           if (code === 200) {
             this.userInfo = res.data.data
+            this.sign = true
           } else if (code === 400) {
             this.$router.push({path: '/'})
           }

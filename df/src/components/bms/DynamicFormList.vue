@@ -132,6 +132,8 @@ export default {
               confirmButtonText: '确定',
               callback: (action) => {
                 this.$message.info(action)
+                this.selectCondition.pageNum = 1
+                this.findDynamicFormByCondition()
               }
             })
           }

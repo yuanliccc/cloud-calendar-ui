@@ -13,6 +13,7 @@ import dfDisplay from '../components/bms/DynamicFormDisplay.vue'
 import collectForm from '../components/bms/CollectForm.vue'
 import collectList from '../components/bms/CollectList.vue'
 import collectDisplay from '../components/bms/CollectDisplay.vue'
+import selfSubmitDynamicForm from '../components/bms/SelfSubmitDynamicFormList.vue'
 
 Vue.use(Router)
 
@@ -47,22 +48,28 @@ export default new Router({
           meta: {index: 3},
           children: [
             {
-              path: '/main/personal',
-              name: 'personal',
-              meta: {index: 4},
-              component: personal
-            },
-            {
               path: '/main/dfList',
               name: 'dfList',
-              meta: {index: 5},
+              meta: {index: 4},
               component: dfList
             },
             {
               path: '/main/shareList',
               name: 'shareList',
-              meta: {index: 6},
+              meta: {index: 5},
               component: shareList
+            },
+            {
+              path: '/main/selfSubmitDynamicForm',
+              name: 'selfSubmitDynamicForm',
+              meta: {index: 6},
+              component: selfSubmitDynamicForm
+            },
+            {
+              path: '/main/personal',
+              name: 'personal',
+              meta: {index: 7},
+              component: personal
             }
           ]
         },

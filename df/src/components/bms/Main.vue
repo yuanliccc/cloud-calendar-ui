@@ -49,14 +49,14 @@ export default {
           route: '/main/shareList'
         },
         {
+          title: '我的填写',
+          icon: 'fa fa-coffee',
+          route: '/main/selfSubmitDynamicForm'
+        },
+        {
           title: '个人信息管理',
           icon: 'fa fa-user-circle-o',
           route: '/main/personal'
-        },
-        {
-          title: '帮助中心',
-          icon: 'fa fa-coffee',
-          route: '/'
         }
       ]
     }
