@@ -1,6 +1,6 @@
 <template>
   <div class="publicList">
-    <div class="publicTitle">机构日历管理</div>
+    <div class="publicTitle">机构工作日程管理</div>
     <div class="publicListTable">
       <div class="publicList_Head">
         <div class="publicList_Head_Bt">
@@ -38,7 +38,7 @@
           <template slot-scope="scope">
             <el-button @click="dis(scope.row.id)" type="text" size="mid" v-if="hasPermission('schedule_display')">查看</el-button>
             <el-button type="text" size="mid" @click="edit(scope.row.id)" v-if="hasPermission('schedule_edit')">编辑</el-button>
-            <el-button @click="del(scope.row.id)" type="text" size="mid" v-if="hasPermission('schedule_delete')">删除</el-button>
+            <el-button @click="revoke(scope.row.id)" type="text" size="mid" v-if="hasPermission('schedule_delete') && scope.row.state != '已撤销'">撤销</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -170,7 +170,37 @@
       displayChange: function(val){
             this.display = val;
             this.displayInfo()
-        },
+      },
+      revoke: function(scheduleId){
+        this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$store.commit('showLoading');
+          this.$axios.post("/occ/schedule/revoke",{
+            params:{id: scheduleId}
+          }).then(res =>{
+            this.$store.commit('hideLoading');
+            this.$message({
+              type: 'success',
+              message: '撤销成功!'
+            });
+          }).catch(err =>{
+            this.$store.commit('hideLoading');
+            this.$message({
+              showClose: true,
+              message: err,
+              type: 'error'
+            });
+          });
+        }).catch(() =>{
+          this.$message({
+            type: 'info',
+            message: '已取消撤销'
+          });
+        })
+      },
       displayInfo: function(){
         this.$store.commit('showLoading');
         this.$axios.get('/occ/schedule/listByKey',{

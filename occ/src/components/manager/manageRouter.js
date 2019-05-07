@@ -6,6 +6,7 @@ import  organizationRoute from './organization/organizationRoute'
 import noticeRoute from './notice/noticeRoute'
 import orgCalenderRoute from './orgCalender/orgCalenderRoute'
 import scheduleRoute from './schedule/scheduleRoute'
+import eventRoute from './event/eventRoute'
 export default [
   {
     path: '/manager',
@@ -34,7 +35,8 @@ export default [
       ...organizationRoute,
       ...noticeRoute,
       ...orgCalenderRoute,
-      ...scheduleRoute
+      ...scheduleRoute,
+      ...eventRoute
     ]
   }
 ]

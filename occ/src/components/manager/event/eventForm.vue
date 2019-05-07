@@ -1,21 +1,16 @@
 <template>
   <div class="publicFrom">
-    <div class="publicTitle" v-if="!add">机构工作日程编辑</div>
-    <div class="publicTitle" v-if="add">新增机构工作日程</div>
+    <div class="publicTitle" v-if="!add">事件编辑</div>
+    <div class="publicTitle" v-if="add">新增事件</div>
     <div>
-      <el-form label-position="left" ref="schedule"class="add_Edit" :model="schedule" :rules="rules"
+      <el-form label-position="left" ref="event"class="add_Edit" :model="event" :rules="rules"
                 label-width="120px">
         <el-form-item label="标题" prop="title">
-          <el-input v-model="schedule.title" placeholder="标题"></el-input>
-        </el-form-item>
-        <el-form-item label="下级机构可见" prop="subordinatecanseen">
-          <el-select v-model="schedule.subordinatecanseen">
-            <el-option v-for="i in repeatList" :key="i" :value="i" :label="i"></el-option>
-          </el-select>
+          <el-input v-model="event.title"></el-input>
         </el-form-item>
         <el-form-item label="开始日期" prop="timeList">
           <el-date-picker
-            v-model="schedule.timeList"
+            v-model="event.timeList"
             type="daterange"
             :picker-options="expireTimeOption"
             range-separator="至"
@@ -23,48 +18,47 @@
             end-placeholder="结束日期">
           </el-date-picker>
         </el-form-item>
+        <el-form-item label="类型" prop="type">
+          <el-select v-model="event.type">
+            <el-option v-for="i in types" :key="i" :value="i" :label="i"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="this.$route.params.scheduleId == undefined" label="对应日程" prop="scheduleid">
+          <el-select v-model="event.scheduleid">
+            <el-option v-for="i in schedules" :key="i.id" :value="i.id" :label="i.title"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="优先级" prop="level">
+          <el-select v-model="event.level">
+            <el-option v-for="i in levels" :key="i.name" :value="i.name" :label="i.tip">
+              <span style="float: left">{{i.name}}</span>
+              <span style="float: right;">{{i.tip}}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="内容" prop="content">
-          <el-input type="textarea" v-model="schedule.content" resize="none" rows="5"
+          <el-input type="textarea" v-model="event.content" resize="none" rows="5"
                     placeholder="内容"></el-input>
         </el-form-item>
-        <div class="form_Bt_Schedule" style="margin-bottom: 10px;">
-        </div>
-        <el-form>
-          <el-timeline>
-            <el-timeline-item
-              style="padding:0;"
-              v-for="(i, index) in timeLine"
-              color="#0bbd87"
-              :timestamp="formatDate(i)"
-              :key="index">
-              <span v-if="index == 0">开始</span>
-              <span v-if="index != 0">结束</span>
-            </el-timeline-item>
-          </el-timeline>
-        </el-form>
-        <div class="form_Bt_Schedule">
+        <div class="form_Bt_Event">
           <el-form-item>
             <el-button v-if="add" type="primary" @click="submit">立即创建</el-button>
-            <el-button v-if="!add && schedule.state != ''" type="primary" @click="">追加事件</el-button>
-            <el-button v-if="schedule.state != '执行'" type="primary" @click="submit2">存入草稿</el-button>
             <el-button v-if="add" type="primary" @click="clear">重置</el-button>
             <el-button v-if="!add" type="primary" @click="submit">立即修改</el-button>
             <el-button @click="reBack">取消</el-button>
           </el-form-item>
         </div>
       </el-form>
-
     </div>
   </div>
 </template>
 <script>
-  import {formatDate} from '../../../assets/lib/common'
   export default{
-    name: 'scheduleForm',
+    name: 'eventForm',
     data(){
       return {
         add: true,
-        schedule: {
+        event: {
           id: '',
           title: '',
           content: '',
@@ -72,27 +66,45 @@
           endtime: '',
           submituserid: '',
           submittime: '',
-          subordinatecanseen: '否',
-          orgid: '',
-          state: '',
-          updateuserid: '',
-          updatetime: '',
+          type: '',
+          level: 1,
+          scheduleid: '',
           timeList:[],
         },
-        events:[],
-        repeatList:["是", "否"],
+        schedules:[],
+        levels:[
+          {
+            name: 1,
+            tip: '默认等级'
+          },
+          {
+            name: 2,
+            tip: '优先级比默认等级高'
+          },
+          {
+            name: 3,
+            tip: '优先级比日程高'
+          },
+        ],
+        types:['追加事件', '紧急事件'],
         rules:{
           title: [
             { required: true, message: '请输入标题', trigger: 'blur' }
-          ],
-          subordinatecanseen: [
-            { required: true, message: '请选择下级机构是否可见', trigger: 'blur' }
           ],
           content: [
             { required: true, message: '请输入内容', trigger: 'blur' }
           ],
           timeList: [
-            { required: true, message: '请选择开始和结束日期', trigger: 'blur' }
+            { required: true, message: '请选择开始时间和结束时间', trigger: 'blur' }
+          ],
+          scheduleid:[
+            { required: true, message: '请选择对应事件', trigger: 'blur' }
+          ],
+          type: [
+            { required: true, message: '请选择类型', trigger: 'blur' }
+          ],
+          level: [
+            { required: true, message: '请选择优先级', trigger: 'blur' }
           ],
         },
         expireTimeOption: {
@@ -102,26 +114,18 @@
         },
       }
     },
-    filters: {
-      formatDate(time) {
-        var date = new Date(time);
-        return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
-      }
-    },
-    computed:{
-      timeLine:function(){
-        return this.schedule.timeList;
-      }
-    },
     mounted: function(){
-      this.add = (this.$route.name == 'scheduleForm_Add' ? true : false);
+      this.add = (this.$route.name == 'eventForm_Add' ? true : false);
       if(!this.add){
-        this.getInfoById(this.$route.params.scheduleId);
+        this.getInfoById(this.$route.params.eventId);
        }
+      if(this.$route.params.scheduleId == undefined){
+        this.getAllSchedule();
+      }
     },
     methods:{
       clear:function(){
-        this.schedule= {
+        this.event= {
           id: '',
           title: '',
           content: '',
@@ -129,54 +133,36 @@
           endtime: '',
           submituserid: '',
           submittime: '',
-          subordinatecanseen: '否',
-          orgid: '',
-          state: '',
-          updateuserid: '',
-          updatetime: '',
-          timeList: []
+          type: '',
+          level: 1,
+          scheduleid: '',
+          timeList:[]
         }
       },
       submit: function(){
-        this.$refs.schedule.validate((valid) => {
+        this.$refs.event.validate((valid) => {
           if (valid) {
+            if(this.$route.params.scheduleId != undefined){
+               this. event.scheduleid = this.$route.params.scheduleId;
+            }
             if(this.add) {
-              this.save("执行");
+              this.save();
             }else{
-              this.edit("执行");
+              this.edit();
             }
           } else {
             return false;
           }
         });
       },
-      submit2: function(){
-        this.$refs.schedule.validate((valid) => {
-          if (valid) {
-            if(this.add) {
-              this.save("草稿");
-            }else{
-              this.edit("草稿");
-            }
-          } else {
-            return false;
-          }
-        });
-      },
-      formatDate(time) {
-        var date = new Date(time);
-        return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
-      },
-      save: function(state){
-        this.schedule.submittime = new Date();
-        this.schedule.submituserid = this.$store.getters.userInfo.user.id;
-        this.schedule.orgid = this.$store.getters.userInfo.organization.id;
-        this.schedule.starttime = this.schedule.timeList[0];
-        this.schedule.endtime = this.schedule.timeList[1];
-        this.schedule.state = state;
+      save: function(){
+        this.event.submittime = new Date();
+        this.event.starttime = this.event.timeList[0];
+        this.event.endtime = this.event.timeList[1];
+        this.event.submituserid = this.$store.getters.userInfo.user.id
 
         this.$store.commit("showLoading");
-        this.$axios.post('/occ/schedule/add', this.schedule)
+        this.$axios.post('/occ/event/add', this.event)
         .then(res =>{
           const data = res.data;
           if(data.code == '400'){
@@ -206,13 +192,13 @@
       reBack: function(){
         this.$router.go(-1);
       },
-      getInfoById: function(scheduleId){
+      getInfoById: function(eventId){
         this.$store.commit("showLoading");
-        this.$axios.get('/occ/schedule/detail',{
-             params:{id: scheduleId}
+        this.$axios.get('/occ/event/detail',{
+             params:{id: eventId}
         }).then(res =>{
           const data = res.data.data;
-          this.schedule = {
+          this.event = {
             id: data.id,
             title: data.title,
             content: data.content,
@@ -220,11 +206,9 @@
             endtime: data.endtime,
             submituserid: data.submituserid,
             submittime: data.submittime,
-            subordinatecanseen: data.subordinatecanseen,
-            orgid: data.orgid,
-            state: data.state,
-            updateuserid:  data.updateuserid,
-            updatetime: data.updatetime,
+            type: data.type,
+            scheduleid: data.scheduleid,
+            level: data.level,
             timeList: [data.starttime, data.endtime]
           };
           this.$store.commit("hideLoading");
@@ -237,18 +221,9 @@
           });
         })
       },
-      edit: function(state){
-        if(this.schedule.state == "草稿" && state == "执行"){
-          this.schedule.state = "执行";
-        }
-
-        this.schedule.updatetime = new Date();
-        this.schedule.updateuserid = this.$store.getters.userInfo.user.id;
-        this.schedule.starttime = this.schedule.timeList[0];
-        this.schedule.endtime = this.schedule.timeList[1];
-
+      edit: function(){
         this.$store.commit("showLoading");
-        this.$axios.put('/occ/schedule/update', this.schedule)
+        this.$axios.put('/occ/event/update', this.event)
         .then(res =>{
           const data = res.data;
           if(data.code == '400'){
@@ -274,12 +249,27 @@
           });
         });
       },
+      getAllSchedule: function(){
+        this.$store.commit("showLoading");
+        this.$axios.get("/occ/schedule/findAllSchedule").then(res =>{
+          this.$store.commit("hideLoading");
+          const  data = res.data.data;
+          this.schedules = data;
+        }).catch(err =>{
+          this.$store.commit("hideLoading");
+          this.$message({
+            showClose: true,
+            message: err,
+            type: 'error'
+          });
+        });
+      }
     }
   }
 </script>
 
 <style scoped>
-  .form_Bt_Schedule{
+  .form_Bt_Event{
     height: 100px;
     padding: 50px 0 0 0;
   }
