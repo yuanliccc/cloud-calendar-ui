@@ -1,10 +1,5 @@
 <template>
   <div id="app">
-    <!--<div class="df_header">
-      <div class="df_left_title">Cloud-calendar</div>
-      <div class="df_main_title">动态表单设计器</div>
-      <div class="df_right_title"><a href="#">Github</a></div>
-    </div>-->
     <router-view/>
   </div>
 </template>

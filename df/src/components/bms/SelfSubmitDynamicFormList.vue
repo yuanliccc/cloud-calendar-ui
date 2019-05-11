@@ -1,7 +1,46 @@
 <template>
   <div v-if="this.user != null">
     <div class="self-submit-form-container flex-column">
-      <div class="self-submit-form-header flex-row"></div>
+      <div class="self-submit-form-header flex-row">
+        <div class="self-submit-form-header-query-box">
+          <el-form ref="selectForm" :model="selectCondition" label-width="100px" style="width: 100%;">
+            <el-row :gutter="20">
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                  <el-form-item label="表单名称">
+                    <el-select
+                      v-model="selectCondition.formId"
+                      filterable
+                      remote
+                      clearable
+                      reserve-keyword
+                      placeholder="请输入关键词"
+                      :remote-method="findFormLikeName"
+                      :loading="loading">
+                      <el-option
+                        v-for="item in formOptions"
+                        :key="item.dynamicForm.name"
+                        :label="item.dynamicForm.name"
+                        :value="item.dynamicForm.id">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                  <el-form-item>
+                    <el-button type="primary" @click="findSelfSubmitFormByCondition">查询</el-button>
+                    <el-button @click="resetSelect">重置</el-button>
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+            </el-row>
+          </el-form>
+        </div>
+      </div>
       <div class="self-submit-form-line"></div>
       <div class="self-submit-form-main flex-column">
         <div class="self-submit-form-main-table">
@@ -52,13 +91,37 @@ export default {
         pageSize: 10,
         pageNum: 1,
         total: 0,
-        userId: this.userInfo.id
+        userId: this.userInfo.id,
+        formId: null
       },
       selfSubmitFormInfo: [],
-      multipleSelection: []
+      multipleSelection: [],
+      loading: false,
+      formOptions: []
     }
   },
   methods: {
+    // 根据表单的名称模糊查询表单信息
+    findFormLikeName: function (formName) {
+      this.$axios.get('/df/collect/form/findFormLikeName/' + formName)
+        .then(res => {
+          const code = res.data.code
+          if (code === 200) {
+            this.formOptions = res.data.data
+          }
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
+    },
+    // 点击查询按钮后调用的方法
+    resetSelect: function () {
+      this.selectCondition.pageSize = 10
+      this.selectCondition.pageNum = 1
+      this.selectCondition.userId = this.user.id
+      this.selectCondition.formId = null
+      this.findSelfSubmitFormByCondition()
+    },
     // 查询当前用户所填写的表单记录
     findSelfSubmitFormByCondition: function () {
       this.$axios.post('/df/collect/form/findSelfSubmitFormByCondition', this.selectCondition)
@@ -127,5 +190,8 @@ export default {
     border-bottom: 1px solid #ddd;
     margin-bottom: 28px;
     text-align: center;
+  }
+  .self-submit-form-header-query-box {
+    width: 100%;
   }
 </style>

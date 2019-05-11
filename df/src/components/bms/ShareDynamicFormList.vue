@@ -152,6 +152,7 @@ export default {
       this.selectCondition.pageNum = 1
       this.selectCondition.total = 0
       this.selectCondition.holderId = null
+      this.findNormalSharedDynamicFormByCondition()
     },
     // 根据用户名称模糊查询用户信息
     findUserLikeName: function (name) {
