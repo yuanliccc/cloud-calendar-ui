@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex-row">
+    <div class="flex-row" v-if="this.user != null">
       <div class="meun-container flex-column">
         <el-menu
           :default-active="defaultActive"
@@ -22,7 +22,7 @@
       </div>
       <div class="main-content">
         <transition :name="transitionName">
-          <router-view :userInfo="userInfo"></router-view>
+          <router-view :userInfo="user"></router-view>
         </transition>
       </div>
     </div>
@@ -34,6 +34,7 @@ export default {
   props: ['userInfo'],
   data () {
     return {
+      user: this.userInfo,
       isShowMenu: false,
       transitionName: '',
       defaultActive: '',
@@ -49,14 +50,14 @@ export default {
           route: '/main/shareList'
         },
         {
+          title: '我的填写',
+          icon: 'fa fa-coffee',
+          route: '/main/selfSubmitDynamicForm'
+        },
+        {
           title: '个人信息管理',
           icon: 'fa fa-user-circle-o',
           route: '/main/personal'
-        },
-        {
-          title: '帮助中心',
-          icon: 'fa fa-coffee',
-          route: '/'
         }
       ]
     }
@@ -84,6 +85,11 @@ export default {
         this.transitionName = 'slide-right'
       }
       this.chooseNavItem()
+    },
+    'userInfo': function (newVal) {
+      if (newVal != null) {
+        this.user = newVal
+      }
     }
   },
   mounted () {

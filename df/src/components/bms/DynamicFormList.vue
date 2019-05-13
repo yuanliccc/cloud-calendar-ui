@@ -132,6 +132,8 @@ export default {
               confirmButtonText: '确定',
               callback: (action) => {
                 this.$message.info(action)
+                this.selectCondition.pageNum = 1
+                this.findDynamicFormByCondition()
               }
             })
           }
@@ -198,6 +200,10 @@ export default {
     },
     // 点击删除按钮后的操作
     handleDelete: function (entity) {
+      if (entity.sharedForm != null && entity.sharedForm.state === '正常') {
+        this.$message.info('不允许删除已经被分享的表单信息')
+        return
+      }
       this.$confirm('此操作将删除表单信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
