@@ -96,8 +96,8 @@ export default {
 
         for (let j = 0; j < gridItems.length; j++) {
           // 如果当前表单域是该栅栏中的元素
-          if (gridItems[i].parentId === grid.id) {
-            grid.columns[j].list.push(this.handleField(gridItems[j]))
+          if (gridItems[j].parentId === grid.id) {
+            grid.columns[gridItems[j].displayIndex].list.push(this.handleField(gridItems[j]))
           }
         }
 

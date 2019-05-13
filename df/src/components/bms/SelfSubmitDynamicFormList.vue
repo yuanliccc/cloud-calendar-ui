@@ -54,6 +54,7 @@
             </el-table-column>
             <el-table-column prop="dynamicForm.name" fixed label="表单名称"></el-table-column>
             <el-table-column prop="submiter.name" fixed label="提交人"></el-table-column>
+            <el-table-column prop="dynamicForm.publishState" label="发布状态"></el-table-column>
             <el-table-column prop="collectForm.submitTime" fixed label="提交时间"></el-table-column>
             <el-table-column fixed="right" label="操作">
               <template slot-scope="scope">

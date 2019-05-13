@@ -262,7 +262,7 @@ export default {
         for (let j = 0; j < gridItems.length; j++) {
           if (gridItems[j].parentId === grid.id) {
             // 如果该条目是目前栅栏下的条目,将其插入到当前栅栏中
-            grid.columns[j].list.push(this.handleField(gridItems[j]))
+            grid.columns[gridItems[j].displayIndex].list.push(this.handleField(gridItems[j]))
           }
         }
 
