@@ -30,15 +30,18 @@
           <el-input v-model="schedule.content"
                     type="textarea" disabled="disabled" resize="none" rows="6"></el-input>
         </el-form-item>
-        <el-timeline>
+        <el-timeline style="padding-left: 0;">
           <el-timeline-item
-            style="padding:0!important;"
+            style="padding:0;"
             v-for="(i, index) in timeLine"
-            color="#0bbd87"
-            :timestamp="formatDate(i)"
+            placement="top"
+            :timestamp="formatDate(i.time)"
+            :color="i.tip == 'start' ? 'red' : 'balck'"
             :key="index">
-            <span v-if="index == 0">开始</span>
-            <span v-if="index != 0">结束</span>
+            <el-card>
+              <h4>{{i.title}}</h4>
+              <p>{{i.time | formatDate}}</p>
+            </el-card>
           </el-timeline-item>
         </el-timeline>
         <div class="form_Bt">
@@ -57,12 +60,20 @@ export default{
   name: 'scheduleDisplay',
   data(){
     return {
-    schedule: {},
-    timeLine:[]
+      schedule: {},
+      timeLine:[],
+      events:[],
+      val:[],
     }
   },
   mounted: function(){
     this.getInfoById(this.$route.params.scheduleId);
+  },
+  filters: {
+    formatDate(time) {
+      var date = new Date(time);
+      return formatDate(date, 'yyyy-MM-dd');
+    }
   },
   methods:{
     reBack: function(){
@@ -80,7 +91,8 @@ export default{
       }).then(res =>{
         const data = res.data;
         this.schedule = data.data;
-        this.timeLine = [this.schedule.starttime, this.schedule.endtime];
+        this.val = [this.schedule.starttime, this.schedule.endtime];
+        this.disEvent(this.$route.params.scheduleId);
         this.$store.commit("hideLoading");
 
       }).catch(err => {
@@ -91,6 +103,61 @@ export default{
           type: 'error'
         });
       })
+    },
+    disEvent: function(scheduleId){
+      this.timeLine.push({
+        title: '日程开始',
+        level: 2,
+        time: this.val[0],
+        tip: 'start'
+      });
+      this.timeLine.push({
+        title: '日程结束',
+        level: 2,
+        time: this.val[1],
+        tip: 'end'
+      });
+
+      this.$store.commit("showLoading");
+      this.$axios.get('/occ/event/getTheEventByScheduleId', {
+        params:{id: scheduleId }
+      }).then(res =>{
+        const data = res.data;
+        this.events = data.data;
+
+        this.events.forEach(e =>{
+          this.timeLine.push({
+            title: e.type + ":" + e.title + "开始",
+            level: e.level,
+            time: e.starttime,
+            tip: 'start'
+          });
+
+          this.timeLine.push({
+            title: e.type + ":" + e.title + "结束",
+            level: e.level,
+            time: e.endtime,
+            tip: 'end'
+          });
+        });
+
+        this.timeLine.sort(function(a,b){
+          if((new Date(a.time).getTime()) - (new Date(b.time).getTime()) == 0 && a.level > b.level)
+            return 1;
+          else if((new Date(a.time).getTime()) - (new Date(b.time).getTime()) == 0 && a.level < b.level)
+            return -1;
+          return (new Date(a.time).getTime()) - (new Date(b.time).getTime());
+        });
+
+        this.$store.commit("hideLoading");
+      }).catch(err =>{
+        this.$store.commit("hideLoading");
+        this.$message({
+          showClose: true,
+          message: err,
+          type: 'error'
+        });
+      });
     },
   }
 }

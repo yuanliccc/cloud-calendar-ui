@@ -27,25 +27,26 @@
           <el-input type="textarea" v-model="schedule.content" resize="none" rows="5"
                     placeholder="内容"></el-input>
         </el-form-item>
-        <div class="form_Bt_Schedule" style="margin-bottom: 10px;">
-        </div>
         <el-form>
-          <el-timeline>
+          <el-timeline style="padding-left: 0;">
             <el-timeline-item
               style="padding:0;"
               v-for="(i, index) in timeLine"
-              color="#0bbd87"
-              :timestamp="formatDate(i)"
+              placement="top"
+              :timestamp="formatDate(i.time)"
+              :color="i.tip == 'start' ? 'red' : 'balck'"
               :key="index">
-              <span v-if="index == 0">开始</span>
-              <span v-if="index != 0">结束</span>
+              <el-card>
+                <h4>{{i.title}}</h4>
+                <p>{{i.time | formatDate}}</p>
+              </el-card>
             </el-timeline-item>
           </el-timeline>
         </el-form>
         <div class="form_Bt_Schedule">
           <el-form-item>
             <el-button v-if="add" type="primary" @click="submit">立即创建</el-button>
-            <el-button v-if="!add && schedule.state != ''" type="primary" @click="">追加事件</el-button>
+            <el-button v-if="!add && schedule.state != ''" type="primary" @click="addEvent">追加事件</el-button>
             <el-button v-if="schedule.state != '执行'" type="primary" @click="submit2">存入草稿</el-button>
             <el-button v-if="add" type="primary" @click="clear">重置</el-button>
             <el-button v-if="!add" type="primary" @click="submit">立即修改</el-button>
@@ -100,23 +101,39 @@
             return date.getTime() <= Date.now();
           }
         },
+        timeLine:[],
       }
     },
     filters: {
       formatDate(time) {
         var date = new Date(time);
-        return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
+        return formatDate(date, 'yyyy-MM-dd');
       }
     },
-    computed:{
+    watch:{
+      'schedule.timeList':{
+        handler(val, old){
+          if(val == null){
+            this.updateEvent();
+          }else if(val != null && val.length != 0){
+            this.updateTimeLine(val);
+          }
+        }
+      }
+    },
+   /* computed:{
       timeLine:function(){
         return this.schedule.timeList;
       }
-    },
+    },*/
     mounted: function(){
       this.add = (this.$route.name == 'scheduleForm_Add' ? true : false);
       if(!this.add){
         this.getInfoById(this.$route.params.scheduleId);
+        this.getTheEventByScheduleId(this.$route.params.scheduleId)
+        setTimeout(()=>{
+          this.updateTimeLine(this.schedule.timeList);
+        }, 200)
        }
     },
     methods:{
@@ -135,7 +152,10 @@
           updateuserid: '',
           updatetime: '',
           timeList: []
-        }
+        },
+        setTimeout(()=>{
+          this.timeLine = [];
+        }, 200)
       },
       submit: function(){
         this.$refs.schedule.validate((valid) => {
@@ -274,6 +294,75 @@
           });
         });
       },
+      getTheEventByScheduleId: function(scheduleId){
+        this.$store.commit("showLoading");
+        this.$axios.get('/occ/event/getTheEventByScheduleId', {
+          params:{id: scheduleId }
+        }).then(res =>{
+          const data = res.data;
+          this.events = data.data;
+          this.updateEvent();
+          this.$store.commit("hideLoading");
+        }).catch(err =>{
+          this.$store.commit("hideLoading");
+          this.$message({
+            showClose: true,
+            message: err,
+            type: 'error'
+          });
+        });
+      },
+      updateEvent: function(){
+        this.timeLine = new Array();
+        this.events.forEach(e =>{
+          this.timeLine.push({
+            title: e.type + ":" + e.title + "开始",
+            level: e.level,
+            time: e.starttime,
+            tip: 'start'
+          });
+
+          this.timeLine.push({
+            title: e.type + ":" + e.title + "结束",
+            level: e.level,
+            time: e.endtime,
+            tip: 'end'
+          });
+        });
+
+        this.timeLine.sort(function(a,b){
+          if((new Date(a.time).getTime()) - (new Date(b.time).getTime()) == 0 && a.level > b.level)
+            return 1;
+          else if((new Date(a.time).getTime()) - (new Date(b.time).getTime()) == 0 && a.level < b.level)
+            return -1;
+          return (new Date(a.time).getTime()) - (new Date(b.time).getTime());
+        });
+      },
+      updateTimeLine:function(val){
+        this.timeLine.push({
+          title: '日程开始',
+          level: 2,
+          time: val[0],
+          tip: 'start'
+        });
+        this.timeLine.push({
+          title: '日程结束',
+          level: 2,
+          time: val[1],
+          tip: 'end'
+        })
+
+        this.timeLine.sort(function(a,b){
+          if((new Date(a.time).getTime()) - (new Date(b.time).getTime()) == 0 && a.level > b.level)
+            return 1;
+          else if((new Date(a.time).getTime()) - (new Date(b.time).getTime()) == 0 && a.level < b.level)
+            return -1;
+          return (new Date(a.time).getTime()) - (new Date(b.time).getTime());
+        });
+      },
+      addEvent: function(){
+        this.$router.push("/manager/eventForm/addForSchedule/" + this.$route.params.scheduleId);
+      },
     }
   }
 </script>
@@ -282,5 +371,11 @@
   .form_Bt_Schedule{
     height: 100px;
     padding: 50px 0 0 0;
+  }
+  .start{
+    color:red;
+  }
+  .end{
+
   }
 </style>

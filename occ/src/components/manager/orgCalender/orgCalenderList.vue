@@ -20,9 +20,16 @@
         <el-table-column type="selection" width="50"></el-table-column>
         <el-table-column prop="title" :label="titles[0].name" sortable></el-table-column>
         <el-table-column prop="content" :label="titles[1].name" sortable></el-table-column>
-        <el-table-column prop="specifictime" :label="titles[2].name" sortable>
+        <el-table-column prop="starttime" :label="titles[2].name" sortable>
           <template slot-scope="scope">
-            {{scope.row.specifictime | formatDate}}
+            <span v-if="scope.row.isrepeat == '是'">{{scope.row.starttime | formatDate1}}</span>
+            <span v-if="scope.row.isrepeat == '否'">{{scope.row.starttime | formatDate}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="endtime" :label="titles[3].name" sortable>
+          <template slot-scope="scope">
+            <span v-if="scope.row.isrepeat == '是'">{{scope.row.endtime | formatDate1}}</span>
+            <span v-if="scope.row.isrepeat == '否'">{{scope.row.endtime | formatDate}}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -69,8 +76,11 @@
             tip: 'content'
           },
           {
-            name: '具体时间',
-            tip: 'specifictime'
+            name: '开始时间',
+            tip: 'starttime'
+          },{
+            name: '结束时间',
+            tip: 'endtime'
           },
           {
             name: '机构日历id',
@@ -89,9 +99,13 @@
             tip: 'content'
           },
           {
-            name: '具体时间',
-            tip: 'specifictime'
+            name: '开始时间',
+            tip: 'starttime'
           },
+          {
+            name: '结束时间',
+            tip: 'endtime'
+          }
         ],
         datas:{
         pageNum: 1,
@@ -103,7 +117,11 @@
     filters: {
       formatDate(time) {
         var date = new Date(time);
-        return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
+        return formatDate(date, 'yyyy-MM-dd');
+      },
+      formatDate1(time) {
+        var date = new Date(time);
+        return formatDate(date, 'MM-dd');
       }
     },
     watch:{

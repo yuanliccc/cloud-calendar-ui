@@ -3,7 +3,7 @@
     <div class="publicTitle" v-if="!add">机构日历编辑</div>
     <div class="publicTitle" v-if="add">新增机构日历</div>
     <div>
-      <el-form label-position="left" ref="orgCalender"class="add_Edit" :model="orgCalender" :rules="rules" :inline="true"
+      <el-form label-position="left" ref="orgCalender"class="add_Edit" :model="orgCalender" :rules="rules"
                 label-width="120px">
         <el-form-item label="标题" prop="title">
           <el-input v-model="orgCalender.title" placeholder="标题"></el-input>
@@ -13,15 +13,29 @@
             <el-option v-for="i in repeatList" :key="i" :value="i" :label="i"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="类型" prop="type">
+          <el-select v-model="orgCalender.type">
+            <el-option v-for="i in typeList" :key="i" :value="i" :label="i"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="下级机构可见" prop="subordinatecanseen">
           <el-select v-model="orgCalender.subordinatecanseen">
             <el-option v-for="i in repeatList" :key="i" :value="i" :label="i"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="具体时间" prop="specifictime">
+        <el-form-item v-if="orgCalender.type == '单日'" label="具体时间" prop="starttime">
           <el-date-picker
-            v-model="orgCalender.specifictime"
+            v-model="orgCalender.starttime"
             placeholder="具体时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item v-if="orgCalender.type == '多日'" label="具体时间" prop="timeList">
+          <el-date-picker
+            v-model="orgCalender.timeList"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="内容" prop="content">
@@ -50,12 +64,15 @@
           id: '',
           title: '',
           content: '',
-          specifictime: '',
+          type:'单日',
           isrepeat: '是',
           submituserid: '',
           submittime: '',
           subordinatecanseen: '否',
           orgid: '',
+          starttime:'',
+          endtime:'',
+          timeList:[],
         },
         expireTimeOption: {
           disabledDate(date) { //disabledDate 文档上：设置禁用状态，参数为当前日期，要求返回 Boolean
@@ -63,6 +80,7 @@
           }
         },
         repeatList:["是", "否"],
+        typeList:["单日","多日"],
         rules:{
           title: [
             { required: true, message: '请输入标题', trigger: 'blur' }
@@ -70,11 +88,17 @@
           content: [
             { required: true, message: '请输入内容', trigger: 'blur' }
           ],
-          specifictime: [
+          timeList: [
+            { required: true, message: '请选择具体时间', trigger: 'blur' }
+          ],
+          starttime:[
             { required: true, message: '请选择具体时间', trigger: 'blur' }
           ],
           isrepeat:[
             { required: true, message: '请选择是否可重复', trigger: 'blur' }
+          ],
+          type:[
+            { required: true, message: '请选择单日或多日', trigger: 'blur' }
           ],
           subordinatecanseen:[
             { required: true, message: '请选择下级机构是否可见', trigger: 'blur' }
@@ -94,12 +118,15 @@
           id: '',
           title: '',
           content: '',
-          specifictime: '',
+          type:'单日',
           isrepeat: '是',
           submituserid: '',
           submittime: '',
           subordinatecanseen: '否',
           orgid: '',
+          starttime:'',
+          endtime:'',
+          timeList:[],
         }
       },
       submit: function(){
@@ -119,6 +146,12 @@
         this.orgCalender.submittime = new Date();
         this.orgCalender.submituserid = this.$store.getters.userInfo.user.id;
         this.orgCalender.orgid = this.$store.getters.userInfo.organization.id;
+        if(this.orgCalender.type == "单日"){
+          this.orgCalender.endtime = this.orgCalender.starttime;
+        }else {
+          this.orgCalender.starttime = this.orgCalender.timeList[0];
+          this.orgCalender.endtime = this.orgCalender.timeList[1];
+        }
 
         this.$store.commit("showLoading");
         this.$axios.post('/occ/orgCalender/add', this.orgCalender)
@@ -156,8 +189,21 @@
         this.$axios.get('/occ/orgCalender/detail',{
              params:{id: orgCalenderId}
         }).then(res =>{
-          const data = res.data;
-          this.orgCalender = data.data;
+          const data = res.data.data;
+          this.orgCalender= {
+            id: data.id,
+            title: data.title,
+            content: data.content,
+            type: data.type,
+            isrepeat: data.isrepeat,
+            submituserid: data.submituserid,
+            submittime: data.submittime,
+            subordinatecanseen: data.subordinatecanseen,
+            orgid: data.orgid,
+            starttime:data.starttime,
+            endtime:data.endtime,
+            timeList:[data.starttime, data.endtime],
+          }
           this.$store.commit("hideLoading");
         }).catch(err => {
           this.$store.commit("hideLoading");
@@ -169,6 +215,12 @@
         })
       },
       edit: function(){
+        if(this.orgCalender.type == "单日"){
+          this.orgCalender.endtime = this.orgCalender.starttime;
+        }else {
+          this.orgCalender.starttime = this.orgCalender.timeList[0];
+          this.orgCalender.endtime = this.orgCalender.timeList[1];
+        }
         this.$store.commit("showLoading");
         this.$axios.put('/occ/orgCalender/update', this.orgCalender)
         .then(res =>{

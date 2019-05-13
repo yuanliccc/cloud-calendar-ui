@@ -6,7 +6,7 @@
         <div class="publicList_Head_Bt">
           <el-button @click="jumpTo('/manager/scheduleForm/add')" style="background-color: lightblue" v-if="hasPermission('schedule_add')">新增</el-button>
             <el-button @click="displayInfo" style="background-color: #ccc">刷新</el-button>
-          <el-button @click="deleteAll" style="background-color: #ff000096" v-if="hasPermission('schedule_delete')">批量删除</el-button>
+          <!--<el-button @click="deleteAll" style="background-color: #ff000096" v-if="hasPermission('schedule_delete')">批量删除</el-button>-->
         </div>
         <div class="publicList_Head_Find">
           <el-input v-model="findVal" class="findInput"></el-input>
@@ -37,8 +37,9 @@
           width="150">
           <template slot-scope="scope">
             <el-button @click="dis(scope.row.id)" type="text" size="mid" v-if="hasPermission('schedule_display')">查看</el-button>
-            <el-button type="text" size="mid" @click="edit(scope.row.id)" v-if="hasPermission('schedule_edit')">编辑</el-button>
-            <el-button @click="revoke(scope.row.id)" type="text" size="mid" v-if="hasPermission('schedule_delete') && scope.row.state != '已撤销'">撤销</el-button>
+            <el-button type="text" size="mid" @click="edit(scope.row.id)" v-if="hasPermission('schedule_edit') && scope.row.state != '已撤销'">编辑</el-button>
+            <el-button @click="revoke(scope.row.id)" type="text" size="mid" v-if="hasPermission('schedule_delete') && scope.row.state == '执行'">撤销</el-button>
+            <el-button @click="del(scope.row.id)" type="text" size="mid" v-if="hasPermission('schedule_delete') && scope.row.state == '草稿'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -125,7 +126,7 @@
     filters: {
       formatDate(time) {
         var date = new Date(time);
-        return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
+        return formatDate(date, 'yyyy-MM-dd');
       }
     },
     watch:{
@@ -172,13 +173,13 @@
             this.displayInfo()
       },
       revoke: function(scheduleId){
-        this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
+        this.$confirm('此操作将永久撤销该条数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           this.$store.commit('showLoading');
-          this.$axios.post("/occ/schedule/revoke",{
+          this.$axios.get("/occ/schedule/revoke",{
             params:{id: scheduleId}
           }).then(res =>{
             this.$store.commit('hideLoading');
@@ -186,6 +187,7 @@
               type: 'success',
               message: '撤销成功!'
             });
+            this.displayInfo();
           }).catch(err =>{
             this.$store.commit('hideLoading');
             this.$message({

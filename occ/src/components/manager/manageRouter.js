@@ -19,10 +19,20 @@ export default [
     component: () => import('./manager'),
     children:[
       {
-        path: '/manager/main',
-        name: 'managerMain',
+        path: '/manager/calender',
+        name: 'managerCalender',
         meta: {
-          label: '主页',
+          label: '主页日历展示',
+          requireAuth: true,
+          permission: ''
+        },
+        component: () => import('./calender'),
+      },
+      {
+        path: '/manager/index',
+        name: 'managerIndex',
+        meta: {
+          label: '主页展示',
           requireAuth: true,
           permission: ''
         },

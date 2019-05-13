@@ -20,8 +20,16 @@
         <el-table-column type="selection" width="50"></el-table-column>
         <el-table-column prop="title" :label="titles[0].name" sortable></el-table-column>
         <el-table-column prop="content" :label="titles[1].name" sortable></el-table-column>
-        <el-table-column prop="starttime" :label="titles[2].name" sortable></el-table-column>
-        <el-table-column prop="endtime" :label="titles[3].name" sortable></el-table-column>
+        <el-table-column prop="starttime" :label="titles[2].name" sortable>
+          <template slot-scope="scope">
+            {{scope.row.starttime | formatDate}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="endtime" :label="titles[3].name" sortable>
+          <template slot-scope="scope">
+            {{scope.row.endtime | formatDate}}
+          </template>
+        </el-table-column>
         <el-table-column prop="type" :label="titles[4].name" sortable></el-table-column>
         <el-table-column prop="level" :label="titles[5].name" sortable></el-table-column>
         <el-table-column
@@ -53,6 +61,7 @@
   </div>
 </template>
 <script>
+  import {formatDate} from '../../../assets/lib/common'
   export default{
     name: 'eventList',
     data(){
@@ -120,6 +129,12 @@
       },
         displays:[10, 20, 50],
         display: 10,
+      }
+    },
+    filters: {
+      formatDate(time) {
+        var date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd');
       }
     },
     watch:{

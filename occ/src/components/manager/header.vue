@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="tip">
-      <router-link to="/manager" class="tipSpan"><i class="el-icon-star-off"></i>机构日历系统</router-link>
+      <router-link to="/manager/index" class="tipSpan"><i class="el-icon-star-off"></i>机构日历系统</router-link>
     </div>
     <ul class="right">
       <li class="li">
