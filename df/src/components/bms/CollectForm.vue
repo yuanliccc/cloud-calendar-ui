@@ -55,7 +55,8 @@ export default {
           enctype: '',
           employeeId: null,
           createTime: null,
-          action: ''
+          action: '',
+          publishState: ''
         }
       },
       showForm: false

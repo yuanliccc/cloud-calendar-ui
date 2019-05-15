@@ -27,39 +27,39 @@
       </div>
     </div>
     <div class="collect-list-line">
-      <div class="collect-lis-main flex-column">
-        <div class="collect-lis-main-table">
-          <el-table
-            border
-            style="width: 100%"
-            :data="collectFormInfo"
-            @selection-change="handleSelectionChange"
-            max-height="350">
-            <el-table-column type="selection">
-            </el-table-column>
-            <el-table-column prop="dynamicForm.name" fixed label="表单名称"></el-table-column>
-            <el-table-column prop="dynamicForm.publishState" label="发布状态"></el-table-column>
-            <el-table-column prop="submiter.name" fixed label="提交人"></el-table-column>
-            <el-table-column prop="collectForm.submitTime" fixed label="提交时间"></el-table-column>
-            <el-table-column fixed="right" label="操作">
-              <template slot-scope="scope">
-                <div class="flex-row">
-                  <el-button size="mini" type="text" @click="displayCollectFormItem(scope.row)">查看详情</el-button>
-                </div>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-        <div class="pagination-block flex-center">
-          <el-pagination
-            :page-size="selectCondition.pageSize"
-            :current-page="selectCondition.pageNum"
-            layout="prev, pager, next"
-            @size-change="handlePageSizeChange"
-            @current-change="handleCurrentPageChange"
-            :total="selectCondition.total">
-          </el-pagination>
-        </div>
+    </div>
+    <div class="collect-lis-main flex-column">
+      <div class="collect-lis-main-table">
+        <el-table
+          border
+          style="width: 100%"
+          :data="collectFormInfo"
+          @selection-change="handleSelectionChange"
+          max-height="350">
+          <el-table-column type="selection">
+          </el-table-column>
+          <el-table-column prop="dynamicForm.name" fixed label="表单名称"></el-table-column>
+          <el-table-column prop="dynamicForm.publishState" label="发布状态"></el-table-column>
+          <el-table-column prop="submiter.name" fixed label="提交人"></el-table-column>
+          <el-table-column prop="collectForm.submitTime" fixed label="提交时间"></el-table-column>
+          <el-table-column fixed="right" label="操作">
+            <template slot-scope="scope">
+              <div class="flex-row">
+                <el-button size="mini" type="text" @click="displayCollectFormItem(scope.row)">查看详情</el-button>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="pagination-block flex-center">
+        <el-pagination
+          :page-size="selectCondition.pageSize"
+          :current-page="selectCondition.pageNum"
+          layout="prev, pager, next"
+          @size-change="handlePageSizeChange"
+          @current-change="handleCurrentPageChange"
+          :total="selectCondition.total">
+        </el-pagination>
       </div>
     </div>
   </div>
