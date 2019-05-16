@@ -57,12 +57,12 @@
             <el-table-column prop="dynamicForm.publishState" label="发布状态"></el-table-column>
             <el-table-column prop="collectForm.submitTime" fixed label="提交时间"></el-table-column>
             <el-table-column prop="collectForm.state" fixed label="状态"></el-table-column>
-            <el-table-column fixed="right" label="操作">
+            <el-table-column fixed="right" label="操作" width="200">
               <template slot-scope="scope">
                 <div class="flex-row">
                   <el-button size="mini" type="text" @click="displayFormInfo(scope.row)">查看详情</el-button>
-                  <el-button v-if="scope.row.applyInfo.state !== '审核中'" size="mini" type="text" @click="openApplyDialog(scope.row)">申请编辑</el-button>
-                  <el-button v-if="scope.row.applyInfo.state === '通过'" size="mini" type="text" @click="openApplyDialog(scope.row)">编辑</el-button>
+                  <el-button v-if="scope.row.collectForm.state === '禁止编辑'" size="mini" type="text" @click="openApplyDialog(scope.row)">申请编辑</el-button>
+                  <el-button v-if="scope.row.collectForm.state === '可编辑'" size="mini" type="text" @click="editCollectForm(scope.row)">编辑</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -124,6 +124,9 @@ export default {
     }
   },
   methods: {
+    // 点击编辑按钮后的操作
+    editCollectForm: function () {
+    },
     // 提交编辑收集表单申请
     submitCollectFormEditApply: function () {
       if (this.applyInfo.collectFormId == null) {
@@ -140,6 +143,8 @@ export default {
               message: ''
             }
             this.dialogVisible = false
+            this.selectCondition.pageNum = 1
+            this.findSelfSubmitFormByCondition()
           }
         })
         .catch(error => {

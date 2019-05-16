@@ -46,6 +46,7 @@ export default {
   data () {
     return {
       formId: null,
+      operate: null,
       widgetForm: {
         list: [],
         config: {
@@ -83,7 +84,7 @@ export default {
           const code = res.data.code
           if (code === 200) {
             const data = res.data.data
-            if (data == null) {
+            if (data == null || data.state === '可编辑') {
               this.findDynamicFormByFormId(formId)
             } else {
               this.openCancelAlert()
@@ -299,6 +300,7 @@ export default {
     }
   },
   mounted () {
+    this.operate = this.$route.params.operate
     this.formId = this.$route.params.formId
     this.formId = base64.Base64.decode(this.formId)
     var numReg = /^[0-9]+$/

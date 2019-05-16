@@ -100,7 +100,7 @@ export default new Router({
           component: dfDisplay
         },
         {
-          path: '/collectForm/:formId/',
+          path: '/collectForm/:operate/:formId/',
           name: 'collectForm',
           meta: {index: 9},
           component: collectForm
