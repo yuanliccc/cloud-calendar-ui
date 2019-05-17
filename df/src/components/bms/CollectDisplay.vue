@@ -124,8 +124,8 @@ export default {
 
       for (let i = 0; i < data.length; i++) {
         // 如果当前遍历的表单域不是栅栏类型,并且不是栅栏中的子元素
-        if (data[i].type !== 'grid' && data[i].parentId === null) {
-          let field = this.handleField(data[i])
+        if (data[i].dfFormField.type !== 'grid' && data[i].dfFormField.parentId === null) {
+          let field = this.handleField(data[i].dfFormField)
 
           // 对于含有表单条目的表单域(单选框,多选框,下拉框需要进行额外的处理)
           /* if (field.type === 'radio' || field.type === 'checkbox' || field.type === 'select') {
@@ -144,9 +144,9 @@ export default {
           components.push(field)
         } else {
           if (data[i].type === 'grid') {
-            grids.push(data[i])
+            grids.push(data[i].dfFormField)
           } else {
-            gridItems.push(data[i])
+            gridItems.push(data[i].dfFormField)
           }
         }
       }

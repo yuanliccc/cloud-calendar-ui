@@ -99,9 +99,13 @@
 
 <script>
 import moment from 'moment'
+import base64 from 'js-base64'
 export default {
   name: 'selfSubmitDynamicForm',
   props: ['userInfo'],
+  components: {
+    base64
+  },
   data () {
     return {
       user: this.userInfo,
@@ -125,7 +129,11 @@ export default {
   },
   methods: {
     // 点击编辑按钮后的操作
-    editCollectForm: function () {
+    editCollectForm: function (entity) {
+      let formId = entity.dynamicForm.id
+      formId = base64.Base64.encode(formId)
+      let path = '/collectForm/' + formId
+      this.$router.push({path: path})
     },
     // 提交编辑收集表单申请
     submitCollectFormEditApply: function () {

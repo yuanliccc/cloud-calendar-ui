@@ -147,7 +147,7 @@ export default {
     getPublishLink: function (entity) {
       let formId = entity.dfDynamicForm.id
       formId = base64.Base64.encode(formId)
-      this.$alert(window.location.host + '/collectForm/add/' + formId, '发布地址', {
+      this.$alert(window.location.host + '/collectForm/' + formId, '发布地址', {
         confirmButtonText: '确定',
         callback: (action) => {}
       })
@@ -175,7 +175,7 @@ export default {
           if (code === 200) {
             let encodeId = formId
             encodeId = base64.Base64.encode(encodeId)
-            this.$alert(window.location.host + '/collectForm/add/' + encodeId, '发布地址', {
+            this.$alert(window.location.host + '/collectForm/' + encodeId, '发布地址', {
               confirmButtonText: '确定',
               callback: (action) => {
                 this.$message.info(action)
