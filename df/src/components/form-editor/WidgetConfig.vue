@@ -42,6 +42,9 @@
             </draggable>
           </el-checkbox-group>
         </template>
+        <div style="margin-left: 22px;">
+          <el-button type="text" @click="handleAddOption">添加选项</el-button>
+        </div>
       </el-form-item>
     </el-form>
   </div>
@@ -68,6 +71,11 @@ export default {
     }
   },
   methods: {
+    handleAddOption () {
+      this.data.options.options.push({
+        value: '新选项'
+      })
+    },
     handleOptionsRemove (index) {
       if (this.data.type === 'grid') {
         this.data.columns.splice(index, 1)

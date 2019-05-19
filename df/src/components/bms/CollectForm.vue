@@ -24,7 +24,8 @@
         <el-row>
           <el-col :span="24">
             <el-form-item>
-              <el-button @click="saveCollectForm">保存</el-button>
+              <el-button @click="addCollectForm">保存</el-button>
+              <el-button @click="goback">返回</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -35,6 +36,7 @@
 
 <script>
 import FormItem from './FormItem.vue'
+import base64 from 'js-base64'
 export default {
   name: 'collectForm',
   props: ['userInfo'],
@@ -43,6 +45,7 @@ export default {
   },
   data () {
     return {
+      collectFormState: null,
       formId: null,
       widgetForm: {
         list: [],
@@ -53,19 +56,39 @@ export default {
           enctype: '',
           employeeId: null,
           createTime: null,
-          action: ''
+          action: '',
+          publishState: '',
+          collectFormId: null
         }
       },
       showForm: false
     }
   },
   methods: {
+    // 根据收集表单Id查询收集表单域信息
+    findCollectFormFieldByCollectFormId: function (collectFormId) {
+      this.$axios.get('/df/form/field/findCollectFormFieldByCollectFormId/' + collectFormId)
+        .then(res => {
+          const code = res.data.code
+          if (code === 200) {
+            const data = res.data.data
+            this.handleFields(data)
+          }
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
+    },
+    // 点击返回方法后的方法
+    goback: function () {
+      this.$router.go(-1)
+    },
     // 弹出提示弹窗,提示用户返回
     openCancelAlert: function () {
-      this.$alert('您已经填写过该表单了,点击确定返回首页', '提示', {
+      this.$alert('您已经填写过该表单了,点击确定返回', '提示', {
         confirmButtonText: '确定',
         callback: action => {
-          this.$router.push({path: '/main/dfList'})
+          this.$router.go(-1)
         }
       })
     },
@@ -76,8 +99,16 @@ export default {
           const code = res.data.code
           if (code === 200) {
             const data = res.data.data
-            if (data == null) {
-              this.findDynamicFormByFormId(formId)
+            if (data === null || data.state === '可编辑') {
+              if (data === null) {
+                this.findDynamicFormByFormId(formId)
+              }
+              if (data.state === '可编辑') {
+                this.collectFormState = data.state
+                this.showForm = true
+                this.widgetForm.config.collectFormId = data.id
+                this.findCollectFormFieldByCollectFormId(data.id)
+              }
             } else {
               this.openCancelAlert()
             }
@@ -87,19 +118,41 @@ export default {
           this.$message.error(error)
         })
     },
-    // 点击保存按钮后的操作
+    // 保存表单收集信息
     saveCollectForm: function () {
       this.$axios.post('/df/collect/form/saveCollectForm', this.widgetForm)
         .then(res => {
           const code = res.data.code
           if (code === 200) {
             this.$message.success('保存成功')
+            this.$router.go(-1)
+          }
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
+    },
+    // 更新表单收集信息
+    updateCollectForm: function () {
+      this.$axios.post('/df/collect/form/updateCollectForm', this.widgetForm)
+        .then(res => {
+          const code = res.data.code
+          if (code === 200) {
+            this.$message.success('更新成功')
             this.$router.push({path: '/main/dfList'})
           }
         })
         .catch(error => {
           this.$message.error(error)
         })
+    },
+    // 点击保存按钮后的操作
+    addCollectForm: function () {
+      if (this.collectFormState === null) {
+        this.saveCollectForm()
+      } else if (this.collectFormState === '可编辑') {
+        this.updateCollectForm()
+      }
     },
     // 处理单个栅栏表单域
     handleGrid (data) {
@@ -135,8 +188,8 @@ export default {
 
         for (let j = 0; j < gridItems.length; j++) {
           // 如果当前表单域是该栅栏中的元素
-          if (gridItems[i].parentId === grid.id) {
-            grid.columns[j].list.push(this.handleField(gridItems[j]))
+          if (gridItems[j].parentId === grid.id) {
+            grid.columns[gridItems[j].displayIndex].list.push(this.handleField(gridItems[j]))
           }
         }
 
@@ -240,6 +293,14 @@ export default {
           if (code === 200) {
             const data = res.data.data
             if (data != null && data.publishState != null && data.publishState !== '未发布') {
+              if (data.publishState === '关闭') {
+                this.$alert('已关闭的表单,点击确定返回首页', '提示', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.$router.push({path: '/main/dfList'})
+                  }
+                })
+              }
               this.showForm = true
               data.createTime = this.dateFormat(data.createTime)
               this.widgetForm.config = data
@@ -285,7 +346,19 @@ export default {
   },
   mounted () {
     this.formId = this.$route.params.formId
-    this.findSelfCollectFormByFormId(this.formId)
+    this.formId = base64.Base64.decode(this.formId)
+    var numReg = /^[0-9]+$/
+    var numRe = new RegExp(numReg)
+    if (!numRe.test(this.formId)) {
+      this.$alert('不存在的数据,点击确定返回', '提示', {
+        confirmButtonText: '确定',
+        callback: action => {
+          this.$router.go(-1)
+        }
+      })
+    } else {
+      this.findSelfCollectFormByFormId(this.formId)
+    }
   }
 }
 </script>

@@ -26,7 +26,7 @@
             <el-table-column fixed prop="holder.name" label="创建人"></el-table-column>
             <el-table-column fixed prop="dfDynamicForm.publishState" label="发布状态"></el-table-column>
             <el-table-column  fixed prop="sharedForm.state" label="分享状态"></el-table-column>
-            <el-table-column fixed="right" label="操作" width="265">
+            <el-table-column fixed="right" label="操作" width="300">
               <template slot-scope="scope">
                 <div class="flex-row">
                   <el-button @click="editDynamicForm(scope.row)" size="mini" type="text">编辑</el-button>
@@ -39,8 +39,10 @@
                   <el-button @click="getPublishLink(scope.row)" size="mini" type="text"
                              v-if="scope.row.dfDynamicForm.publishState === '已发布'">发布地址</el-button>
                   <el-button @click="handleDelete(scope.row)" size="mini" type="text">删除</el-button>
-                  <el-button v-if="scope.row.dfDynamicForm.publishState === '已发布'"
+                  <el-button v-if="scope.row.dfDynamicForm.publishState !== '未发布'"
                              @click="clickCollectInfoBtn(scope.row)" size="mini" type="text">信息收集</el-button>
+                  <el-button v-if="scope.row.dfDynamicForm.publishState === '已发布'"
+                             @click="clickCloseCollectBtn(scope.row)" size="mini" type="text">关闭发布</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -62,6 +64,7 @@
 </template>
 <script>
 import moment from 'moment'
+import base64 from 'js-base64'
 export default {
   name: 'dfList',
   components: {
@@ -83,25 +86,67 @@ export default {
     this.findDynamicFormByCondition()
   },
   methods: {
+    // 关闭发布
+    closePublishForm: function (formId) {
+      this.$axios.get('/df/dynamic/form/closePublishForm/' + formId)
+        .then(res => {
+          const code = res.data.code
+          if (code === 200) {
+            this.$message.success('操作成功')
+            this.selectCondition.pageNum = 1
+            this.findDynamicFormByCondition()
+          }
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
+    },
+    // 点击关闭发布按钮后的操作
+    clickCloseCollectBtn: function (entity) {
+      this.$confirm('是否关闭已经发布的表单?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        this.closePublishForm(entity.dfDynamicForm.id)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
     // 点击信息收集按钮后的操作
     clickCollectInfoBtn: function (entity) {
       this.$router.push({path: '/collectList', query: {formId: entity.dfDynamicForm.id}})
     },
     // 取消分享
     cancelShare: function (entity) {
-      this.$axios.get('/df/shared/dynamic/form/cancelShareDynamicForm/' + entity.dfDynamicForm.id)
-        .then(res => {
-          this.$message.success('操作成功')
-          this.selectCondition.pageNum = 1
-          this.findDynamicFormByCondition()
+      this.$confirm('是否取消该表单的分享?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        this.$axios.get('/df/shared/dynamic/form/cancelShareDynamicForm/' + entity.dfDynamicForm.id)
+          .then(res => {
+            this.$message.success('操作成功')
+            this.selectCondition.pageNum = 1
+            this.findDynamicFormByCondition()
+          })
+          .catch(error => {
+            this.$message.error(error)
+          })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
         })
-        .catch(error => {
-          this.$message.error(error)
-        })
+      })
     },
     // 点击获取发布链接后的操作
     getPublishLink: function (entity) {
-      const formId = entity.dfDynamicForm.id
+      let formId = entity.dfDynamicForm.id
+      formId = base64.Base64.encode(formId)
       this.$alert(window.location.host + '/collectForm/' + formId, '发布地址', {
         confirmButtonText: '确定',
         callback: (action) => {}
@@ -128,7 +173,9 @@ export default {
         .then(res => {
           const code = res.data.code
           if (code === 200) {
-            this.$alert(window.location.host + '/collectForm/' + formId, '发布地址', {
+            let encodeId = formId
+            encodeId = base64.Base64.encode(encodeId)
+            this.$alert(window.location.host + '/collectForm/' + encodeId, '发布地址', {
               confirmButtonText: '确定',
               callback: (action) => {
                 this.$message.info(action)
@@ -248,7 +295,9 @@ export default {
             const result = data.data.listInfo
 
             for (let i = 0; i < result.length; i++) {
-              result[i].dfDynamicForm.createTime = this.timeGST(result[i].dfDynamicForm.createTime)
+              if (result[i].dfDynamicForm.createTime != null) {
+                result[i].dfDynamicForm.createTime = this.timeGST(result[i].dfDynamicForm.createTime)
+              }
             }
 
             this.dynamicFormInfo = result

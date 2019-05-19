@@ -55,6 +55,16 @@ export default {
           route: '/main/selfSubmitDynamicForm'
         },
         {
+          title: '我的申请',
+          icon: 'fa fa-flag',
+          route: '/main/collectFormEditApplyList'
+        },
+        {
+          title: '等待审批',
+          icon: 'fa fa-gavel',
+          route: '/main/collectFormEditApplyApprovalList'
+        },
+        {
           title: '个人信息管理',
           icon: 'fa fa-user-circle-o',
           route: '/main/personal'

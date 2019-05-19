@@ -54,11 +54,15 @@
             </el-table-column>
             <el-table-column prop="dynamicForm.name" fixed label="表单名称"></el-table-column>
             <el-table-column prop="submiter.name" fixed label="提交人"></el-table-column>
+            <el-table-column prop="dynamicForm.publishState" label="发布状态"></el-table-column>
             <el-table-column prop="collectForm.submitTime" fixed label="提交时间"></el-table-column>
-            <el-table-column fixed="right" label="操作">
+            <el-table-column prop="collectForm.state" fixed label="状态"></el-table-column>
+            <el-table-column fixed="right" label="操作" width="200">
               <template slot-scope="scope">
                 <div class="flex-row">
                   <el-button size="mini" type="text" @click="displayFormInfo(scope.row)">查看详情</el-button>
+                  <el-button v-if="scope.row.collectForm.state === '禁止编辑'" size="mini" type="text" @click="openApplyDialog(scope.row)">申请编辑</el-button>
+                  <el-button v-if="scope.row.collectForm.state === '可编辑'" size="mini" type="text" @click="editCollectForm(scope.row)">编辑</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -74,6 +78,20 @@
             :total="selectCondition.total">
           </el-pagination>
         </div>
+        <el-dialog
+          title="编辑收集表单申请"
+          :visible.sync="dialogVisible"
+          width="30%">
+          <el-form ref="applyForm" :model="applyInfo" label-width="80px">
+            <el-form-item label="申请理由">
+              <el-input type="textarea" v-model="applyInfo.message"/>
+            </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="submitCollectFormEditApply">确 定</el-button>
+          </span>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -81,9 +99,13 @@
 
 <script>
 import moment from 'moment'
+import base64 from 'js-base64'
 export default {
   name: 'selfSubmitDynamicForm',
   props: ['userInfo'],
+  components: {
+    base64
+  },
   data () {
     return {
       user: this.userInfo,
@@ -97,10 +119,51 @@ export default {
       selfSubmitFormInfo: [],
       multipleSelection: [],
       loading: false,
-      formOptions: []
+      formOptions: [],
+      dialogVisible: false,
+      applyInfo: {
+        collectFormId: null,
+        message: ''
+      }
     }
   },
   methods: {
+    // 点击编辑按钮后的操作
+    editCollectForm: function (entity) {
+      let formId = entity.dynamicForm.id
+      formId = base64.Base64.encode(formId)
+      let path = '/collectForm/' + formId
+      this.$router.push({path: path})
+    },
+    // 提交编辑收集表单申请
+    submitCollectFormEditApply: function () {
+      if (this.applyInfo.collectFormId == null) {
+        this.$message.warning('请选择要申请修改的表单')
+        return
+      }
+      this.$axios.post('/df/collect/form/edit/apply/submitCollectFormEditApply', this.applyInfo)
+        .then(res => {
+          const code = res.data.code
+          if (code === 200) {
+            this.$message.success('申请成功,请等待表单所有人审批')
+            this.applyInfo = {
+              collectFormId: null,
+              message: ''
+            }
+            this.dialogVisible = false
+            this.selectCondition.pageNum = 1
+            this.findSelfSubmitFormByCondition()
+          }
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
+    },
+    // 点击申请编辑按钮后的操作
+    openApplyDialog: function (entity) {
+      this.applyInfo.collectFormId = entity.collectForm.id
+      this.dialogVisible = true
+    },
     // 根据表单的名称模糊查询表单信息
     findFormLikeName: function (formName) {
       this.$axios.get('/df/collect/form/findFormLikeName/' + formName)

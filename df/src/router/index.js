@@ -14,6 +14,8 @@ import collectForm from '../components/bms/CollectForm.vue'
 import collectList from '../components/bms/CollectList.vue'
 import collectDisplay from '../components/bms/CollectDisplay.vue'
 import selfSubmitDynamicForm from '../components/bms/SelfSubmitDynamicFormList.vue'
+import collectFormEditApplyList from '../components/bms/CollectFormEditApplyList.vue'
+import collectFormEditApplyApprovalList from '../components/bms/CollectFormEditApplyApprovalList.vue'
 
 Vue.use(Router)
 
@@ -66,9 +68,21 @@ export default new Router({
               component: selfSubmitDynamicForm
             },
             {
+              path: '/main/collectFormEditApplyList',
+              name: 'collectFormEditApplyList',
+              meta: {index: 7},
+              component: collectFormEditApplyList
+            },
+            {
+              path: '/main/collectFormEditApplyApprovalList',
+              name: 'collectFormEditApplyApprovalList',
+              meta: {index: 8},
+              component: collectFormEditApplyApprovalList
+            },
+            {
               path: '/main/personal',
               name: 'personal',
-              meta: {index: 7},
+              meta: {index: 9},
               component: personal
             }
           ]

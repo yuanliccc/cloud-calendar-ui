@@ -102,7 +102,8 @@ export default {
           createTime: null,
           employeeId: null,
           enctype: null,
-          action: null
+          action: null,
+          publishState: ''
         }
       },
       widgetFormSelect: '1550739614000_52521',
@@ -186,6 +187,7 @@ export default {
           this.widgetForm.config.employeeId = data.data.employeeId
           this.widgetForm.config.enctype = data.data.enctype
           this.widgetForm.config.action = data.data.action
+          this.widgetForm.config.publishState = data.data.publishState
 
           // 查询表单条目信息
           this.findDynamicFormFieldsByFormId(formId)
@@ -262,7 +264,7 @@ export default {
         for (let j = 0; j < gridItems.length; j++) {
           if (gridItems[j].parentId === grid.id) {
             // 如果该条目是目前栅栏下的条目,将其插入到当前栅栏中
-            grid.columns[j].list.push(this.handleField(gridItems[j]))
+            grid.columns[gridItems[j].displayIndex].list.push(this.handleField(gridItems[j]))
           }
         }
 
