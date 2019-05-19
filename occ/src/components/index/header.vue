@@ -42,7 +42,7 @@
             },
             {
             name: 'manager',
-            url : '/manager',
+            url : '/manager/index',
             }
           ],
       }
