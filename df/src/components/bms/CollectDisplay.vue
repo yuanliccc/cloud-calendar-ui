@@ -1,7 +1,7 @@
 <template>
   <div class="collect-display-container">
     <div class="collect-display-form">
-      <el-form label-width="80px">
+      <el-form label-width="100px">
         <div v-for="(item, index) in widgetForm.list" :key="index">
           <div v-if="item.type === 'grid'">
             <el-row>
@@ -143,7 +143,7 @@ export default {
 
           components.push(field)
         } else {
-          if (data[i].type === 'grid') {
+          if (data[i].dfFormField.type === 'grid') {
             grids.push(data[i].dfFormField)
           } else {
             gridItems.push(data[i].dfFormField)

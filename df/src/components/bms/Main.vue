@@ -60,7 +60,7 @@ export default {
           route: '/main/collectFormEditApplyList'
         },
         {
-          title: '等待审批',
+          title: '我的审批',
           icon: 'fa fa-gavel',
           route: '/main/collectFormEditApplyApprovalList'
         },

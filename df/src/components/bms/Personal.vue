@@ -4,7 +4,7 @@
       <div class="personal-header-block">hi {{this.user.name}}</div>
       <div class="personal-line"></div>
       <div class="personal-form-block">
-        <el-form ref="form" :model="user" label-width="80px">
+        <el-form ref="form" :model="user" label-width="100px">
           <el-row :gutter="20">
             <el-col :span="12">
               <div class="grid-content bg-purple">

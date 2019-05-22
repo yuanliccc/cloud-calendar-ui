@@ -61,7 +61,7 @@
               <template slot-scope="scope">
                 <div class="flex-row">
                   <el-button size="mini" type="text" @click="displayFormInfo(scope.row)">查看详情</el-button>
-                  <el-button v-if="scope.row.collectForm.state === '禁止编辑'" size="mini" type="text" @click="openApplyDialog(scope.row)">申请编辑</el-button>
+                  <el-button v-if="scope.row.collectForm.state === '禁止编辑' && scope.row.dynamicForm.publishState !== '关闭'" size="mini" type="text" @click="openApplyDialog(scope.row)">申请编辑</el-button>
                   <el-button v-if="scope.row.collectForm.state === '可编辑'" size="mini" type="text" @click="editCollectForm(scope.row)">编辑</el-button>
                 </div>
               </template>
