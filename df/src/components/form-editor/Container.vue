@@ -127,6 +127,10 @@ export default {
     },
     // 点击保存按钮后的操作
     saveOrUpdateDynamicForm: function () {
+      if (this.widgetForm.config.name === null || this.widgetForm.config.name === '') {
+        this.$message.warning('请填写表单名称')
+        return
+      }
       if (this.operator === 'add') {
         this.saveDynamicForm(this.widgetForm)
       } else if (this.operator === 'edit') {
@@ -136,7 +140,7 @@ export default {
     // 新增动态表单
     saveDynamicForm: function (dynamicForm) {
       if (dynamicForm.list.length === 0) {
-        alert('请构建有组件的动态表单')
+        this.$message.warning('请构建有组件的动态表单')
       } else {
         this.$axios.post('/df/dynamic/form/addDynamicForm', dynamicForm)
           .then(res => {
@@ -151,7 +155,7 @@ export default {
     // 更新动态表单
     updateDynamicForm: function (dynamicForm) {
       if (dynamicForm.list.length === 0) {
-        alert('请构建有组件的动态表单')
+        this.$message.warning('请构建有组件的动态表单')
       } else {
         this.$axios.put('/df/dynamic/form/updateDynamicForm', dynamicForm)
           .then(res => {
