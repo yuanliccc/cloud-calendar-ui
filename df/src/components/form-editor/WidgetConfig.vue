@@ -2,7 +2,7 @@
   <div v-if="show">
     <el-form label-position="top">
       <el-form-item label="标题" v-if="data.type != 'grid'">
-        <el-input v-model="data.name"></el-input>
+        <el-input v-model="data.label"></el-input>
       </el-form-item>
       <el-form-item label="选项" v-if="Object.keys(data.options).indexOf('options') >= 0">
         <template v-if="data.type == 'radio' || data.type == 'select'">
@@ -42,6 +42,9 @@
             </draggable>
           </el-checkbox-group>
         </template>
+        <div style="margin-left: 22px;">
+          <el-button type="text" @click="handleAddOption">添加选项</el-button>
+        </div>
       </el-form-item>
     </el-form>
   </div>
@@ -68,6 +71,11 @@ export default {
     }
   },
   methods: {
+    handleAddOption () {
+      this.data.options.options.push({
+        value: '新选项'
+      })
+    },
     handleOptionsRemove (index) {
       if (this.data.type === 'grid') {
         this.data.columns.splice(index, 1)

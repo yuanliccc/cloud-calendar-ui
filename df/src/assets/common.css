@@ -1,0 +1,30 @@
+body {
+  margin: 0px;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.color-red {
+  color: red;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+}
+
+.flex-space-between {
+  justify-content: space-between;
+}

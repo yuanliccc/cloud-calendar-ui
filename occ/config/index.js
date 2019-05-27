@@ -10,10 +10,25 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/': {
+        target: 'http://127.0.0.1:8000',//后端接口地址
+        changeOrigin: true,//是否允许跨越
+        pathRewrite: {
+          '^/': '',//重写,
+        }
+      },
+      '/scoket': {
+        target: 'ws://127.0.0.1:8000',//后端接口地址
+        changeOrigin: true,//是否允许跨越
+        pathRewrite: {
+          '^/scoket': '/',//重写,
+        }
+      },
+    },
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: '0.0.0.0', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
@@ -50,7 +65,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps

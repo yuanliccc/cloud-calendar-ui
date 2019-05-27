@@ -3,35 +3,6 @@
       <div class="content flex-column flex-center">
         <div class="content-container flex-row flex-center">
           <div class="content-left">
-            <!--<div id="carousel-example-generic" class="carousel slide full" data-ride="carousel">
-              &lt;!&ndash; Indicators &ndash;&gt;
-              &lt;!&ndash;<ol class="carousel-indicators">
-                  <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                  <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                  <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-              </ol>&ndash;&gt;
-
-              &lt;!&ndash; Wrapper for slides &ndash;&gt;
-              <div class="carousel-inner" role="listbox">
-                <div class="item active img-item">
-                  <img class="img-size" src="../assets/images/signup/one.jpg" alt="...">
-                </div>
-                <div class="item img-item">
-                  <img class="img-size" src="../assets/images/signup/two.jpg" alt="...">
-                </div>
-              </div>
-
-              &lt;!&ndash; Controls &ndash;&gt;
-              <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-              </a>
-              <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-              </a>
-            </div>-->
-
             <el-carousel class="full" indicator-position="outside">
               <el-carousel-item class="img-block" v-for="(item, index) in images" :key="index">
                 <img class="full" v-bind:src="item.src">
@@ -48,9 +19,8 @@
                 <div>
                   <div class="input-container">
                     <div class="input-item">
-                      <!--<div class="input-title">
-                          username
-                      </div>-->
+                      <div class="input-title">
+                      </div>
                       <div class="input-block flex-row">
                         <div class="input-icon-block">
                           <span class="fa fa-user"></span>
@@ -60,48 +30,47 @@
                     </div>
 
                     <div class="input-item">
-                      <!--<div class="input-title">
-                          email
-                      </div>-->
+                      <div class="input-title">
+                        {{tips.email}}
+                      </div>
                       <div class="input-block flex-row">
                         <div class="input-icon-block">
                           <span class="fa fa-envelope"></span>
                         </div>
-                        <input type="text" value="" class="input-style" v-model="user.email" placeholder="email">
+                        <input type="text" v-on:input="verifyEmail" value="" class="input-style" v-model="user.email" placeholder="email">
                       </div>
                     </div>
 
                     <div class="input-item">
-                      <!--<div class="input-title">
-                          phone
-                      </div>-->
+                      <div class="input-title">{{tips.phone}}
+                      </div>
                       <div class="input-block flex-row">
                         <div class="input-icon-block">
                           <span class="fa fa-phone"></span>
                         </div>
-                        <input type="text" value="" class="input-style" v-model="user.phone" placeholder="phone">
+                        <input type="number" v-on:input="verifyPhone" value="" class="input-style" v-model="user.phone" placeholder="phone">
                       </div>
                     </div>
+
                     <div class="input-item">
-                      <!--<div class="input-title">
-                          password
-                      </div>-->
+                      <div class="input-title">
+                        {{tips.password}}
+                      </div>
                       <div class="input-block flex-row">
                         <div class="input-icon-block">
                           <span class="fa fa-lock"></span>
                         </div>
-                        <input type="password" value="" class="input-style" v-model="user.password" placeholder="password">
+                        <input type="password" v-on:input="checkPassword" value="" class="input-style" v-model="user.password" placeholder="password">
                       </div>
                     </div>
                     <div class="input-item">
-                      <!--<div class="input-title">
-                          verify password
-                      </div>-->
+                      <div class="input-title">{{tips.verifyPassword}}
+                      </div>
                       <div class="input-block flex-row">
                         <div class="input-icon-block">
                           <span class="fa fa-lock"></span>
                         </div>
-                        <input type="password" value="" class="input-style" v-model="verifyPassword" placeholder="verify password">
+                        <input type="password" v-on:input="verifyCheckPassword" value="" class="input-style" v-model="verifyPassword" placeholder="verify password">
                       </div>
                     </div>
 
@@ -147,15 +116,19 @@ export default {
         phone: null,
         password: null
       },
-      verifyPassword: null
+      verifyPassword: null,
+      tips: {
+        email : '',
+        phone: '',
+        password: ''
+      }
     }
   },
   methods: {
     signUp: function () {
-      if(this.verifyPassword === this.user.password) {
+      if (this.verifyPassword === this.user.password) {
         this.addUser()
-      }
-      else {
+      } else {
         // 弹框
       }
     },
@@ -163,7 +136,7 @@ export default {
       // 显示加载动画
       this.$store.commit("showLoading")
       // 请求
-      this.$axios.post('/pcc/user',this.user)
+      this.$axios.post('/pcc/user', this.user)
         .then(res => {
           this.$router.push({path: '/login'})
           this.$store.commit("hideLoading")
@@ -171,6 +144,61 @@ export default {
         .catch(err => {
           this.$store.commit("hideLoading")
         })
+    },
+    verifyEmail: function () {
+
+      if (this.user.email == '') {
+        this.tips.email = ""
+        return
+      }
+
+      let regEmail = /^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/
+      if (!regEmail.test(this.user.email)) {
+        this.tips.email = "邮箱格式不正确"
+      } else {
+        this.tips.email = "";
+      }
+    },
+    verifyPhone: function () {
+      if (this.user.phone == '') {
+        this.tips.phone = ""
+        return
+      }
+
+      let regPhone = /^1(3|4|5|7|8)\d{9}$/
+      if (!regPhone.test(this.user.phone)) {
+        this.tips.phone = "请输入正确手机号"
+      } else {
+        this.tips.phone = ""
+      }
+    },
+    checkPassword: function () {
+      if (this.user.password == "") {
+        this.tips.password = ""
+        return
+      }
+      if (this.user.password.indexOf(' ') != -1) {
+        this.tips.password = "不允许存在空格"
+      } else if (this.user.password.length <= 7) {
+        this.tips.password = "至少八个字母或数字"
+      } else if (this.user.password.length > 20) {
+        this.tips.password = "至多20哥字母或数字"
+      } else {
+        this.tips.password = ""
+      }
+    },
+    verifyCheckPassword: function () {
+      if(this.verifyPassword == "") {
+        this.tips.verifyPassword = ""
+        return
+      }
+
+      if(this.verifyPassword === this.user.password) {
+        this.tips.verifyPassword = ""
+      }
+      else {
+        this.tips.verifyPassword = "输入不一致"
+      }
     }
   }
 }
@@ -197,16 +225,16 @@ export default {
 
   .content-container {
     width: 70%;
-    height: 400px;
+    height: 500px;
     margin: 0 auto;
   }
 
   .content-left {
-    width: 65%;
+    width: 650px;
   }
 
   .content-right {
-    width: 35%;
+    width: 350px;
     padding-left: 30px;
   }
 
@@ -261,7 +289,7 @@ export default {
     position: relative;
     box-sizing: border-box;
     color: inherit;
-    height: 45px;
+    height: 40px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
     box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 0px 0px,
     rgba(0, 0, 0, 0.14) 0px 0px 0px 0px,
@@ -292,12 +320,16 @@ export default {
   }
 
   .input-title {
-    font-size: 16px;
-    color: #777;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    font-size: 12px;
+    color: rgba(255, 0, 0, 0.76);
+    height: 20px;
   }
 
   .input-item {
-    margin-top: 18px;
+    height: 60px;
   }
 
   .submit-block {
