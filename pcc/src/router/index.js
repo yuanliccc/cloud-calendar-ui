@@ -4,12 +4,12 @@ import index from '../components/index.vue'
 import pcc from '../components/pcc.vue'
 import login from '../components/login.vue'
 import signup from '../components/signup.vue'
-import calendar from '../components/calendar.vue'
 import mine from '../components/mine'
 import chart from '../components/mineChart'
 import schedule from '../components/schedule'
 import friends from '../components/friends'
 import personal from '../components/personal'
+import calendar from '../components/calendar'
 
 Vue.use(Router)
 
@@ -53,6 +53,10 @@ export default new Router({
             {
               path: 'friends',
               component: friends
+            },
+            {
+              path: 'calendar',
+              component: calendar
             }
           ]
         },

@@ -62,7 +62,8 @@
           },
           {
             icon: 'fa fa-calendar-check-o',
-            title: '日程管理'
+            title: '日程管理',
+            route: '/mine/calendar'
           }
         ]
       }

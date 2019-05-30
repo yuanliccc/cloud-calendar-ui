@@ -7,9 +7,9 @@
           <div class="header-item-start t-center flex-column flex-center">
             <router-link class="header-logo-a" to="/">个人云日历</router-link>
           </div>
-          <div v-bind:class="[ titles[0].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column', 'flex-center' ]">
-            <a class="header-item-a" v-on:click="jump(0)">{{titles[0].title}}</a>
-          </div>
+          <!--<div v-bind:class="[ titles[0].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column', 'flex-center' ]">-->
+            <!--<a class="header-item-a" v-on:click="jump(0)">{{titles[0].title}}</a>-->
+          <!--</div>-->
           <!--<div v-bind:class="[ titles[1].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column' ]">
             <a class="header-item-a" v-on:click="jump(1)">{{titles[1].title}}</a>
           </div>-->

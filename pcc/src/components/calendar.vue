@@ -12,14 +12,14 @@
 
       <div class="flex-row">
         <div class="calendar-control-button flex-column flex-center" @click="preMonth(undefined)">
-          <span class="glyphicon glyphicon-chevron-left"></span>
+          <span class="el-icon-d-arrow-left"></span>
         </div>
         <div class="calendar-control-view-block flex-column flex-center">
           <div class="flex-column flex-center text-center">{{selectDay.year}} 年 {{selectDay.month + 1}} 月</div>
           <div class="flex-column flex-center text-center">{{selectDay.day}} 日</div>
         </div>
         <div class="calendar-control-button flex-column flex-center" @click="nextMonth(undefined)">
-          <span class="glyphicon glyphicon-chevron-right"></span>
+          <span class="el-icon-d-arrow-right"></span>
         </div>
       </div>
 
@@ -29,7 +29,6 @@
 
           </div>
           <div class="flex-row flex-grow flex-end">
-            <!--<div class="lunar-tag">{{originalLunarDate.lunarYear}} - {{originalLunarDate.lunarMonth}} - {{originalLunarDate.lunarDay}}</div>-->
             <div class="lunar-tag">{{showLunarDate.day}}</div>
             <div class="lunar-tag">{{showLunarDate.tg}}{{showLunarDate.dz}}</div>
             <div class="lunar-tag">{{showLunarDate.year}}</div>
