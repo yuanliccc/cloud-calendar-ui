@@ -7,7 +7,7 @@ import noticeRoute from './notice/noticeRoute'
 import orgCalenderRoute from './orgCalender/orgCalenderRoute'
 import scheduleRoute from './schedule/scheduleRoute'
 import eventRoute from './event/eventRoute'
-import workArrange from './workarrange/workarrangeRoute'
+import workArrange from './workArrange/workArrangeRoute'
 import orgInvite from './orgInvite/orgInviteRoute'
 import orgApply from  './orgApply/orgApplyRoute'
 export default [
