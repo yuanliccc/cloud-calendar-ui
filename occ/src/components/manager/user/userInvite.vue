@@ -58,7 +58,11 @@
     },
     watch:{
       nameOrAccount(value){
-        this.findUserByAccountOrName(value);
+        if(value != '')
+          this.findUserByAccountOrName(value);
+        else {
+          this.users = [];
+        }
       },
     },
     mounted: function(){
@@ -90,7 +94,7 @@
       },
       findUserByAccountOrName: function(val){
         this.$store.commit("showLoading");
-        this.$axios.get('/occ/user/findUserByAccountOrName',{
+        this.$axios.get('/occ/user/findUserByIdOrNameByLoginOrg',{
             params: {value: val}
         }).then(res =>{
             const data = res.data;
@@ -128,7 +132,39 @@
         });
       },
       inviteUser:function(){
-        const apply = {};
+        const orgInvite = {
+          approvalorgid: this.$store.getters.userInfo.organization.id,
+          submituserid: this.$store.getters.userInfo.user.id,
+          submittime: new Date(),
+          userid:this.invite.userId,
+          state: '邀请中'
+        };
+        this.$store.commit("showLoading");
+        this.$axios.post("/occ/orgInvite/add", orgInvite).then(res =>{
+          const data = res.data;
+          if(data.code == '400'){
+            this.$message({
+              showClose: true,
+              message: data.message,
+              type: 'warning'
+            });
+          }else {
+            this.$message({
+              showClose: true,
+              message: '邀请成功！',
+              type: 'success'
+            });
+          }
+
+          this.$store.commit("hideLoading");
+        }).catch(err =>{
+          this.$store.commit("hideLoading");
+          this.$message({
+            showClose: true,
+            message: err,
+            type: 'error'
+          });
+        });
       }
     }
   }

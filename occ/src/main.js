@@ -9,10 +9,12 @@ import './assets/lib/bootstrap/css/bootstrap.min.css'
 import  './assets/lib/public/public.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-
+import VueWechatTitle from 'vue-wechat-title';
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
+
+Vue.use(VueWechatTitle)
 
 /* eslint-disable no-new */
 new Vue({

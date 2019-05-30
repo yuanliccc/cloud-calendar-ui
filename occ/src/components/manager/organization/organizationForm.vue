@@ -74,10 +74,7 @@
       this.add = (this.$route.name == 'organizationForm_Add' ? true : false);
       this.roleLevel = this.$store.getters.userInfo.role.rolelevel;
 
-      if(this.roleLevel == 6)
-        this.getAllOrg();
-      else
-          this.getAllOrgByThisOrLow();
+      this.getAllOrgByThisOrLow();
 
       if(!this.add){
         this.getInfoById(this.$route.params.organizationId);

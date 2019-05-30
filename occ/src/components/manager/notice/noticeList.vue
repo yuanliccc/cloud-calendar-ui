@@ -6,6 +6,7 @@
         <div class="publicListTable">
           <div class="publicList_Head">
             <div class="publicList_Head_Bt">
+              <el-button @click="jumpTo('/manager/noticeForm/add')" style="background-color: lightblue">发布通知</el-button>
               <el-button @click="displayInfo" style="background-color: #ccc">刷新</el-button>
               <el-button @click="seeAll" style="background-color: #ccc">标记为已读</el-button>
               <el-button @click="deleteAll" style="background-color: #ff000096;">批量删除</el-button>
@@ -679,5 +680,9 @@
     border-radius: 4px;
     -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+  }
+  .publicList_Head_Bt{
+    width:500px;
+    float: left;
   }
 </style>

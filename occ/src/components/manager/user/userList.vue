@@ -6,7 +6,7 @@
         <div class="publicList_Head_Bt">
           <el-button @click="jumpTo('/manager/userForm/add')" style="background-color: lightblue" v-if="hasPermission('user_add')">邀请</el-button>
             <el-button @click="displayInfo" style="background-color: #ccc">刷新</el-button>
-          <!--<el-button @click="deleteAll" style="background-color: #ff000096" v-if="" v-if="hasPermission('user_delete')">批量删除</el-button>-->
+          <el-button @click="removeAll" style="background-color: #ff000096" v-if="hasPermission('user_delete')">批量移除</el-button>
         </div>
         <div class="publicList_Head_Find">
           <el-input v-model="findVal" class="findInput"></el-input>
@@ -26,11 +26,11 @@
         <el-table-column
           fixed="right"
           label="操作"
-          width="150">
+          width="180">
           <template slot-scope="scope">
             <el-button @click="dis(scope.row.id)" type="text" size="mid" v-if="hasPermission('user_display')">查看</el-button>
             <el-button type="text" size="mid" @click="edit(scope.row.id)" v-if="hasPermission('user_edit')">分配角色</el-button>
-            <!--<el-button @click="del(scope.row.id)" type="text" size="mid" v-if="hasPermission('user_delete')">删除</el-button>-->
+            <el-button @click="remove(scope.row.id)" type="text" size="mid" v-if="hasPermission('user_delete')">移除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -182,6 +182,80 @@
       },
       hasPermission(permission){
         return this.rolePers.indexOf(permission) > -1;
+      },
+      remove: function(id){
+        this.$confirm('此操作将会使该用户移除本机构, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$store.commit('showLoading');
+
+          this.$axios.get('/occ/user/removeUser',{
+            params:{userId: id}
+          }).then(res =>{
+            this.$store.commit('hideLoading');
+            this.$message({
+              type: 'success',
+              message: '移除成功!'
+            });
+            this.displayInfo();
+          }).catch(err =>{
+            this.$store.commit('hideLoading');
+            this.$message({
+              showClose: true,
+              message: err,
+              type: 'error'
+            });
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消移除！'
+          });
+        });
+      },
+      removeAll: function(){
+        if(this.$refs.table.store.states.selection.length == 0){
+          this.$message({
+            type: 'info',
+            message: '请选择删除的内容！'
+          });
+          return;
+        }
+
+        this.$confirm('此操作将所选择的用户移除本机构, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          const sel = this.$refs.table.store.states.selection;
+          let arr = new Array();
+          sel.forEach(row =>{
+            arr.push(row);
+          });
+          this.$store.commit('showLoading');
+          this.$axios.post('/occ/user/removeAllUser',arr).then(res =>{
+            this.$store.commit('hideLoading');
+            this.$message({
+              type: 'success',
+              message: '移除成功!'
+            });
+            this.displayInfo();
+          }).catch(err =>{
+            this.$store.commit('hideLoading');
+            this.$message({
+              showClose: true,
+              message: err,
+              type: 'error'
+            });
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消移除!'
+          });
+        });
       }
     }
 }

@@ -53,7 +53,7 @@
               });
             }else{
               this.$store.commit('setUserInfo', data.data);
-              this.$router.push('/');
+              this.$router.push('/main');
             }
             this.$store.commit('hideLoading');
           }).catch(err => {

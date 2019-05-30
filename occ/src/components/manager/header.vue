@@ -73,6 +73,10 @@
       },
     },
     created:function(){
+      let _this = this; // 声明一个变量指向Vue实例this，保证作用域一致
+      this.timer = setInterval(() => {
+        this.flushUnreadNotice();
+      }, 30000);
       this.getAllLoginUserOrg();
       this.initWebSocket();
       this.flushUnreadNotice();
@@ -81,6 +85,9 @@
     destroyed: function() {
       //页面销毁时关闭长连接
       this.websocketclose();
+      if(this.timer){
+        clearInterval(this.timer);
+      }
     },
     methods:{
       singOut: function(){
@@ -204,12 +211,9 @@
         console.log("connection closed (" + e + ")");
       },
       flushUnreadNotice: function(){
-        this.$store.commit("showLoading");
         this.$axios.get("/occ/notice/getAllUnread").then(res =>{
           this.infomation = res.data.data;
-          this.$store.commit("hideLoading");
         }).catch(err =>{
-          this.$store.commit("hideLoading");
           this.$message({
             showClose: true,
             message: err,
@@ -218,12 +222,9 @@
         })
       },
       flushUnreadChatMessage: function(){
-        this.$store.commit("showLoading");
         this.$axios.get("/occ/notice/getUnreadMessage").then(res =>{
           this.chat = res.data.data;
-          this.$store.commit("hideLoading");
         }).catch(err =>{
-          this.$store.commit("hideLoading");
           this.$message({
             showClose: true,
             message: err,
