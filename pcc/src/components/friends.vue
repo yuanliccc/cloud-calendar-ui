@@ -136,20 +136,40 @@
           })
       },
       openAddFriends: function () {
-        this.$prompt('请输入对方电话号码', '添加好友', {
+        // this.$msgbox( {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+        //   inputErrorMessage: '邮箱格式不正确'
+        // })
+        const h = this.$createElement;
+        this.$msgbox({
+          title: '消息',
+          message: h('p', null, [
+            h('span', null, '内容可以是 '),
+            h('i', { style: 'color: teal' }, 'VNode')
+          ]),
+          showCancelButton: true,
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-          inputErrorMessage: '邮箱格式不正确'
-        }).then(({ value }) => {
-          this.$message({
-            type: 'success',
-            message: '你的邮箱是: ' + value
-          });
-        }).catch(() => {
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
+              instance.confirmButtonLoading = true;
+              instance.confirmButtonText = '执行中...';
+              setTimeout(() => {
+                done();
+                setTimeout(() => {
+                  instance.confirmButtonLoading = false;
+                }, 300);
+              }, 3000);
+            } else {
+              done();
+            }
+          }
+        }).then(action => {
           this.$message({
             type: 'info',
-            message: '取消输入'
+            message: 'action: ' + action
           });
         });
       }
