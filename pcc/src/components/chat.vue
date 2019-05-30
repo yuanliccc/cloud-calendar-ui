@@ -1,5 +1,16 @@
 <template>
-  <div class="test">
+  <div>
+    <el-dialog width="850px" :visible.sync="isShow" :modal="true" :close-on-click-modal="false" :show-close="false">
+      <div class="title flex-row flex-start" slot="title">
+        <div class="flex-grow flex-row flex-end">
+          <div class="el-icon-close pointer" @click="closeDialog"></div>
+        </div>
+      </div>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="closeDialog">关闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -10,8 +21,11 @@
         websock: null,
       }
     },
+    props: {
+      isShow: Boolean
+    },
     created() {
-      this.initWebSocket();
+      //this.initWebSocket();
     },
     destroyed() {
       this.websock.close() //离开路由之后断开websocket连接
@@ -41,7 +55,17 @@
       websocketclose(e) {  //关闭
         console.log('断开连接', e);
       },
+      closeDialog: function () {
+        this.$emit('close');
+      }
     },
   }</script>
 <style scoped>
+  .el-dialog__header {
+    padding: 0 !important;
+  }
+
+  .el-dialog__body {
+    padding: 0px;
+  }
 </style>
