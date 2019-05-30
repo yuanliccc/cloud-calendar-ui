@@ -18,13 +18,13 @@
           <el-table-column prop="applyInfo.applyDate" fixed label="申请日期"></el-table-column>
           <el-table-column prop="applyInfo.handleDate" fixed label="处理日期"></el-table-column>
           <el-table-column prop="applyInfo.message" fixed label="申请信息"></el-table-column>
-          <el-table-column fixed="right" label="操作">
+          <!--<el-table-column fixed="right" label="操作">
             <template slot-scope="scope">
               <div class="flex-row">
                 <el-button size="mini" type="text">查看详情</el-button>
               </div>
             </template>
-          </el-table-column>
+          </el-table-column>-->
         </el-table>
       </div>
       <div class="pagination-block flex-center">

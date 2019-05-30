@@ -22,9 +22,9 @@
           <div class="login-container-content flex-row flex-center">
             <div class="login-container-content-block">
               <div class="login-input-item">
-                <div class="login-input-item-title">phone</div>
+                <div class="login-input-item-title">email</div>
                 <div class="login-input-block">
-                  <input v-model="pccUser.phone" class="login-input">
+                  <input v-model="pccUser.email" class="login-input">
                 </div>
               </div>
               <div class="login-input-item">
@@ -95,7 +95,7 @@ export default {
   data: function () {
     return {
       pccUser: {
-        phone: '',
+        email: '',
         password: ''
       }
     }

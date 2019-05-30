@@ -20,13 +20,13 @@
           <el-table border style="width: 100%" :data="dynamicFormInfo" @selection-change="handleSelectionChange" max-height="350">
             <el-table-column type="selection">
             </el-table-column>
-            <el-table-column fixed prop="dfDynamicForm.name" label="表单名称"></el-table-column>
-            <el-table-column fixed prop="dfDynamicForm.method" label="请求方式"></el-table-column>
-            <el-table-column fixed prop="dfDynamicForm.createTime" label="创建时间"></el-table-column>
-            <el-table-column fixed prop="holder.name" label="创建人"></el-table-column>
-            <el-table-column fixed prop="dfDynamicForm.publishState" label="发布状态"></el-table-column>
-            <el-table-column  fixed prop="sharedForm.state" label="分享状态"></el-table-column>
-            <el-table-column fixed="right" label="操作" width="300">
+            <el-table-column  prop="dfDynamicForm.name" label="表单名称"></el-table-column>
+            <el-table-column  prop="dfDynamicForm.method" label="请求方式"></el-table-column>
+            <el-table-column  prop="dfDynamicForm.createTime" label="创建时间"></el-table-column>
+            <el-table-column  prop="holder.name" label="创建人"></el-table-column>
+            <el-table-column  prop="dfDynamicForm.publishState" label="发布状态"></el-table-column>
+            <el-table-column  prop="sharedForm.state" label="分享状态"></el-table-column>
+            <el-table-column fixed="right" label="操作" width="350">
               <template slot-scope="scope">
                 <div class="flex-row">
                   <el-button @click="editDynamicForm(scope.row)" size="mini" type="text">编辑</el-button>

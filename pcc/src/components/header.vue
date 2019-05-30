@@ -1,4 +1,3 @@
-/* eslint-disable */
 <template>
   <div class="header-block flex-column flex-center">
     <div class="index-header-block flex-row flex-center">
@@ -7,12 +6,6 @@
           <div class="header-item-start t-center flex-column flex-center">
             <router-link class="header-logo-a" to="/">个人云日历</router-link>
           </div>
-          <div v-bind:class="[ titles[0].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column', 'flex-center' ]">
-            <a class="header-item-a" v-on:click="jump(0)">{{titles[0].title}}</a>
-          </div>
-          <!--<div v-bind:class="[ titles[1].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column' ]">
-            <a class="header-item-a" v-on:click="jump(1)">{{titles[1].title}}</a>
-          </div>-->
         </div>
         <div class="header-content-right flex-row" v-if="userInfo === undefined">
           <div v-bind:class="[ titles[2].isActive ? 'header-item-active' : 'header-item', 't-center', 'flex-column', 'flex-center' ]">
@@ -27,9 +20,14 @@
           'flex-center' ]">
             <a class="header-item-a" v-on:click="jump(4)">{{titles[4].title}}</a>
           </div>
-          <div class="right-item-common cell flex-column flex-center text-center">
-            <el-badge :value="12" class="item">
-            <div class="el-icon-bell"></div>
+          <div class="right-item-common right-badge-item cell flex-column flex-center text-center" @click="showChat">
+            <el-badge is-dot class="item">
+              <div class="el-icon-chat-dot-round"></div>
+            </el-badge>
+          </div>
+          <div class="right-item-common right-badge-item cell flex-column flex-center text-center">
+            <el-badge is-dot class="item">
+              <div class="el-icon-bell"></div>
             </el-badge>
           </div>
           <div>
@@ -56,14 +54,20 @@
         </div>
       </div>
     </div>
+    <chat :isShow="isShowChat" @close="showChat"></chat>
   </div>
 </template>
 
 <script>
+import chat from './chat'
 export default {
   name: 'hheader',
+  components: {
+    chat
+  },
   data: function () {
     return {
+      isShowChat: false,
       titles: [
         {
           title: '日历',
@@ -131,12 +135,18 @@ export default {
     toPersonal: function () {
       this.showUserMenu()
       this.$router.push({path: "/personal"})
+    },
+    showChat: function () {
+      this.isShowChat = !this.isShowChat
     }
   }
 }
 </script>
 
 <style scoped>
+
+  .right-badge-item {
+  }
 
   .line {
     width: 100%;

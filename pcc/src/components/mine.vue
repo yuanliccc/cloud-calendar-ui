@@ -2,13 +2,6 @@
   <div class="flex-row flex-center text-center minePage" ref="minePage">
     <div class="menu flex-row flex-center">
       <div class="menu-container">
-        <!--<div class="menu-item flex-row flex-center" v-for="(item, index) in menuItems" @click="clickMenu(item.route)">
-          <div class="flex-column flex-center menu-item-icon">
-            <div class="menu-item-icon-container" v-bind:class="item.icon"></div>
-          </div>
-          <div class="flex-column flex-center text-center flex-grow menu-item-title">{{item.title}}</div>
-          <div class="menu-item-icon"></div>
-        </div>-->
         <el-menu default-active="图表统计"
                  class="el-menu-vertical-demo"
                  @open="controlMenuDisplay"
@@ -41,6 +34,8 @@
 <script>
   export default {
     name: "mine",
+    components: {
+    },
     data: function () {
       return {
         isShowMenu: true,
@@ -62,7 +57,8 @@
           },
           {
             icon: 'fa fa-calendar-check-o',
-            title: '日程管理'
+            title: '日程管理',
+            route: '/mine/calendar'
           }
         ]
       }
