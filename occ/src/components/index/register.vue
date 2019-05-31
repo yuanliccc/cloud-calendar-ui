@@ -48,6 +48,7 @@
 
 <script>
   import con from '../../confirm/index.vue'
+  import md5 from 'js-md5'
   export default{
     name: 'register',
     components: {
@@ -95,7 +96,7 @@
         }
         this.user.name = this.name;
         this.user.account = this.account;
-        this.user.password = this.password;
+        this.user.password = md5(this.password);
         this.user.phone = this.phone;
         this.user.email = this.email;
         this.user.sex = this.sex;

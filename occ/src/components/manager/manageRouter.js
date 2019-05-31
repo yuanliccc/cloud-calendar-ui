@@ -10,6 +10,7 @@ import eventRoute from './event/eventRoute'
 import workArrange from './workArrange/workArrangeRoute'
 import orgInvite from './orgInvite/orgInviteRoute'
 import orgApply from  './orgApply/orgApplyRoute'
+import systemconfig from './systemconfig/systemconfigRoute'
 export default [
   {
     path: '/manager',
@@ -52,7 +53,8 @@ export default [
       ...eventRoute,
       ...workArrange,
       ...orgApply,
-      ...orgInvite
+      ...orgInvite,
+      ...systemconfig
     ]
   }
 ]
