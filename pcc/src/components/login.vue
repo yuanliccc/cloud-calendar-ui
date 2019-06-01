@@ -4,7 +4,7 @@
       <div class="login-container-bg">
         <div class="login-container">
           <div class="login-container-header">
-            Login in
+            登录
           </div>
           <div class="flex-row login-line-block">
             <div class="flex-column flex-grow flex-center">
@@ -12,7 +12,7 @@
             </div>
             <div class="line-tip">
               无账号，请
-              <router-link to="/signup">注册</router-link>
+              <router-link to="/signup" style="color: #333333;">注册</router-link>
             </div>
             <div class="flex-column flex-grow flex-center">
               <div class="normal-line"></div>
@@ -22,13 +22,13 @@
           <div class="login-container-content flex-row flex-center">
             <div class="login-container-content-block">
               <div class="login-input-item">
-                <div class="login-input-item-title">email</div>
+                <div class="login-input-item-title">邮箱</div>
                 <div class="login-input-block">
                   <input v-model="pccUser.email" class="login-input">
                 </div>
               </div>
               <div class="login-input-item">
-                <div class="login-input-item-title">password</div>
+                <div class="login-input-item-title">密码</div>
                 <div class="login-input-block">
                   <input v-model="pccUser.password" type="password" class="login-input">
                 </div>

@@ -80,15 +80,15 @@
               </el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <el-form-item label="提醒时间">
-            <el-date-picker class="flex-row flex-start"
-                            v-model="schedule.remindTime"
-                            type="datetime"
-                            placeholder="选择日期时间"
-                            align="left"
-                            :picker-options="pickerOptions">
-            </el-date-picker>
-          </el-form-item>
+          <!--<el-form-item label="提醒时间">-->
+            <!--<el-date-picker class="flex-row flex-start"-->
+                            <!--v-model="schedule.remindTime"-->
+                            <!--type="datetime"-->
+                            <!--placeholder="选择日期时间"-->
+                            <!--align="left"-->
+                            <!--:picker-options="pickerOptions">-->
+            <!--</el-date-picker>-->
+          <!--</el-form-item>-->
           <el-form-item label="截止时间">
             <el-date-picker class="flex-row flex-start"
                             v-model="schedule.deadline"
@@ -339,6 +339,7 @@
       },
       addSchedule: function () {
         this.dialogFormVisible = false
+        this.schedule.remindTime = this.schedule.deadline
         this.$store.commit('showLoading')
         let data = {
           pccSchedule: this.schedule,

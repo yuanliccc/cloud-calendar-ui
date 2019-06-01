@@ -92,7 +92,7 @@
                 </div>
                 <div class="additional-content-block">
                   <div class="text-left info-font" v-for="(text, textIndex) in additional.texts">{{text.content}}</div>
-                  <div class="file text-left" v-for="(file, fileIndex) in additional.files" :key="fileIndex">
+                  <div class="file text-left pointer" v-for="(file, fileIndex) in additional.files" :key="fileIndex" @click="downloadFile(file)">
                     <a class="fa fa-file"></a>
                     <a class="info-font">{{file.name}}</a></div>
                 </div>
@@ -182,6 +182,9 @@
       }
     },
     methods: {
+      downloadFile: function(file) {
+        window.location.href = 'http://127.0.0.1:8090/pcc/file/download?id=' + file.id
+      },
       completeSchedule: function () {
         this.isLoadingComplete = true
         let fileIds = this.parseFiles()

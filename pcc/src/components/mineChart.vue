@@ -5,7 +5,7 @@
         <div class="chart-title">总量统计</div>
         <div class="chart-content">
           <div class="flex-row flex-start">
-            <div style="width: 900px" class="flex-row flex-wrap">
+            <div class="flex-row flex-wrap">
               <div class="progress-item">
                 <div  class="progress-title">相关总数</div>
                 <div>
@@ -349,7 +349,7 @@
   }
 
   .content-container {
-    width: 1200px;
+    width: 90%;
   }
 
   .week-chart-item-title {

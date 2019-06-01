@@ -39,10 +39,9 @@
     <div class="flex-row flex-wrap calendar-common-margin flex-center">
       <div class="calendar-item-common calendar-item-title" v-for="item in weekInfo" :key="item">{{item}}</div>
     </div>
-    <div class="flex-row flex-wrap calendar-common-margin flex-center" style="height: 500px">
+    <div class="flex-row flex-wrap calendar-common-margin flex-center">
       <div class="calendar-item-common calendar-item"
-           v-bind:class="[item.type==='normal' ? '' : 'un-normal',
-           item.day === selectDay.day && item.type === 'normal' ? 'calendar-item-selected' : '' ]"
+           v-bind:class="[item.type==='normal' ? '' : 'un-normal non-click']"
            v-for="(item, index) in list"
            @click="clickDay(item)"
            @mouseover="showNewAdd(index)"
@@ -53,29 +52,40 @@
             <div class="flex-column flex-start calendar-item-internal-item">
               <div class="full">{{item.day}}</div>
             </div>
-            <div class="flex-column flex-center calendar-item-internal-item" v-show="item.isShowNewAdd">
-              <div class="full text-center">新增</div>
-            </div>
             <div class="flex-column flex-end calendar-item-internal-item">
               <div class="full text-right">{{item.lunarStr.day}}</div>
             </div>
           </div>
+          <div v-if="counts[item.dd]" class="count-block">
+            <el-tooltip v-bind:content="'日程数量：' + counts[item.dd]" placement="top">
+              <el-button style=" width: 40px;height: 40px;" circle>{{counts[item.dd]}}</el-button>
+            </el-tooltip>
+          </div>
         </div>
       </div>
     </div>
+    <calendar-detail :is-show="isShow" :select-day="selectDay" @close="clickDay"></calendar-detail>
   </div>
 </template>
 
 <script>
+  import calendarDetail from './calendarDetail'
   export default {
     name: 'calendar',
+    components: {
+      calendarDetail
+    },
     data: function () {
       return {
+        isShow: false,
         today: {
           year: Number,
           month: Number,
           day: Number
         },
+        counts:[],
+        startDay: String,
+        endDay: String,
         selectDay: {
           year: Number,
           month: Number,
@@ -116,20 +126,35 @@
         this.list[index].isShowNewAdd = !this.list[index].isShowNewAdd;
       },
       clickDay: function (item) {
-        if (item.type === 'pre') {
-          this.preMonth(item.day)
-        } else if (item.type === 'normal') {
-          this.selectDay.day = item.day
-          this.showMonth()
-        } else {
-          this.nextMonth(item.day)
+        if(this.isShow) {
+          //
         }
+        else {
+          if (item.type === 'pre') {
+            this.preMonthDay(item.day)
+          } else if (item.type === 'normal') {
+            this.selectDay.day = item.day
+          } else {
+            this.nextMonthDay(item.day)
+          }
+        }
+        this.isShow = !this.isShow
+        this.getCounts()
       },
       toToday: function () {
         this.selectDay.year = this.today.year
         this.selectDay.month = this.today.month
         this.selectDay.day = this.today.day
         this.showMonth(undefined)
+      },
+      preMonthDay: function(day) {
+        if (this.selectDay.month === 0) {
+          this.selectDay.year = this.selectDay.year - 1
+          this.selectDay.month = 11
+        } else {
+          this.selectDay.month = this.selectDay.month - 1
+        }
+        this.selectDay.day = day === undefined ? 1 : day
       },
       preMonth: function (day) {
         if (this.selectDay.month === 0) {
@@ -140,6 +165,15 @@
         }
         this.selectDay.day = day === undefined ? 1 : day
         this.showMonth()
+      },
+      nextMonthDay: function(day) {
+        if (this.selectDay.month === 11) {
+          this.selectDay.year = this.selectDay.year + 1
+          this.selectDay.month = 0
+        } else {
+          this.selectDay.month = this.selectDay.month + 1
+        }
+        this.selectDay.day = day === undefined ? 1 : day
       },
       nextMonth: function (day) {
         if (this.selectDay.month === 11) {
@@ -170,6 +204,7 @@
           this.selectDay.month,
           this.selectDay.day)
         this.showLunarDate = this.lunarDateToStr(this.originalLunarDate)
+        this.getCounts()
       },
       howMuchDays: function (year, month) {
         let daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -181,51 +216,67 @@
       howMuchInWeek: function (year, month, day, days) {
         // 获得指定年月的1号是星期几
         let targetDay = new Date(year, month, day).getDay()
-        // 将要在calendar__main中渲染的列表
         let list = []
         let preNum = targetDay
-        // 首先先说一下，我们的日期是(日--六)这个顺序也就是(0--6)
-        // 有了上述的前提我们可以认为targetDay为多少，我们就只需要在list的数组中push几个content为''的obj作为占位
         if (targetDay > 0) {
           let preMonth = month === 0 ? 11 : month - 1
           let preYear = month === 0 ? year - 1 : year
           let preMonthDays = this.howMuchDays(preYear, preMonth)
+          let mm = (preMonth + 1) < 10 ? ('0' + (preMonth + 1)) : (preMonth + 1)
           for (let i = 1; i < preNum; i++) {
+            let cud = preMonthDays--
             let obj = {
               type: 'pre',
-              day: (preMonthDays--),
-              isShowNewAdd: false
+              day: cud,
+              isShowNewAdd: false,
+              dd: preYear + '-' + mm + '-' + cud
             }
             obj.lunar = this.getLunar(preYear, preMonth, preMonthDays + 1)
             obj.lunarStr = this.lunarDateToStr(obj.lunar)
             list.push(obj)
           }
+          this.startDay = preYear + '-' + mm + '-' + list[list.length - 1].day
           list.reverse()
         }
+        else {
+          let mm = (month + 1) < 10 ? ('0' + (month + 1)) : (month + 1)
+          this.startDay = year + '-' + mm + '-' + day
+        }
         for (let i = 0; i < days; i++) {
+          let mm = (month + 1) < 10 ? ('0' + (month + 1)) : (month + 1)
+          let dd = (i + 1) < 10 ? ('0' + (i + 1)) : (i + 1)
           let obj = {
             type: 'normal',
             day: i + 1,
-            isShowNewAdd: false
+            isShowNewAdd: false,
+            dd: year + '-' + mm + '-' + dd
           }
           obj.lunar = this.getLunar(year, month, i + 1)
           obj.lunarStr = this.lunarDateToStr(obj.lunar)
           list.push(obj)
         }
-        // let nextNum = 6 - new Date(year, month + 1, 0).getDay()
+
+        let mm = (month + 1) < 10 ? ('0' + (month + 1)) : (month + 1)
+        this.endDay = year + '-' + mm + '-' + days
+
         let len = list.length
         // 与上面的type=pre同理
         for (let i = 0; i < 42 - len; i++) {
           let nextMonth = month === 11 ? 0 : month + 1
           let nextYear = month === 11 ? year + 1 : year
+          let mm = (nextMonth + 1) < 10 ? ('0' + (nextMonth + 1)) : (nextMonth + 1)
           let obj = {
             type: 'next',
             day: (i + 1),
-            isShowNewAdd: false
+            isShowNewAdd: false,
+            dd: nextYear + '-' + mm + '-' + '0' + (i + 1)
           }
           obj.lunar = this.getLunar(nextYear, nextMonth, i + 1)
           obj.lunarStr = this.lunarDateToStr(obj.lunar)
           list.push(obj)
+
+          let dd = (42 - len) < 10 ? ('0' + (42 - len)) : (42 - len)
+          this.endDay = nextYear + '-' + mm + '-' + dd
         }
         return list
       },
@@ -295,12 +346,32 @@
           day += this.lunar.number.charAt((lunarDay - 1) % 10)
         }
         return day
+      },
+      getCounts: function () {
+        this.$axios.get('/pcc/task/counts', {
+          params: {pccUserId: this.$store.getters.userInfo.id, startDay: this.startDay, endDay: this.endDay}
+        }).then(res => {
+          const data = res.data
+          this.counts = data.data
+        }).catch(err => {
+          this.$message.error('获取日程数错误');
+        })
       }
     }
   }
 </script>
 
 <style scoped>
+
+  .count-item {
+    width: 50px;
+    background: red;
+  }
+
+  .count-block {
+    width: 100%;
+    height: 40px;
+  }
   .calendar-item-internal-item {
     width: 33%;
   }
@@ -368,14 +439,12 @@
   }
   .calendar-item {
     border: 1px solid #f2f2f2;
-    height: 16.667%;
+    height: 90px;
     border-bottom: none;
     border-right: none;
     cursor: pointer;
   }
-  /*.calendar-item:hover {
-    background: #e1e5eb;
-  }*/
+
   .calendar-item-selected {
     background: var(--commonOtherBg);
     color: white;

@@ -46,6 +46,11 @@ body {
   justify-content: flex-start;
 }
 
+.non-click {
+  pointer-events: none;
+  cursor : not-allowed;
+}
+
 .flex-between {
   justify-content: space-between;
 }
@@ -98,6 +103,11 @@ body {
 .flex-column {
   display: flex;
   flex-direction: column;
+}
+
+.flex-row-reverse {
+  display: flex;
+  flex-direction: row-reverse;
 }
 
 .normal-line {
