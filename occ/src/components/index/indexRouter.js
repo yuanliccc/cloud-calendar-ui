@@ -19,6 +19,15 @@ export default [
           requireAuth: false
         },
         component: () => import('./login'),
+      },{
+        path: '/main',
+        name: 'main',
+        meta: {
+          label: '云日历系统机构日历子系统',
+          permission: '',
+          requireAuth: false
+        },
+        component: () => import('./index'),
       },
       {
         path: '/register',
@@ -29,6 +38,16 @@ export default [
           requireAuth: false
         },
         component: () => import('./register'),
+      },
+      {
+        path: '/joinUs',
+        name: 'joinUs',
+        meta: {
+          label: '加入我们',
+          permission: '',
+          requireAuth: false
+        },
+        component: () => import('./joinUs'),
       },
       {
         path: '/calender',

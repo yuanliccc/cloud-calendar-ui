@@ -3,10 +3,10 @@
     <div class="publicTitle" v-if="!add">通知编辑</div>
     <div class="publicTitle" v-if="add">新增通知</div>
     <div>
-      <el-form label-position="left" ref="notice"class="add_Edit" :model="notice" :rules="rules" :inline="true"
+      <el-form label-position="left" ref="notice"class="add_Edit" :model="notice" :rules="rules"
                 label-width="130px">
-        <el-form-item label="用户">
-          <el-select v-model="notice.userid">
+        <el-form-item label="用户" v-if="notice.type == '个人通知'">
+          <el-select v-model="notice.submituserid">
             <el-option v-for="i in users" :key="i.id" :value="i.id" :label="i.name">
               <span style="float:left;">{{i.name}}</span>
               <span style="float:right;">{{i.account}}</span>
@@ -16,17 +16,27 @@
         <el-form-item label="标题" prop="title">
           <el-input v-model="notice.title" placeholder="标题"></el-input>
         </el-form-item>
-        <el-form-item label="所有用户推送">
-          <el-switch v-model="allUser"></el-switch>
+        <el-form-item label="类型" prop="type" v-if="role.rolelevel == 6">
+          <el-select v-model="notice.type" placeholder="请选择类型">
+            <el-option v-for="i in types2" :key="i" :value="i" :label="i">
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="类型" prop="type">
+        <el-form-item label="类型" prop="type" v-if="role.rolelevel != 6">
           <el-select v-model="notice.type" placeholder="请选择类型">
             <el-option v-for="i in types" :key="i" :value="i" :label="i">
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="子机构群发" prop="subordinatecanseen" v-if="notice.type == '机构通知'">
+          <el-select v-model="notice.subordinatecanseen" placeholder="请选择子机构也发布">
+            <el-option v-for="i in canBeSeen" :key="i" :value="i" :label="i">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="内容" prop="content">
-          <el-input type="textarea"  class="text" v-model="notice.content" placeholder="请输入内容"></el-input>
+          <el-input type="textarea" v-model="notice.content" resize="none" rows="5"
+                    placeholder="内容"></el-input>
         </el-form-item>
 
         <div class="form_Bt">
@@ -49,17 +59,19 @@
         add: true,
         notice: {
           id: '',
-          userid: '',
-          state: '',
+          submituserid: '',
+          orgId: '',
           title: '',
           content: '',
-          starttime: '',
-          checktime: '',
-          type: '消息通知',
+          submittime: '',
+          subordinatecanseen: '否',
+          type: '机构通知',
         },
         allUser: false,
         users:[],
-        types:['部门通知','紧急通知','消息通知'],
+        types:['机构通知','个人通知'],
+        types2:['机构通知','个人通知','系统通知'],
+        canBeSeen:['是','否'],
         rules:{
           title: [
             { required: true, message: '请输入标题，一旦新建便无法修改', trigger: 'blur' }
@@ -67,6 +79,12 @@
           type: [
             { required: true, message: '请选择类型，一旦新建便无法修改', trigger: 'blur' }
           ],
+          content:[
+            { required: true, message: '请输入内容，一旦新建便无法修改', trigger: 'blur' }
+          ],
+          subordinatecanseen:[
+            { required: true, message: '请选择子机构是否群发', trigger: 'blur' }
+          ]
         }
       }
     },
@@ -77,17 +95,22 @@
        }
        this.getUserByLoginOrgId();
     },
+    computed:{
+      role: function () {
+        return this.$store.getters.userInfo.role
+      },
+    },
     methods:{
       clear:function(){
         this.notice= {
           id: '',
-          userid: '',
-          state: '',
+          submituserid: '',
+          orgId: '',
           title: '',
           content: '',
-          starttime: '',
-          checktime: '',
-          type: '消息通知',
+          submittime: '',
+          subordinatecanseen: '否',
+          type: '机构通知',
         }
       },
       submit: function(){
@@ -104,7 +127,7 @@
         });
       },
       save: function(){
-          if(this.notice.userid == '' && !this.allUser){
+          if(this.notice.submituserid == '' && this.notice.type == '个人通知'){
             this.$message({
               showClose: true,
               message: '请选择通知的用户！',
@@ -113,12 +136,8 @@
             return;
           }
 
-          if(this.allUser){
-            this.notice.id = -1;
-          }
-
         this.$store.commit("showLoading");
-        this.$axios.post('/occ/notice/add', this.notice)
+        this.$axios.post('/occ/noticeList/add', this.notice)
         .then(res =>{
           const data = res.data;
           if(data.code == '400'){
@@ -133,6 +152,8 @@
               type: 'success',
               message: '新增成功!'
             });
+            console.log(this.$parent.$children[0])
+            this.$parent.$children[0].flushUnreadNotice();
             this.$store.commit("hideLoading");
             this.clear();
           }
@@ -217,5 +238,9 @@
   }
   .el-switch{
     width:250px;
+  }
+  .form_Bt{
+    height: 100px;
+    padding: 50px 0 0 0;
   }
 </style>

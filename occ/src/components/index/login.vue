@@ -21,6 +21,7 @@
 </template>
 
 <script>
+  import md5 from 'js-md5'
   export default{
     name: 'login',
     data() {
@@ -40,7 +41,7 @@
             return;
           }
           this.$store.commit('showLoading');
-
+          this.password = md5(this.password);
           this.$axios.get('/occ/user/login', {
             params: {account: this.account, password: this.password}
           }).then(res => {
@@ -53,7 +54,7 @@
               });
             }else{
               this.$store.commit('setUserInfo', data.data);
-              this.$router.push('/');
+              this.$router.push('/main');
             }
             this.$store.commit('hideLoading');
           }).catch(err => {

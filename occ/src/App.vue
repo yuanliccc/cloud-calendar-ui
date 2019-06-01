@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-view v-if="isRouterAlive"/>
+    <router-view v-wechat-title="$route.meta.label" v-if="isRouterAlive"/>
     <loading v-if="isLoad"></loading>
   </div>
 </template>

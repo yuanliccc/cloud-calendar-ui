@@ -1,8 +1,8 @@
 <template>
   <div class="publicList">
     <div class="publicTitle">{{dateTime | formatDate}}</div>
-    <el-container style="width: 100%;">
-      <el-aside style="width:30%;height: 100%;padding-left: 50px;">
+    <el-container style="width: 100%;overflow: hidden;">
+      <el-aside style="width:30%;padding-left: 50px;">
         <h4>今日工作日程</h4>
         <el-collapse accordion>
           <el-collapse-item  v-for="(item, index) in schedules" :key="index" :name="index">
@@ -27,47 +27,12 @@
           </el-collapse-item>
         </el-collapse>
       </el-aside>
-      <el-container style="padding: 10px;overflow: auto;">
+      <el-container style="padding: 10px;overflow: hidden;">
         <el-header class="operator_Icon">
-          <div class="icon">
-            <el-button type="success" icon="el-icon-chat-round" circle></el-button>
+          <div class="icon" v-for="i in icon" v-if="hasPermission(i.permission)">
+            <el-button type="success" :icon="i.logo" circle @click="jumpTo(i.url)"></el-button>
             <br/>
-            <span class="icon_Tip">群发通知</span>
-          </div>
-          <div class="icon">
-            <el-button type="success" icon="el-icon-chat-round" circle></el-button>
-            <br/>
-            <span class="icon_Tip">群发通知</span>
-          </div>
-          <div class="icon">
-            <el-button type="success" icon="el-icon-chat-round" circle></el-button>
-            <br/>
-            <span class="icon_Tip">群发通知</span>
-          </div>
-          <div class="icon">
-            <el-button type="success" icon="el-icon-chat-round" circle></el-button>
-            <br/>
-            <span class="icon_Tip">群发通知</span>
-          </div>
-          <div class="icon">
-            <el-button type="success" icon="el-icon-chat-round" circle></el-button>
-            <br/>
-            <span class="icon_Tip">群发通知</span>
-          </div>
-          <div class="icon">
-            <el-button type="success" icon="el-icon-chat-round" circle></el-button>
-            <br/>
-            <span class="icon_Tip">群发通知</span>
-          </div>
-          <div class="icon">
-            <el-button type="success" icon="el-icon-chat-round" circle></el-button>
-            <br/>
-            <span class="icon_Tip">群发通知</span>
-          </div>
-          <div class="icon">
-            <el-button type="success" icon="el-icon-chat-round" circle></el-button>
-            <br/>
-            <span class="icon_Tip">群发通知</span>
+            <span class="icon_Tip">{{i.title}}</span>
           </div>
         </el-header>
       </el-container>
@@ -84,6 +49,62 @@
         dateTime:new Date(),
         schedules:[],
         orgCalenders:[],
+        icon:[
+          {
+            title:'群发通知',
+            permission: 'notice_add',
+            logo:'el-icon-chat-round',
+            url:'/manager/noticeForm/add',
+          },
+          {
+            title:'添加日历',
+            permission: 'orgCalender_add',
+            logo:'el-icon-circle-plus',
+            url:'/manager/orgCalenderForm/add',
+          },
+          {
+            title:'私信',
+            permission: 'perLetter_left',
+            logo:'el-icon-chat-line-round',
+            url:'/manager/noticeList/perLetter',
+          },
+          {
+            title:'查看通知',
+            permission: 'notice_left',
+            logo:'el-icon-message-solid',
+            url:'/manager/noticeList/notice',
+          },
+          {
+            title:'机构邀请',
+            permission: 'orgCalender_left',
+            logo:'el-icon-position',
+            url:'/manager/OrgInviteList',
+          },
+          {
+            title:'邀请用户',
+            permission: 'orgCalender_add',
+            logo:'el-icon-user-solid',
+            url:'/manager/userForm/add',
+          },
+          {
+            title:'添加日程',
+            permission: 'schedule_add',
+            logo:'el-icon-s-order',
+            url:'/manager/scheduleForm/add',
+          },
+          {
+            title:'安排工作',
+            permission: 'workArrange_add',
+            logo:'el-icon-document',
+            url:'/manager/workArrangeForm/add',
+          },
+          {
+            title:'日历',
+            permission: '',
+            logo:'el-icon-document',
+            url:'/manager/calender',
+          }
+        ],
       }
     },
     mounted() {
@@ -93,6 +114,11 @@
       }, 1000);
       this.getAllSchedule();
       this.findAllOrgCalenderToday();
+    },
+    computed:{
+      rolePers: function () {
+        return this.$store.getters.userInfo.permissions;
+      },
     },
     beforeDestroy() {
       if(this.timer){
@@ -154,6 +180,13 @@
 
         return (dayN / day) * 100;
 
+      },
+      jumpTo: function(url){
+        this.$router.push(url);
+      },
+      hasPermission(permission){
+        if(permission == '') return true;
+        return this.rolePers.indexOf(permission) > -1;
       }
     }
   }
@@ -180,6 +213,7 @@
   .operator_Icon{
     padding-left: 40px;
     padding-top: 20px;
+    height: 100%!important;
   }
   .icon{
     text-align: center;

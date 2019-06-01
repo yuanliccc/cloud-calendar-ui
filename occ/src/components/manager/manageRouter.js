@@ -7,6 +7,10 @@ import noticeRoute from './notice/noticeRoute'
 import orgCalenderRoute from './orgCalender/orgCalenderRoute'
 import scheduleRoute from './schedule/scheduleRoute'
 import eventRoute from './event/eventRoute'
+import workArrange from './workArrange/workArrangeRoute'
+import orgInvite from './orgInvite/orgInviteRoute'
+import orgApply from  './orgApply/orgApplyRoute'
+import systemconfig from './systemconfig/systemconfigRoute'
 export default [
   {
     path: '/manager',
@@ -46,7 +50,11 @@ export default [
       ...noticeRoute,
       ...orgCalenderRoute,
       ...scheduleRoute,
-      ...eventRoute
+      ...eventRoute,
+      ...workArrange,
+      ...orgApply,
+      ...orgInvite,
+      ...systemconfig
     ]
   }
 ]
