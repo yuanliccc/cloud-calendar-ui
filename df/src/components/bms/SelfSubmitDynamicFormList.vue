@@ -3,7 +3,26 @@
     <div class="self-submit-form-container flex-column">
       <div class="self-submit-form-header flex-row">
         <div class="self-submit-form-header-query-box">
-          <el-form ref="selectForm" :model="selectCondition" label-width="100px" style="width: 100%;">
+          <div class="query-box-block">
+            <el-select
+              v-model="selectCondition.formId"
+              filterable
+              remote
+              clearable
+              reserve-keyword
+              placeholder="请输入表单名称"
+              :remote-method="findFormLikeName"
+              :loading="loading">
+              <el-option
+                v-for="item in formOptions"
+                :key="item.dynamicForm.name"
+                :label="item.dynamicForm.name"
+                :value="item.dynamicForm.id">
+              </el-option>
+            </el-select>
+            <el-button type="primary" @click="findSelfSubmitFormByCondition">查询</el-button>
+          </div>
+          <!--<el-form ref="selectForm" :model="selectCondition" label-width="100px" style="width: 100%;">
             <el-row :gutter="20">
               <el-col :span="8">
                 <div class="grid-content bg-purple">
@@ -38,7 +57,7 @@
             </el-row>
             <el-row :gutter="20">
             </el-row>
-          </el-form>
+          </el-form>-->
         </div>
       </div>
       <div class="self-submit-form-line"></div>
@@ -166,14 +185,17 @@ export default {
     },
     // 根据表单的名称模糊查询表单信息
     findFormLikeName: function (formName) {
+      this.loading = true
       this.$axios.get('/df/collect/form/findFormLikeName/' + formName)
         .then(res => {
+          this.loading = false
           const code = res.data.code
           if (code === 200) {
             this.formOptions = res.data.data
           }
         })
         .catch(error => {
+          this.loading = false
           this.$message.error(error)
         })
     },
@@ -187,6 +209,9 @@ export default {
     },
     // 查询当前用户所填写的表单记录
     findSelfSubmitFormByCondition: function () {
+      if (this.selectCondition.formId === '') {
+        this.selectCondition.formId = null
+      }
       this.$axios.post('/df/collect/form/findSelfSubmitFormByCondition', this.selectCondition)
         .then(res => {
           const code = res.data.code

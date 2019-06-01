@@ -16,7 +16,14 @@
             <el-col :span="12">
               <div class="grid-content bg-purple">
                 <el-form-item label="性别">
-                  <el-input v-model="user.sex"></el-input>
+                  <el-select v-model="user.sex" placeholder="请选择">
+                    <el-option
+                      v-for="item in sexOptions"
+                      :key="item.value"
+                      :label="item.value"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
                 </el-form-item>
               </div>
             </el-col>
@@ -63,7 +70,15 @@ export default {
         sex: '',
         email: '',
         phone: ''
-      }
+      },
+      sexOptions: [
+        {
+          value: '男'
+        },
+        {
+          value: '女'
+        }
+      ]
     }
   },
   methods: {
@@ -78,6 +93,7 @@ export default {
           const code = res.data.code
           if (code === 200) {
             this.findUserById(this.userInfo.id)
+            this.$message.success('更新成功')
           }
         })
         .catch(err => {
@@ -125,4 +141,9 @@ export default {
    margin-bottom: 28px;
    text-align: center;
  }
+
+  .personal-form-block .el-select {
+    min-width: 100%;
+  }
+
 </style>

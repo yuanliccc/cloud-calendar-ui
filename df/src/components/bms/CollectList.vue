@@ -11,7 +11,7 @@
           remote
           clearable
           reserve-keyword
-          placeholder="请输入关键词"
+          placeholder="请输入提交人"
           :remote-method="findUserLikeName"
           :loading="loading">
           <el-option
@@ -23,7 +23,7 @@
         </el-select>
       </div>
       <div class="query-condition-block">
-        <el-button icon="el-icon-arrow-left" @click="findCollectFormByCondition">查询</el-button>
+        <el-button icon="el-icon-search" @click="findCollectFormByCondition">查询</el-button>
       </div>
     </div>
     <div class="collect-list-line">

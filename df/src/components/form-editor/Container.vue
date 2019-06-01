@@ -106,7 +106,7 @@ export default {
           publishState: ''
         }
       },
-      widgetFormSelect: '1550739614000_52521',
+      widgetFormSelect: null,
       configTab: 'form',
       operator: null,
       formId: null

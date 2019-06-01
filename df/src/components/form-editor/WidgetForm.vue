@@ -29,7 +29,7 @@
                       @end="handleMoveEnd"
                       @add="handleWidgetColAdd($event, element, colIndex)">
                       <widget-form-item v-for="(el, i) in col.list" :element="el" :index="i"
-                        :data="col" :key="el.key + '_' + i" :select.sync="selectWidget">
+                        :data="col" :key="el.key" :select.sync="selectWidget">
                       </widget-form-item>
                     </draggable>
                   </div>

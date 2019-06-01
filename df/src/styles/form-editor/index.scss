@@ -93,7 +93,7 @@ $primary-background-color: #ecf5ff;
     }
 
     .widget-form-list-grid {
-      padding: 5px 10px 18px;  /* 设置上内边距为5px,左右内边距10px,下内边距18px */
+      padding: 15px 10px 25px;  /* 设置上内边距为5px,左右内边距10px,下内边距18px */
       margin: 0;  /* 设置外边距为0 */
       border-left: 5px solid transparent; /* 设置边框粗细为5px,实线,透明 */
       min-height: 32px;
@@ -101,6 +101,12 @@ $primary-background-color: #ecf5ff;
   }
 
   .widget-grid {
+    background: #F4F6FC;
+    position: relative;
+    border-left: 5px solid transparent;
+    padding: 5px;
+    margin: 0 !important;
+
     &.active {
       border-left: 5px solid $primary-color;
       background: #b3d8ff;

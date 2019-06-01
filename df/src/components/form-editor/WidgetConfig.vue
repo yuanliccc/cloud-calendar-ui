@@ -4,7 +4,7 @@
       <el-form-item label="标题" v-if="data.type != 'grid'">
         <el-input v-model="data.label"></el-input>
       </el-form-item>
-      <el-form-item label="选项" v-if="Object.keys(data.options).indexOf('options') >= 0">
+      <el-form-item label="选项" v-if="data.type == 'checkbox' || data.type == 'radio' || data.type == 'select'">
         <template v-if="data.type == 'radio' || data.type == 'select'">
           <el-radio-group v-model="data.options.defaultValue">
             <!-- vuedraggable的options属性中,handle可以配置一个css选择器的字符串,使列表单元中符合选择器的元素
@@ -42,7 +42,7 @@
             </draggable>
           </el-checkbox-group>
         </template>
-        <div style="margin-left: 22px;">
+        <div style="margin-left: 22px;" v-if="data.type == 'checkbox' || data.type == 'radio' || data.type == 'select'">
           <el-button type="text" @click="handleAddOption">添加选项</el-button>
         </div>
       </el-form-item>

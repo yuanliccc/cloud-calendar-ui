@@ -1,6 +1,26 @@
 <template>
   <div class="apply-list-container flex-column" v-if="this.selectCondition.applyUserId != null">
-    <div class="apply-list-header flex-row"></div>
+    <div class="apply-list-header flex-row">
+      <div class="query-box-block">
+        <el-select
+          v-model="selectCondition.collectFormId"
+          filterable
+          remote
+          clearable
+          reserve-keyword
+          placeholder="请输入表单名称"
+          :remote-method="findFormLikeName"
+          :loading="loading">
+          <el-option
+            v-for="item in formOptions"
+            :key="item.dynamicForm.name"
+            :label="item.dynamicForm.name"
+            :value="item.collectForm.id">
+          </el-option>
+        </el-select>
+        <el-button type="primary" @click="findCollectFormEditApply">查询</el-button>
+      </div>
+    </div>
     <div class="apply-list-line"></div>
     <div class="apply-list-main flex-column">
       <div class="apply-list-main-table">
@@ -56,11 +76,26 @@ export default {
         pageNum: 1,
         pageSize: 10,
         total: 0,
-        applyUserId: this.userInfo.id
-      }
+        applyUserId: this.userInfo.id,
+        collectFormId: null
+      },
+      formOptions: []
     }
   },
   methods: {
+    // 根据表单的名称模糊查询表单信息
+    findFormLikeName: function (formName) {
+      this.$axios.get('/df/collect/form/findFormLikeName/' + formName)
+        .then(res => {
+          const code = res.data.code
+          if (code === 200) {
+            this.formOptions = res.data.data
+          }
+        })
+        .catch(error => {
+          this.$message.error(error)
+        })
+    },
     // 分页当前页码改变时的回调方法
     handleCurrentPageChange: function (currentPage) {
       this.selectCondition.pageNum = currentPage
@@ -74,6 +109,9 @@ export default {
     // 查询当前用户的申请信息
     findCollectFormEditApply: function () {
       console.log(this.userInfo)
+      if (this.selectCondition.collectFormId === '') {
+        this.selectCondition.collectFormId = null
+      }
       this.$axios.post('/df/collect/form/edit/apply/findCollectFormEditApply', this.selectCondition)
         .then(res => {
           const code = res.data.code

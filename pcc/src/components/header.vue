@@ -25,7 +25,7 @@
               <div class="el-icon-chat-dot-round"></div>
             </el-badge>
           </div>
-          <div class="right-item-common right-badge-item cell flex-column flex-center text-center">
+          <div class="right-item-common right-badge-item cell flex-column flex-center text-center" @click="showNotice">
             <el-badge is-dot class="item">
               <div class="el-icon-bell"></div>
             </el-badge>
@@ -41,9 +41,6 @@
                 <div class="user-menu-item flex-column flex-center">
                   <div class="user-menu-item-container" @click="toPersonal">账号设置</div>
                 </div>
-                <div class="user-menu-item flex-column flex-center">
-                  <div class="user-menu-item-container">好友列表</div>
-                </div>
                 <div class="line"></div>
                 <div class="user-menu-item flex-column flex-center">
                   <div class="user-menu-item-container" @click="loginOut">退出登录</div>
@@ -55,19 +52,22 @@
       </div>
     </div>
     <chat :isShow="isShowChat" @close="showChat"></chat>
+    <notice :isShow="isShowNotice" @close="showNotice"></notice>
   </div>
 </template>
 
 <script>
 import chat from './chat'
+import notice from './notice'
 export default {
   name: 'hheader',
   components: {
-    chat
+    chat, notice
   },
   data: function () {
     return {
       isShowChat: false,
+      isShowNotice: false,
       titles: [
         {
           title: '日历',
@@ -138,6 +138,9 @@ export default {
     },
     showChat: function () {
       this.isShowChat = !this.isShowChat
+    },
+    showNotice: function () {
+      this.isShowNotice = !this.isShowNotice
     }
   }
 }

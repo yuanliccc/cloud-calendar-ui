@@ -12,7 +12,7 @@
           <div class="content-right flex-row">
             <div class="content-right-container">
               <div class="register-title">
-                Register
+                注册
               </div>
 
               <div class="register-content">
@@ -25,7 +25,8 @@
                         <div class="input-icon-block">
                           <span class="fa fa-user"></span>
                         </div>
-                        <input type="text" value="" class="input-style" v-model="user.name" placeholder="username">
+                        <input type="text" value="" class="input-style"
+                               v-model="user.name" placeholder="用户名">
                       </div>
                     </div>
 
@@ -37,7 +38,8 @@
                         <div class="input-icon-block">
                           <span class="fa fa-envelope"></span>
                         </div>
-                        <input type="text" v-on:input="verifyEmail" value="" class="input-style" v-model="user.email" placeholder="email">
+                        <input type="text" v-on:input="verifyEmail" value="" class="input-style"
+                               v-model="user.email" placeholder="邮箱地址">
                       </div>
                     </div>
 
@@ -48,7 +50,8 @@
                         <div class="input-icon-block">
                           <span class="fa fa-phone"></span>
                         </div>
-                        <input type="number" v-on:input="verifyPhone" value="" class="input-style" v-model="user.phone" placeholder="phone">
+                        <input type="number" v-on:input="verifyPhone" value="" class="input-style"
+                               v-model="user.phone" placeholder="电话号码">
                       </div>
                     </div>
 
@@ -60,7 +63,8 @@
                         <div class="input-icon-block">
                           <span class="fa fa-lock"></span>
                         </div>
-                        <input type="password" v-on:input="checkPassword" value="" class="input-style" v-model="user.password" placeholder="password">
+                        <input type="password" v-on:input="checkPassword" value="" class="input-style"
+                               v-model="user.password" placeholder="密码">
                       </div>
                     </div>
                     <div class="input-item">
@@ -70,7 +74,9 @@
                         <div class="input-icon-block">
                           <span class="fa fa-lock"></span>
                         </div>
-                        <input type="password" v-on:input="verifyCheckPassword" value="" class="input-style" v-model="verifyPassword" placeholder="verify password">
+                        <input type="password" v-on:input="verifyCheckPassword" value=""
+                               class="input-style" v-model="verifyPassword"
+                               placeholder="确认密码">
                       </div>
                     </div>
 
@@ -78,7 +84,7 @@
                       <div class="flex-column flex-center flex-grow">
                         <div class="normal-line"></div>
                       </div>
-                      <div class="line-tip">已经有账号，请 <router-link to="/login">登录</router-link></div>
+                      <div class="line-tip">已经有账号，请 <router-link to="/login" style="color: #333333;">登录</router-link></div>
                       <div class="flex-column flex-center flex-grow">
                         <div class="normal-line"></div>
                       </div>
@@ -138,11 +144,19 @@ export default {
       // 请求
       this.$axios.post('/pcc/user', this.user)
         .then(res => {
-          this.$router.push({path: '/login'})
           this.$store.commit("hideLoading")
+          if(res.data.data == 'repeat email') {
+            this.$message.warning("邮箱地址已经被注册过了")
+          }
+          else {
+            this.$message.success("注册成功，现在可以登录了")
+            this.$router.push({path: '/login'})
+          }
+
         })
         .catch(err => {
           this.$store.commit("hideLoading")
+          this.$message.error("注册失败")
         })
     },
     verifyEmail: function () {
