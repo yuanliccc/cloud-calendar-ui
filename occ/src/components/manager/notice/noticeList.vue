@@ -61,7 +61,7 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane>
+      <el-tab-pane class="">
         <span slot="label"><i class="el-icon-message"></i>私信</span>
         <el-container style="height: 600px;">
           <el-aside width="250px" style="background-color: #dfe3e6" class="innerbox">
@@ -82,8 +82,6 @@
           <el-container direction="vertical">
             <el-main style="background-color: #f3f5f7;padding-top: 50px;" class="innerbox">
               <div class="chat_Window" ref="chatMain">
-                <img src="../../../assets/logo.png" style="margin: 0 auto" v-if="showImg"/>
-
                 <div :class="[i.senduserid == chatUser.id ? 'messageItem_Left' : 'messageItem_Right']" v-for=" i in chatMessages" v-if="!showImg">
                   <div :class="[i.senduserid == chatUser.id ? 'chat_Logo_Left' : 'chat_Logo_Right']">
                     <img src="../../../assets/image/testPortrait.jpg" class="chat_Img"/>
@@ -600,6 +598,7 @@
   .chat_Window{
     width: 100%;
   }
+
   .chat_Window .img{
     margin: 25% 38% 25% 38%!important;
   }

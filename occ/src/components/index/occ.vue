@@ -13,6 +13,11 @@
     name: 'occ',
     components: {
       occHead
+    },
+    mounted:function(){
+      if(this.$route.name == 'index'){
+        this.$router.push('/main');
+      }
     }
   }
 </script>

@@ -3,7 +3,7 @@
     <div class="publicTitle" v-if="!add">机构工作日程编辑</div>
     <div class="publicTitle" v-if="add">新增机构工作日程</div>
     <div>
-      <el-form label-position="left" ref="schedule"class="add_Edit" :model="schedule" :rules="rules"
+      <el-form label-position="left" ref="schedule" class="add_Edit" :model="schedule" :rules="rules"
                 label-width="120px">
         <el-form-item label="标题" prop="title">
           <el-input v-model="schedule.title" placeholder="标题"></el-input>

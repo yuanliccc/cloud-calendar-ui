@@ -1,5 +1,6 @@
 <template>
   <div class="login">
+    <div class="backgroup"></div>
     <div class="title">
       <span>机构入驻申请</span>
     </div>
@@ -106,13 +107,24 @@
 </script>
 
 <style scoped>
+  .backgroup{
+    position: fixed;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-image: url(../../assets/image/login-bg.jpg);
+    background-size: 100%;
+
+  }
   .login {
     width: 600px;
-    height: 800px;
+    height: 360px;
     margin: 0 auto;
-    margin-top: 40px;
+    margin-top: 140px;
     border-radius: 2px;
-    border: 1px solid #ccc;
+    background-color: #fff6;
   }
   .title{
     margin-top: 10px;

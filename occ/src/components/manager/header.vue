@@ -101,7 +101,7 @@
           });
         });
 
-        this.$router.push("/login");
+        this.$router.push("/manager/login");
         this.$store.commit("loginOut");
       },
       getAllLoginUserOrg: function(){

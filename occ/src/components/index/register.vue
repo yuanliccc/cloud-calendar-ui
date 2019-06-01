@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <!--<div class="login">
     <div class="title">
       <span>注册</span>
     </div>
@@ -43,6 +43,53 @@
     </div>
 
     <con ref="myConfirm"></con>
+  </div>-->
+  <div class="login-wrap">
+    <div class="backgroup"></div>
+    <div class="ms-login">
+      <div class="ms-title">系统登录</div>
+      <el-form :model="user" :rules="rules" ref="user" label-width="0px" class="ms-content">
+        <el-form-item prop="name">
+          <el-input v-model="user.name" placeholder="昵称">
+            <el-button slot="prepend" icon="el-icon-message"></el-button>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="account">
+          <el-input v-model="user.account" placeholder="账号">
+            <el-button slot="prepend" icon="el-icon-user"></el-button>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input type="password" placeholder="密码" v-model="user.password">
+            <el-button slot="prepend" icon="el-icon-lock"></el-button>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="rePassword">
+          <el-input type="password" placeholder="重复输入密码" v-model="user.rePassword">
+            <el-button slot="prepend" icon="el-icon-lock"></el-button>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="phone">
+          <el-input v-model="user.phone" placeholder="手机号码">
+            <el-button slot="prepend" icon="el-icon-phone"></el-button>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="sex">
+          <el-button class="prepend" icon="el-icon-s-custom"></el-button>
+          <el-select v-model="user.sex" placeholder="性别" style="width: 79%">
+            <el-option v-for="i in sex" :key="i" :label="i" :value="i"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="email">
+          <el-input v-model="user.email" placeholder="邮件">
+            <el-button slot="prepend" icon="el-icon-message"></el-button>
+          </el-input>
+        </el-form-item>
+        <div class="login-btn">
+          <el-button type="primary" @click="register">注册</el-button>
+        </div>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -56,14 +103,27 @@
     },
     data() {
       return {
-        account:'',
-        name:'',
-        password:'',
-        rePassword:'',
-        phone:'',
-        email:'',
-        sex:'',
-        user:{},
+        user:{
+          account:'',
+          name:'',
+          password:'',
+          rePassword:'',
+          phone:'',
+          email:'',
+          sex:'',
+        },
+        sex:["男","女"],
+        rules:{
+          account: [
+            { required: true, message: '请输入账号', trigger: 'blur' }
+          ],
+          password:[
+            { required: true, message: '请输入密码', trigger: 'blur' }
+          ],
+          rePassword:[
+            { required: true, message: '请重复输入密码', trigger: 'blur' }
+          ],
+        }
       }
     },
     mounted : function(){
@@ -72,34 +132,15 @@
     },
     methods:{
       register: function(){
-        if(this.account == '') {
-          this.$refs.myConfirm.show('请输入账号！', null);
-          ;return ;
-        }
-        if(this.password == '') {
-          this.$refs.myConfirm.show('请输入密码！', null);
-          ;return ;
-        }
-        if(this.rePassword == '') {
-          this.$refs.myConfirm.show('请重复输入密码！', null);
+        if(this.user.rePassword != this.user.password) {
+          this.$message.warning('两次密码不相符，请确认！');
           ;return ;
         }
 
-        if(this.rePassword != this.password) {
-          this.$refs.myConfirm.show('两次密码不相符，请确认！', null);
+        if(!(/^1[34578]\d{9}$/.test(this.user.phone))){
+          this.$message.warning()('电话号码有误，请重新输入！');
           ;return ;
         }
-
-        if(!(/^1[34578]\d{9}$/.test(this.phone))){
-          this.$refs.myConfirm.show('电话号码有误，请重新输入！', null);
-          ;return ;
-        }
-        this.user.name = this.name;
-        this.user.account = this.account;
-        this.user.password = md5(this.password);
-        this.user.phone = this.phone;
-        this.user.email = this.email;
-        this.user.sex = this.sex;
 
         this.$store.commit('showLoading');
         this.$axios.post("/occ/user/register",
@@ -125,7 +166,7 @@
 </script>
 
 <style scoped>
-  .login{
+/*  .login{
     width:500px;
     height:700px;
     margin: 0 auto;
@@ -178,5 +219,55 @@
   }
   .required2{
     padding-left: 2px;
-  }
+  }*/
+.login-wrap{
+  background-image: url(../../assets/image/login-bg.jpg);
+  background-repeat: repeat;
+  width: 100%;
+  height: 100%;
+}
+.backgroup{
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-image: url(../../assets/image/login-bg.jpg);
+  background-size: 100%;
+
+}
+.ms-title{
+  width:100%;
+  line-height: 50px;
+  text-align: center;
+  font-size:20px;
+  color: #000000;
+  border-bottom: 1px solid #ddd;
+}
+.ms-login{
+  position: absolute;
+  left:50%;
+  top:50%;
+  width:350px;
+  margin:-190px 0 0 -175px;
+  border-radius: 5px;
+  background: rgba(255,255,255, 0.3);
+  overflow: hidden;
+}
+.ms-content{
+  padding: 30px 30px;
+}
+.login-btn{
+  text-align: center;
+}
+.login-btn button{
+  width:100%;
+  height:36px;
+  margin-bottom: 10px;
+}
+.login-tips{
+  font-size:12px;
+  line-height:30px;
+  color:#fff;
+}
 </style>

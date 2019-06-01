@@ -1,23 +1,56 @@
 <template>
-<div class="login">
+<!--<div class="login">
   <div class="title">
     <span>登录</span>
   </div>
-  <div class="loginInput">
+  &lt;!&ndash;<div class="loginInput">
     <span>账号</span>
     <input type="text" v-model="account" />
   </div>
   <div class="loginInput">
     <span>密码</span>
     <input type="password" v-model="password"/>
-  </div>
+  </div>&ndash;&gt;
   <div class="register">
     <router-link to="/register">注册</router-link>
   </div>
   <div class="loginBt_">
-    <button @click="login" >登录</button>
+    <el-button type="primary" @click="login" >登录</el-button>
   </div>
-</div>
+</div>-->
+  <!--<el-form :model="user" :rules="rules" ref="user" label-position="left" label-width="0px" class="demo-ruleForm login-container">
+    <h3 class="title">系统登录</h3>
+    <el-form-item prop="account">
+      <el-input type="text" v-model="user.account" auto-complete="off" placeholder="账号"></el-input>
+    </el-form-item>
+    <el-form-item prop="checkPass">
+      <el-input type="password" v-model="user.password" auto-complete="off" placeholder="密码"></el-input>
+    </el-form-item>
+    <el-form-item style="width:100%;">
+      <el-button type="primary" style="width:100%;" @click="login">登录</el-button>
+      <el-button style="width:100%;margin:2px 0 0 0;" @click="register">注册</el-button>
+    </el-form-item>
+  </el-form>-->
+  <div class="login-wrap">
+    <div class="ms-login">
+      <div class="ms-title">系统登录</div>
+      <el-form :model="user" :rules="rules" ref="user" label-width="0px" class="ms-content">
+        <el-form-item prop="account">
+          <el-input v-model="user.account" placeholder="username">
+            <el-button slot="prepend" icon="el-icon-user"></el-button>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input type="password" placeholder="password" v-model="user.password" @keyup.enter.native="login">
+            <el-button slot="prepend" icon="el-icon-lock"></el-button>
+          </el-input>
+        </el-form-item>
+        <div class="login-btn">
+          <el-button type="primary" @click="login">登录</el-button>
+        </div>
+      </el-form>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -26,13 +59,25 @@
     name: 'login',
     data() {
       return {
+        user:{
+          account:'',
+          password:'',
+        },
         account:'',
         password:'',
+        rules:{
+          account: [
+            { required: true, message: '请输入账号', trigger: 'blur' }
+          ],
+          password:[
+            { required: true, message: '请输入密码', trigger: 'blur' }
+          ],
+        }
       }
     },
     methods:{
-        login: function() {
-          if (this.password == '' || this.account == '') {
+      login: function() {
+          if (this.user.password == '' || this.user.account == '') {
             this.$message({
               showClose: true,
               message: '请输入账号或密码！',
@@ -41,9 +86,9 @@
             return;
           }
           this.$store.commit('showLoading');
-          this.password = md5(this.password);
+          this.user.password = md5(this.user.password);
           this.$axios.get('/occ/user/login', {
-            params: {account: this.account, password: this.password}
+            params: {account: this.user.account, password: this.user.password}
           }).then(res => {
             const data = res.data;
             if(data == '' || data.message != 'SUCCESS'){
@@ -65,7 +110,10 @@
               type: 'error'
             });
           });
-        }
+        },
+      register: function(){
+        this.$router.push('./register');
+      },
     }
   }
 
@@ -73,13 +121,12 @@
 
 <style scoped>
 .login{
-  width:400px;
-  height:380px;
+  width:600px;
+  height:450px;
   margin: 0 auto;
   margin-top: 40px;
-  border: 1px solid #1e88e5;
 }
-  .loginInput{
+/*  .loginInput{
     height: 80px;
 
   }
@@ -128,5 +175,68 @@
     color: #000;
     cursor: pointer;
     background-color: rgba(25,221,255,0.58);
+  }*/
+ /* .login-container {
+    !*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*!
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    background-clip: padding-box;
+    margin: 100px auto;
+    width: 350px;
+    padding: 35px 35px 15px 35px;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 0 25px #cac6c6;
+  }
+  .title {
+    margin: 0px auto 40px auto;
+    text-align: center;
+    color: #505458;
+  }
+  .remember {
+    margin: 0px 0px 35px 0px;
+  }*/
+
+  .login-wrap{
+    position: fixed;
+    width:100%;
+    height:100%;
+    background-image: url(../../assets/image/login-bg.jpg);
+    background-size: 100%;
+  }
+  .ms-title{
+    width:100%;
+    line-height: 50px;
+    text-align: center;
+    font-size:20px;
+    color: #000000;
+    border-bottom: 1px solid #ddd;
+  }
+  .ms-login{
+    position: absolute;
+    left:50%;
+    top:50%;
+    width:350px;
+    margin:-190px 0 0 -175px;
+    border-radius: 5px;
+    background: rgba(255,255,255, 0.3);
+    overflow: hidden;
+  }
+  .ms-content{
+    padding: 30px 30px;
+  }
+  .login-btn{
+    text-align: center;
+  }
+  .login-btn button{
+    width:100%;
+    height:36px;
+    margin-bottom: 10px;
+  }
+  .login-tips{
+    font-size:12px;
+    line-height:30px;
+    color:#fff;
   }
 </style>

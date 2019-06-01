@@ -21,6 +21,15 @@ const routes = [
     },
   },
   {
+    path: '/manager/login',
+    meta: {
+      label: '云日历系统机构日历系统后台登录',
+      permission: '',
+      requireAuth: false
+    },
+    component: () => import('../components/manager/login'),
+  },
+  {
     path: '/noPermission',
     component: noPer,
     meta: {
