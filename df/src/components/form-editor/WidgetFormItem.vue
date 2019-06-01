@@ -2,7 +2,7 @@
   <!-- 在Form表单中,每一个表单域由一个Form-Item组件构成 -->
   <el-form-item v-if="element && element.key" class="widget-view" :label="element.label"
     :class="{active: selectWidget.key === element.key}"
-    @click.native="handleSelectWidget(index)">
+    @click.native="handleSelectWidget(index, $event)">
     <template v-if="element.type === 'input'">
       <el-input v-model="element.options.defaultValue">
       </el-input>
@@ -72,8 +72,9 @@ export default {
         this.data.list.splice(index, 1)
       })
     },
-    handleSelectWidget (index) {
+    handleSelectWidget (index, event) {
       this.selectWidget = this.data.list[index]
+      event.stopPropagation()
     }
   },
   watch: {

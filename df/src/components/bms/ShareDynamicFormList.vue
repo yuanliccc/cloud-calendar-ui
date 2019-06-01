@@ -3,7 +3,26 @@
     <div class="share-list-container flex-column">
       <div class="share-list-header flex-row">
         <div class="share-list-header-query-block">
-          <el-form ref="selectForm" :model="selectCondition" label-width="100px" style="width: 100%;">
+          <div class="query-box-block">
+            <el-select
+              v-model="selectCondition.holderId"
+              filterable
+              remote
+              clearable
+              reserve-keyword
+              placeholder="请输入表单创建人"
+              :remote-method="findUserLikeName"
+              :loading="loading">
+              <el-option
+                v-for="item in userOptions"
+                :key="item.name"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+            <el-button type="primary" @click="findNormalSharedDynamicFormByCondition">查询</el-button>
+          </div>
+          <!--<el-form ref="selectForm" :model="selectCondition" label-width="100px" style="width: 100%;">
             <el-row :gutter="20">
               <el-col :span="8">
                 <div class="grid-content bg-purple">
@@ -38,7 +57,7 @@
             </el-row>
             <el-row :gutter="20">
             </el-row>
-          </el-form>
+          </el-form>-->
         </div>
       </div>
       <div class="share-list-line"></div>
@@ -170,6 +189,9 @@ export default {
     },
     // 根据条件查询分享的表单
     findNormalSharedDynamicFormByCondition: function () {
+      if (this.selectCondition.holderId === '') {
+        this.selectCondition.holderId = null
+      }
       this.$axios.post('/df/shared/dynamic/form/findNormalSharedDynamicFormByCondition', this.selectCondition)
         .then(res => {
           const code = res.data.code

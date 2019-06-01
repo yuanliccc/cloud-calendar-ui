@@ -17,14 +17,18 @@
           </div>
           <div class="login-container-right">
             <div class="login-container-right-context flex-column">
-              <el-form>
+              <el-form :rules="loginRules" ref="loginForm" :model="loginUserInfo">
                 <div class="input-item-block">
-                  <el-input class="input-style" placeholder="用户名" v-model="loginUserInfo.userName"></el-input>
+                  <el-form-item label="用户名" prop="userName">
+                    <el-input class="input-style" placeholder="用户名" v-model="loginUserInfo.userName"></el-input>
+                  </el-form-item>
                 </div>
                 <div class="input-item-block">
-                  <el-input class="input-style" type="password" placeholder="密码" v-model="loginUserInfo.password"></el-input>
+                  <el-form-item label="密码" prop="password">
+                    <el-input class="input-style" type="password" placeholder="密码" v-model="loginUserInfo.password"></el-input>
+                  </el-form-item>
                 </div>
-                <div class="prompt-block flex-row flex-space-between">
+                <!-- <div class="prompt-block flex-row flex-space-between">
                   <div class="prompt-left flex-row">
                     <el-checkbox-group v-model="test">
                       <el-checkbox label="记住我">
@@ -35,10 +39,10 @@
                   <div class="prompt-right">
                     <router-link to="/">忘记密码？</router-link>
                   </div>
-                </div>
+                </div> -->
                 <div class="button-block flex-row flex-space-between">
                   <div class="left-button-block">
-                    <button class="login-page-button blue-button left-button" @click.prevent="login">登录</button>
+                    <button class="login-page-button blue-button left-button" @click.prevent="login('loginForm')">登录</button>
                   </div>
                   <div class="right-button-block">
                     <button type="button" class="login-page-button white-button right-button" @click.prevent="toSignup">注册</button>
@@ -56,12 +60,34 @@
 export default {
   name: 'login',
   data () {
+    var validateUserName = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('用户名不能为空'))
+      } else {
+        callback()
+      }
+    }
+    var validatePassword = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('密码不能为空'))
+      } else {
+        callback()
+      }
+    }
     return {
       test: null,
       userInfo: null,
       loginUserInfo: {
         userName: null,
         password: null
+      },
+      loginRules: {
+        userName: [
+          {validator: validateUserName, trigger: 'blur'}
+        ],
+        password: [
+          {validator: validatePassword, trigger: 'blur'}
+        ]
       }
     }
   },
@@ -69,23 +95,29 @@ export default {
     toSignup: function (path) {
       this.$router.push({path: '/signup'})
     },
-    login: function () {
-      this.$axios.post('/df/user/login', this.loginUserInfo)
-        .then(res => {
-          const code = res.data.code
-          if (code === 200) {
-            this.userInfo = res.data.data
-            this.$emit('userInfoCallback', this.userInfo)
-            this.$router.push({path: '/main/dfList'})
-          }
-          if (code === 500) {
-            const message = res.data.message
-            this.$message.error(message)
-          }
-        })
-        .catch(err => {
-          this.$message.error(err)
-        })
+    login: function (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$axios.post('/df/user/login', this.loginUserInfo)
+            .then(res => {
+              const code = res.data.code
+              if (code === 200) {
+                this.userInfo = res.data.data
+                this.$emit('userInfoCallback', this.userInfo)
+                this.$router.push({path: '/main/dfList'})
+              }
+              if (code === 500) {
+                const message = res.data.message
+                this.$message.error(message)
+              }
+            })
+            .catch(err => {
+              this.$message.error(err)
+            })
+        } else {
+          return false
+        }
+      })
     }
   }
 }

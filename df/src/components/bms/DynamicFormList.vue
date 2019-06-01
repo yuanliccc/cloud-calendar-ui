@@ -154,7 +154,7 @@ export default {
     },
     // 点击发布按钮后的操作
     clickPublish: function (entity) {
-      this.$confirm('是否分享该表单?', '提示', {
+      this.$confirm('是否发布该表单?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'info'
@@ -249,6 +249,10 @@ export default {
     handleDelete: function (entity) {
       if (entity.sharedForm != null && entity.sharedForm.state === '正常') {
         this.$message.info('不允许删除已经被分享的表单信息')
+        return
+      }
+      if (entity.dfDynamicForm.publishState === '已发布') {
+        this.$message.info('不允许删除已经被发布的表单信息,请先关闭发布')
         return
       }
       this.$confirm('此操作将删除表单信息, 是否继续?', '提示', {
