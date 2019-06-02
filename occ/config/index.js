@@ -12,14 +12,14 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/': {
-        target: 'http://127.0.0.1:8000',//后端接口地址
+        target: 'http://120.78.161.19:8000',//后端接口地址
         changeOrigin: true,//是否允许跨越
         pathRewrite: {
           '^/': '',//重写,
         }
       },
       '/scoket': {
-        target: 'ws://127.0.0.1:8000',//后端接口地址
+        target: 'ws://120.78.161.19:8000',//后端接口地址
         changeOrigin: true,//是否允许跨越
         pathRewrite: {
           '^/scoket': '/',//重写,

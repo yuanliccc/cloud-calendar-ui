@@ -2,7 +2,7 @@
   <div class="publicFrom">
     <div class="publicTitle">查看组织机构</div>
     <div class="public_Display">
-      <el-form label-position="left" ref="organization"class="add_Edit" :model="organization":inline="true"
+      <el-form label-position="left" ref="organization"class="add_Edit" :model="organization"
             label-width="120px">
         <el-form-item label="机构名称">
           <el-input v-model="organization.name" disabled="disabled"></el-input>

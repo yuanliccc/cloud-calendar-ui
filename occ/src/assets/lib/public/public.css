@@ -1,6 +1,6 @@
 .publicList, .publicFrom{
+  width: 100%;
   margin-top: 60px;
-  margin-left: 200px;
 }
 .publicTitle{
   width: 100%;
@@ -77,7 +77,6 @@
 .form_Bt{
   height: 100px;
   padding: 50px 0 0 0;
-  padding-left: 300px;
 }
 .form_Bt2{
   height: 100px;
@@ -97,7 +96,7 @@
   width:80%;
   margin: 40px auto;
   text-align: left;
-  padding:0 5%;
+  padding:0 20%;
 }
 .add_Edit .el-input{
   width:250px;

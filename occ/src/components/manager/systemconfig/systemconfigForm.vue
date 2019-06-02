@@ -3,7 +3,7 @@
     <div class="publicTitle" v-if="!add">机构邀请编辑</div>
     <div class="publicTitle" v-if="add">新增机构邀请</div>
     <div>
-      <el-form label-position="left" ref="systemconfig"class="add_Edit" :model="systemconfig" :rules="rules" :inline="true"
+      <el-form label-position="left" ref="systemconfig"class="add_Edit" :model="systemconfig" :rules="rules"
                 label-width="120px">
         <el-form-item label="键" prop="systemkey">
           <el-input v-model="systemconfig.systemkey" placeholder="键，一旦新建便无法修改"></el-input>

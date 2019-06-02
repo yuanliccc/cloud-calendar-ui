@@ -2,7 +2,7 @@
   <div class="publicFrom">
     <div class="publicTitle">查看机构入驻申请</div>
     <div class="public_Display">
-      <el-form label-position="left" ref="orgApply"class="add_Edit" :model="orgApply":inline="true"
+      <el-form label-position="left" ref="orgApply"class="add_Edit" :model="orgApply"
             label-width="120px">
         <el-form-item label="机构名称">
           <el-input v-model="orgApply.name" disabled="disabled"></el-input>

@@ -3,7 +3,7 @@
     <div class="publicTitle" v-if="!add">机构入驻申请编辑</div>
     <div class="publicTitle" v-if="add">新增机构入驻申请</div>
     <div>
-      <el-form label-position="left" ref="orgApply"class="add_Edit" :model="orgApply" :rules="rules" :inline="true"
+      <el-form label-position="left" ref="orgApply"class="add_Edit" :model="orgApply" :rules="rules"
                 label-width="120px">
         <el-form-item label="机构名称" prop="name">
           <el-input v-model="orgApply.name" disabled="disabled" placeholder="机构名称，一旦新建便无法修改"></el-input>
