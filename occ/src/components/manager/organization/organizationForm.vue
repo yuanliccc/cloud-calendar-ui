@@ -3,7 +3,7 @@
     <div class="publicTitle" v-if="!add">组织机构编辑</div>
     <div class="publicTitle" v-if="add">新增组织机构</div>
     <div>
-      <el-form label-position="left" ref="organization"class="add_Edit" :model="organization" :rules="rules" :inline="true"
+      <el-form label-position="left" ref="organization"class="add_Edit" :model="organization" :rules="rules"
                 label-width="120px">
         <el-form-item label="机构名称" prop="name">
           <el-input v-model="organization.name"></el-input>

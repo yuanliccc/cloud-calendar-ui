@@ -2,7 +2,7 @@
   <div class="publicFrom">
     <div class="publicTitle">查看机构邀请</div>
     <div class="public_Display">
-      <el-form label-position="left" ref="systemconfig"class="add_Edit" :model="systemconfig":inline="true"
+      <el-form label-position="left" ref="systemconfig"class="add_Edit" :model="systemconfig"
             label-width="120px">
         <el-form-item label="键">
           <el-input v-model="systemconfig.systemkey" disabled="disabled"></el-input>

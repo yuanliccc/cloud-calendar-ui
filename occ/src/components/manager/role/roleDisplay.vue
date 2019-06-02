@@ -2,7 +2,7 @@
     <div class="publicFrom">
         <div class="publicTitle">查看角色</div>
         <div class="public_Display">
-            <el-form label-position="left" ref="role"class="add_Edit" :model="role":inline="true"
+            <el-form label-position="left" ref="role"class="add_Edit" :model="role"
                      label-width="120px">
                 <el-form-item label="角色名称">
                     <el-input v-model="role.name" disabled="disabled"></el-input>

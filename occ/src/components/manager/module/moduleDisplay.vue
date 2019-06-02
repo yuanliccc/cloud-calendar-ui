@@ -2,7 +2,7 @@
   <div class="publicFrom">
     <div class="publicTitle">查看模块</div>
     <div class="public_Display">
-      <el-form label-position="left" ref="module"class="add_Edit" :model="module":inline="true"
+      <el-form label-position="left" ref="module"class="add_Edit" :model="module"
                label-width="120px">
         <el-form-item label="模块名称" prop="name">
           <el-input v-model="module.name" disabled="disabled"></el-input>

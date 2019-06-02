@@ -3,7 +3,7 @@
     <div class="publicTitle" v-if="!add">模块编辑</div>
     <div class="publicTitle" v-if="add">新增模块</div>
     <div>
-      <el-form label-position="left" ref="module"class="add_Edit" :model="module" :rules="rules" :inline="true"
+      <el-form label-position="left" ref="module"class="add_Edit" :model="module" :rules="rules"
                 label-width="120px">
         <el-form-item label="模块名称" prop="name" v-if="add">
           <el-input v-model="module.name" placeholder="模块名称，一旦新建便无法修改名称"></el-input>

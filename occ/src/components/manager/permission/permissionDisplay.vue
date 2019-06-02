@@ -2,7 +2,7 @@
   <div class="publicFrom">
     <div class="publicTitle">查看权限点</div>
     <div class="public_Display">
-      <el-form label-position="left" ref="permission"class="add_Edit" :model="permission":inline="true"
+      <el-form label-position="left" ref="permission"class="add_Edit" :model="permission"
             label-width="120px">
         <el-form-item label="名称">
           <el-input v-model="permission.name" disabled="disabled"></el-input>

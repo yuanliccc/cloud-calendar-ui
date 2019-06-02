@@ -1,16 +1,5 @@
 <template>
-  <div class="left">
-   <!-- <div v-for="(i, index) in info">
-      <div class="left_Sidebar" @click="display(index)">
-        <i class="glyphicon glyphicon-th-large iLogo"></i>{{i.module.name}}
-      </div>
-      <div v-for="t in i.children" v-if="i.showChild == 'true' || i.showChild">
-        <div class="left_Sidebar_son" @click="jumpTo(t.url)">
-          <i class="glyphicon glyphicon-th-list iLogo"></i>{{t.name}}
-        </div>
-      </div>
-    </div>
-    <con ref="con"></con>-->
+  <!--<div class="left">
     <div class="leftTop"></div>
     <el-container>
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
@@ -25,24 +14,47 @@
         </el-menu>
       </el-aside>
     </el-container>
+  </div>-->
+  <div class="sidebar">
+    <el-menu class="sidebar-el-menu" :collapse="collapse" background-color="#131313"
+             text-color="#fff" active-text-color="#fff" unique-opened router>
+      <template v-for="(item, index) in info">
+        <template>
+          <el-submenu :index="''+index" :key="''+index">
+            <template slot="title">
+              <i :class="logo[index % 3]"></i><span slot="title">{{ item.module.name }}</span>
+            </template>
+            <template v-for="(subItem, e) in item.children">
+              <el-menu-item @click="jumpTo(subItem.url)">
+                {{ subItem.name }}
+              </el-menu-item>
+            </template>
+          </el-submenu>
+        </template>
+      </template>
+    </el-menu>
   </div>
 </template>
 
 <script>
-  import con from '../../confirm/index.vue'
+  import bus from '../../assets/lib/bus';
 export default{
   name:'left',
-  components:{
-      con,
-  },
   data(){
     return {
       info:[],
       logo:['el-icon-setting','el-icon-menu','el-icon-message'],
+      collapse: true,
+
     }
   },
   created:function(){
-      this.init();
+    this.init();
+    // 通过 Event Bus 进行组件间通信，来折叠侧边栏
+    bus.$on('collapse', msg => {
+      this.collapse = msg;
+    });
+
   },
   methods:{
     display: function(index){
@@ -63,13 +75,13 @@ export default{
           this.$refs.con.show(err.data.message, null);
           this.$store.commit('hideLoading');
         });
-    }
+    },
   }
 }
 </script>
 
 <style scoped>
-  .left{
+ /* .left{
     position:absolute;
     top:0;
     bottom: 0;
@@ -103,6 +115,21 @@ export default{
   }
   .iLogo{
     padding-right: 5px;
-  }
-
+  }*/
+ .sidebar{
+   display: block;
+   position: fixed;
+   left: 0;
+   top: 70px;
+   bottom:0;
+ }
+ .sidebar::-webkit-scrollbar{
+   width: 0;
+ }
+ .sidebar-el-menu:not(.el-menu--collapse){
+   width: 250px;
+ }
+ .sidebar > ul {
+   height:100%;
+ }
 </style>

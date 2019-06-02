@@ -2,7 +2,7 @@
   <div class="publicFrom">
     <div class="publicTitle">查看机构工作日程</div>
     <div class="public_Display">
-      <el-form label-position="left" ref="schedule"class="add_Edit" :model="schedule":inline="true"
+      <el-form label-position="left" ref="schedule"class="add_Edit" :model="schedule"
             label-width="120px">
         <el-form-item label="标题">
           <el-input v-model="schedule.title" disabled="disabled"></el-input>
