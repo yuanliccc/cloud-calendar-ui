@@ -22,7 +22,7 @@
         <template>
           <el-submenu :index="''+index" :key="''+index">
             <template slot="title">
-              <i :class="logo[index % 3]"></i><span slot="title">{{ item.module.name }}</span>
+              <i :class="logo[index]"></i><span slot="title">{{ item.module.name }}</span>
             </template>
             <template v-for="(subItem, e) in item.children">
               <el-menu-item @click="jumpTo(subItem.url)">
@@ -43,7 +43,7 @@ export default{
   data(){
     return {
       info:[],
-      logo:['el-icon-setting','el-icon-menu','el-icon-message'],
+      logo:['el-icon-setting','el-icon-rank', 'el-icon-s-order','el-icon-s-unfold', 'el-icon-message'],
       collapse: true,
 
     }
