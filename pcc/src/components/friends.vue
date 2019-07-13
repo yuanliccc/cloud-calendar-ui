@@ -1,28 +1,28 @@
 <template>
   <div>
     <div class="flex-row flex-start title-block">
-      <div class="search-form flex-row flex-start">
-        <div class="title-select-block">
-          <el-select v-model="filters[0].key" placeholder="请选择">
-            <el-option
-              v-for="item in filterOpinions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div>
-          <el-input
-            placeholder="请输入内容"
-            prefix-icon="el-icon-search"
-            v-model="filters[0].value">
-          </el-input>
-        </div>
-        <div>
-          <el-button type="primary" icon="el-icon-search"></el-button>
-        </div>
-      </div>
+      <!--<div class="search-form flex-row flex-start">-->
+        <!--<div class="title-select-block">-->
+          <!--<el-select v-model="filters[0].key" placeholder="请选择">-->
+            <!--<el-option-->
+              <!--v-for="item in filterOpinions"-->
+              <!--:key="item.value"-->
+              <!--:label="item.label"-->
+              <!--:value="item.value">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+        <!--</div>-->
+        <!--<div>-->
+          <!--<el-input-->
+            <!--placeholder="请输入内容"-->
+            <!--prefix-icon="el-icon-search"-->
+            <!--v-model="filters[0].value">-->
+          <!--</el-input>-->
+        <!--</div>-->
+        <!--<div>-->
+          <!--<el-button type="primary" icon="el-icon-search"></el-button>-->
+        <!--</div>-->
+      <!--</div>-->
       <div class="flex-grow flex-row flex-end title-control-block">
         <el-button-group>
           <el-button type="primary" icon="el-icon-plus" @click="openAddFriends">新增</el-button>

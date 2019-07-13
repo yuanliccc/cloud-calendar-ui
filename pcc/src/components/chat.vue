@@ -118,7 +118,7 @@
       onOpen() {
       },
       onError() {//连接建立失败重连
-        this.initWebSocket();
+        //this.initWebSocket();
       },
       onMessage(res) { //数据接收
         let data = JSON.parse(res.data)
@@ -142,7 +142,7 @@
       friendApplyMessage: function(pccNotice) {
         this.$notify({
           title: '好友申请',
-          message: pccNotice.content.name + '申请加您为好友，请至通知栏进行确认',
+          message: JSON.parse(pccNotice.content).name + '申请加您为好友，请至通知栏进行确认',
           duration: 0
         });
       },
@@ -168,6 +168,7 @@
         this.websock.send(message)
       },
       onClose(e) {  //关闭
+        console.log('cl')
         this.initWebSocket()
       },
       closeDialog: function () {

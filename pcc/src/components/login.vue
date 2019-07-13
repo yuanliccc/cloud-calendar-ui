@@ -112,8 +112,8 @@ export default {
         .then(res => {
           const data = res.data
 
-          if(data.data == null) {
-            // 弹框
+          if(data.data == 'error') {
+            this.$message.success('邮箱或密码错误')
           }
           else {
             this.$store.commit("setUserInfo", data.data)

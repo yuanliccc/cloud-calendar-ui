@@ -89,10 +89,16 @@
         this.$emit('close');
       },
       saveFriend: function (index, row) {
+        console.log(this.$store.getters.userInfo.id)
+        let content = row['content']
+        let js = JSON.parse(content)
+        console.log(js.id)
+
         this.$axios.get('/pcc/user/friend/save/friend', {
-          params: {pccUserId: this.$store.getters.userInfo.id, friendPccUserId: row.id}
+          params: {pccUserId: this.$store.getters.userInfo.id, friendPccUserId: js.id}
         }).then(res => {
           this.$message.success("您已经同意申请")
+          this.getNotices()
         }).catch(err => {
           this.$message.error('同意好友申请失败');
         })

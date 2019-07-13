@@ -126,8 +126,7 @@ export default {
       this.$axios.post('/pcc/task', this.task)
       .then(res => {
         const data = res.data
-        this.$message({message: '新增日程成功',type: 'success'})
-        this.task.content = ''
+        this.$message.success('新增日程成功')
         this.getTasks()
       })
       .catch(err => {
@@ -145,7 +144,8 @@ export default {
     },
     dayStr: function() {
       let month = (this.selectDay.month + 1) < 10 ? ('0' + (this.selectDay.month + 1)) : (this.selectDay.month + 1)
-      return this.selectDay.year + '-' + month + '-' + this.selectDay.day
+      let dd = this.selectDay.day < 10 ? ('0' + this.selectDay.day) : this.selectDay.day
+      return this.selectDay.year + '-' + month + '-' + dd
     },
     getTasks: function () {
       this.$axios.get('/pcc/task/day/user', {params:{pccUserId: this.$store.getters.userInfo.id, day: this.dayStr()}})
