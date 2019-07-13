@@ -79,20 +79,24 @@ export default {
         applyUserId: this.userInfo.id,
         collectFormId: null
       },
-      formOptions: []
+      formOptions: [],
+      loading: false
     }
   },
   methods: {
     // 根据表单的名称模糊查询表单信息
     findFormLikeName: function (formName) {
+      this.loading = false
       this.$axios.get('/df/collect/form/findFormLikeName/' + formName)
         .then(res => {
+          this.loading = true
           const code = res.data.code
           if (code === 200) {
             this.formOptions = res.data.data
           }
         })
         .catch(error => {
+          this.loading = true
           this.$message.error(error)
         })
     },

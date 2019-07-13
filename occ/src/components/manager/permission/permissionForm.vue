@@ -3,7 +3,7 @@
     <div class="publicTitle" v-if="!add">权限点编辑</div>
     <div class="publicTitle" v-if="add">新增权限点</div>
     <div>
-      <el-form label-position="left" ref="permission"class="add_Edit" :model="permission" :rules="rules" :inline="true"
+      <el-form label-position="left" ref="permission"class="add_Edit" :model="permission" :rules="rules"
                 label-width="120px">
         <el-form-item label="名称" prop="name">
           <el-input v-model="permission.name"></el-input>

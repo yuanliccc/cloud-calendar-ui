@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <!--<div class="header">
     <div class="tip">
       <router-link to="/manager/index" class="tipSpan"><i class="el-icon-star-off"></i>机构日历系统</router-link>
     </div>
@@ -41,10 +41,72 @@
         </el-form>
       </div>
     </div>
+  </div>-->
+  <div class="header">
+    <!-- 折叠按钮 -->
+    <div class="collapse-btn" @click="collapseChage">
+      <i class="el-icon-menu"></i>
+    </div>
+    <div class="logo"  @click="jumpTo('/manager/index')">机构日历系统</div>
+    <div class="header-right">
+      <div class="header-user-con">
+        <!-- 全屏显示 -->
+        <div class="btn-fullscreen" @click="handleFullScreen">
+          <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
+            <i class="el-icon-rank"></i>
+          </el-tooltip>
+        </div>
+        <div class="btn-bell">
+          <el-tooltip effect="dark" :content="chat > 0?`有${chat}条未读私信`:`私信中心`" placement="bottom">
+            <router-link to="/manager/noticeList/perLetter">
+              <i class="el-icon-message"></i>
+            </router-link>
+          </el-tooltip>
+          <span class="btn-bell-badge" v-if="chat > 0"></span>
+        </div>
+        <!-- 消息中心 -->
+        <div class="btn-bell">
+          <el-tooltip effect="dark" :content="infomation.length > 0?`有${infomation.length}条未读消息`:`消息中心`" placement="bottom">
+            <router-link to="/manager/noticeList/notice">
+              <i class="el-icon-bell"></i>
+            </router-link>
+          </el-tooltip>
+          <span class="btn-bell-badge" v-if="infomation.length > 0"></span>
+        </div>
+        <!-- 用户头像 -->
+        <div class="user-avator"><img src="../../assets/image/testPortrait.jpg"></div>
+        <!-- 用户名下拉菜单 -->
+        <el-dropdown class="user-name" trigger="click" @command="handleCommand">
+                    <span class="el-dropdown-link">
+                        {{username}} <i class="el-icon-caret-bottom"></i>
+                    </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item divided><span @click="selectOrNot">选择机构</span></el-dropdown-item>
+            <el-dropdown-item divided ><span  @click="singOut">退出登录</span></el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+    </div>
+    <div class="selOrg" v-if="selOrNot">
+      <div class="chooseLogin">
+        <el-form>
+          <el-form-item label="选择登录的机构">
+            <el-select v-model="organization.id">
+              <el-option v-for="i in organizations" :key="i.id" :value="i.id" :label="i.name"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item class="chooseBt">
+            <el-button type="primary" @click="changeOrg()">进入</el-button>
+            <el-button @click="selectOrNot">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+  import bus from '../../assets/lib/bus'
   export default{
     inject:['reload'],
     name: 'managerHeader',
@@ -59,11 +121,18 @@
         },
         selOrNot: false,
         websocket:null,
+        collapse: true,
+        fullscreen: false,
+        name: 'linxin',
+        message: 2
       }
     },
     computed:{
       user: function () {
         return this.$store.getters.userInfo.user
+      },
+      username:function(){
+        return this.$store.getters.userInfo.user.name;
       },
       organization: function () {
         return this.$store.getters.userInfo.organization
@@ -140,7 +209,7 @@
             this.$store.commit('setUserInfo', data.data);
             this.selectOrNot();
             this.reload();
-            this.$router.push("/manager");
+            this.$router.push("/manager/index");
           }
           this.$store.commit("hideLoading");
         }).catch(err =>{
@@ -154,8 +223,8 @@
       },
       initWebSocket(){ //初始化weosocket
         const ip = window.location.href.split('/')[2].split(":")[0];
-        const wsuri = "ws://" + ip + ":8000/notice/" + this.user.id;//ws地址
-
+        //const wsuri = "ws://" + ip + ":8000/notice/" + this.user.id;//ws地址
+        const wsuri = "ws://120.78.161.19:8000/notice/" + this.user.id;//ws地址
         this.websocket = new WebSocket(wsuri);
         this.websocket.onopen = this.websocketonopen;
 
@@ -231,13 +300,51 @@
             type: 'error'
           });
         })
+      },
+      // 用户名下拉菜单选择事件
+      handleCommand(command) {
+        if(command == 'loginout'){
+          this.$router.push('/login');
+        }
+      },
+      // 侧边栏折叠
+      collapseChage(){
+        this.collapse = !this.collapse;
+        bus.$emit('collapse', this.collapse);
+      },
+      // 全屏事件
+      handleFullScreen(){
+        let element = document.documentElement;
+        if (this.fullscreen) {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+          } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+        } else {
+          if (element.requestFullscreen) {
+            element.requestFullscreen();
+          } else if (element.webkitRequestFullScreen) {
+            element.webkitRequestFullScreen();
+          } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+          } else if (element.msRequestFullscreen) {
+            // IE11
+            element.msRequestFullscreen();
+          }
+        }
+        this.fullscreen = !this.fullscreen;
       }
     }
   }
 </script>
 
 <style scoped>
-  .header{
+  /*.header{
     position: fixed;
     display: inline;
     top: 0;
@@ -328,10 +435,10 @@
     margin: 0 2px;
     font-size: 13px;
     font-weight: bold;
-  }
+  }*/
   .selOrg{
     position: fixed;
-    z-index: 1000;
+    z-index: 1009;
     top: 0;
     left: 0;
     right: 0;
@@ -344,6 +451,85 @@
     margin-top:15%;
   }
   .chooseBt{
+    text-align: center;
+  }
+  .header {
+    position: fixed;
+    z-index: 1003;
+    box-sizing: border-box;
+    width: 100%;
+    height: 70px;
+    font-size: 22px;
+    color: #fff;
+    background-color: #131313;
+  }
+  .collapse-btn{
+    float: left;
+    padding: 0 21px;
+    cursor: pointer;
+    line-height: 70px;
+  }
+  .header .logo{
+    float: left;
+    width:250px;
+    font-size: 16px;
+    line-height: 70px;
+    cursor: pointer;
+  }
+  .header-right{
+    float: right;
+    padding-right: 50px;
+  }
+  .header-user-con{
+    display: flex;
+    height: 70px;
+    align-items: center;
+  }
+  .btn-fullscreen{
+    transform: rotate(45deg);
+    margin-right: 5px;
+    font-size: 24px;
+  }
+  .btn-bell, .btn-fullscreen{
+    position: relative;
+    width: 30px;
+    margin:0 5px;
+    color:#fff;
+    height: 30px;
+    text-align: center;
+    border-radius: 15px;
+    cursor: pointer;
+  }
+  .btn-bell-badge{
+    position: absolute;
+    right: 0;
+    top: -2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: #f56c6c;
+    color: #fff;
+  }
+  .btn-bell .el-icon-bell{
+    color: #fff;
+  }
+  .user-name{
+    margin-left: 10px;
+  }
+  .user-avator{
+    margin-left: 20px;
+  }
+  .user-avator img{
+    display: block;
+    width:40px;
+    height:40px;
+    border-radius: 50%;
+  }
+  .el-dropdown-link{
+    color: #fff;
+    cursor: pointer;
+  }
+  .el-dropdown-menu__item{
     text-align: center;
   }
 </style>

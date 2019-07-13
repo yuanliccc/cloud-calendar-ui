@@ -8,8 +8,8 @@
       </div>
       <div class="loginBox">
         <div class="loginCon">
-          <p class="title">云日历系统</p>
-          <p class="title">机构日历子系统</p>
+          <p class="title">云日历系统机构日历子系统</p>
+          <p class="title">后台登录</p>
           <el-card shadow="always" class="login-module" v-if="smdl">
             <div slot="header" class="clearfix formTitlt">
               <span>密码登录</span>

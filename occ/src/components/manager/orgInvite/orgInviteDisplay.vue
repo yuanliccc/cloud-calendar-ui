@@ -2,7 +2,7 @@
   <div class="publicFrom">
     <div class="publicTitle">查看机构邀请</div>
     <div class="public_Display">
-      <el-form label-position="left" ref="orgInvite"class="add_Edit" :model="orgInvite":inline="true"
+      <el-form label-position="left" ref="orgInvite"class="add_Edit" :model="orgInvite"
             label-width="120px">
         <el-form-item label="提交时间">
           <el-input v-model="orgInvite.submittime" disabled="disabled"></el-input>

@@ -3,7 +3,7 @@
     <div class="publicTitle notice_Title">{{notice.title}}</div>
     <div class="publicTitle_Data">{{notice.starttime | formatDate}}</div>
     <div class="public_Display">
-      <el-form label-position="left" ref="notice"class="add_Edit" :model="notice":inline="true"
+      <el-form label-position="left" ref="notice"class="add_Edit" :model="notice"
             label-width="120px">
         <!--<el-form-item label="用户id">
           <el-input v-model="notice.userid" disabled="disabled"></el-input>

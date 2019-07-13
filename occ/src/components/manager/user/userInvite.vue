@@ -2,7 +2,7 @@
   <div class="publicFrom">
     <div class="publicTitle">邀请用户</div>
     <div>
-      <el-form label-position="left" ref="user"class="add_Edit" :model="invite" :rules="rules" :inline="true"
+      <el-form label-position="left" ref="user"class="add_Edit" :model="invite" :rules="rules"
                label-width="120px">
         <el-form-item label="昵称或账号" prop="nameOrAccount">
           <el-input v-model="nameOrAccount"></el-input>

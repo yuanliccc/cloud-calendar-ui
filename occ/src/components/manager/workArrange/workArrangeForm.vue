@@ -566,7 +566,7 @@
     height: 100px;
     margin-top: 50px;
     padding: 50px 0 0 0;
-    padding-left: 300px;
+    padding-left: 400px;
   }
   .publicListTable{
     width:100%;

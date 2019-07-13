@@ -3,7 +3,7 @@
     <div class="publicTitle" v-if="!add">角色编辑</div>
     <div class="publicTitle" v-if="add">新增角色</div>
     <div>
-      <el-form label-position="left" ref="role"class="add_Edit" :model="role" :rules="rules" :inline="true"
+      <el-form label-position="left" ref="role"class="add_Edit" :model="role" :rules="rules"
                 label-width="120px">
         <el-form-item label="角色名称" prop="name">
           <el-input v-model="role.name" placeholder="角色名称"></el-input>

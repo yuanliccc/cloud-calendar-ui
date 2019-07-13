@@ -141,7 +141,7 @@
           this.$message.warning()('电话号码有误，请重新输入！');
           ;return ;
         }
-
+        this.user.password =md5(this.user.password);
         this.$store.commit('showLoading');
         this.$axios.post("/occ/user/register",
           this.user

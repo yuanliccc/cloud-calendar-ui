@@ -2,7 +2,7 @@
   <div class="publicFrom">
     <div class="publicTitle">查看事件</div>
     <div class="public_Display">
-      <el-form label-position="left" ref="event"class="add_Edit" :model="event":inline="true"
+      <el-form label-position="left" ref="event"class="add_Edit" :model="event"
             label-width="120px">
         <el-form-item label="标题">
           <el-input v-model="event.title" disabled="disabled"></el-input>

@@ -80,20 +80,24 @@ export default {
         holderId: this.userInfo.id,
         collectFormId: null
       },
-      formOptions: []
+      formOptions: [],
+      loading: false
     }
   },
   methods: {
     // 根据表单名称查询信息
     findFormLikeFormName: function (formName) {
+      this.loading = true
       this.$axios.get('/df/collect/form/edit/apply/findFormLikeFormName/' + formName)
         .then(res => {
+          this.loading = false
           const code = res.data.code
           if (code === 200) {
             this.formOptions = res.data.data
           }
         })
         .catch(error => {
+          this.loading = false
           this.$message.error(error)
         })
     },
